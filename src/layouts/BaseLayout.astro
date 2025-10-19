@@ -13,14 +13,8 @@ const { pageTitle, showHeader } = Astro.props;
   </head>
   <body>
     {showHeader && <Header />}
-    <div class={showHeader ? "content-with-header" : ""}>
+    <div class={showHeader ? "pt-[200px]" : ""}>
       <slot />
     </div>
   </body>
 </html>
-
-<style>
-  .content-with-header {
-    padding-top: 200px;
-  }
-</style>

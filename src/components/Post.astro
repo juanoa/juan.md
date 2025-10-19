@@ -1,0 +1,114 @@
+---
+
+---
+
+<div class="relative">
+  <article class="prose prose-lg mx-auto max-w-4xl">
+    <slot />
+  </article>
+
+  <!-- Table of Contents - Desktop only -->
+  <nav id="toc-nav" class="hidden lg:block fixed right-0 top-[200px]">
+    <div id="toc-content" class="flex flex-col gap-3 items-end"></div>
+  </nav>
+</div>
+
+<script>
+  function generateTOC() {
+    const article = document.querySelector("article.prose");
+    const tocContent = document.getElementById("toc-content");
+
+    if (!article || !tocContent) return;
+
+    // Find all h2 and h3 headings
+    const headings = article.querySelectorAll("h2, h3");
+
+    headings.forEach((heading, index) => {
+      // Create ID for the heading if it doesn't have one
+      if (!heading.id) {
+        heading.id = `heading-${index}`;
+      }
+
+      // Create TOC entry
+      const tocItem = document.createElement("a");
+      tocItem.href = `#${heading.id}`;
+      tocItem.className = "toc-item block transition-opacity hover:opacity-100";
+
+      // Determine width based on heading level
+      const isH2 = heading.tagName === "H2";
+      const width = isH2 ? "w-8" : "w-6";
+
+      // Create the line
+      const line = document.createElement("div");
+      line.className = `h-[2px] bg-black/30 ${width} transition-all`;
+      tocItem.appendChild(line);
+
+      // Smooth scroll behavior
+      tocItem.addEventListener("click", (e) => {
+        e.preventDefault();
+        heading.scrollIntoView({ behavior: "smooth" });
+      });
+
+      tocContent.appendChild(tocItem);
+    });
+
+    // Highlight current section on scroll
+    let observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            const tocItems = document.querySelectorAll(".toc-item");
+            tocItems.forEach((item) => {
+              const href = item.getAttribute("href");
+              const line = item.querySelector("div");
+              if (!line) return;
+
+              if (href === `#${id}`) {
+                line.classList.remove("bg-black/30");
+                line.classList.add("bg-black");
+              } else {
+                line.classList.remove("bg-black");
+                line.classList.add("bg-black/30");
+              }
+            });
+          }
+        });
+      },
+      {
+        rootMargin: "-50% 0px -50% 0px",
+      },
+    );
+
+    headings.forEach((heading) => {
+      observer.observe(heading);
+    });
+  }
+
+  // Generate TOC on page load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", generateTOC);
+  } else {
+    generateTOC();
+  }
+</script>
+
+<style>
+  .toc-item {
+    opacity: 0.5;
+  }
+
+  .toc-item:hover {
+    opacity: 1;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .toc-item div {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .toc-item div.bg-black {
+      background-color: rgba(255, 255, 255, 1);
+    }
+  }
+</style>

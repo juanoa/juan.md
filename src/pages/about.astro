@@ -1,12 +1,13 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Post from "../components/Post.astro";
 
 const pageTitle = "Sobre mí";
 const description = "Una breve historia sobre mí";
 ---
 
 <BaseLayout pageTitle={pageTitle} showHeader>
-  <article class="prose prose-lg mx-auto">
+  <Post>
     <p>
       ¡Hola! Soy Juan y me dedico a la tecnología. Soy Ingeniero Informático de
       profesión y construyo productos digitales, actualmente para MITO. Hasta
@@ -301,5 +302,5 @@ const description = "Una breve historia sobre mí";
       >
       </iframe>
     </div>
-  </article>
+  </Post>
 </BaseLayout>
