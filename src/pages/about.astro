@@ -1,66 +1,384 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const pageTitle = "About Me";
-
-const identity = {
-  firstName: "Sarah",
-  country: "Canada",
-  occupation: "Technical Writer",
-  hobbies: ["photography", "birdwatching", "baseball"],
-};
-
-const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Writing Docs"];
-
-const happy = true;
-const finished = true;
-const goal = 3;
-
-const skillColor = "crimson";
-const fontWeight = "bold";
-const textCase = "uppercase";
+const pageTitle = "Sobre mí";
+const description = "Una breve historia sobre mí";
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-  <h1 class="text-purple-600 text-6xl my-4">About Me</h1>
-  <h2>... and my new Astro site!</h2>
+<BaseLayout pageTitle={pageTitle} showLogo>
+  <article class="max-w-4xl mx-auto px-4 py-8 prose">
+    <p>
+      ¡Hola! Soy Juan y me dedico a la tecnología. Soy Ingeniero Informático de
+      profesión y construyo productos digitales, actualmente para MITO. Hasta
+      octubre de 2025 formé parte del equipo de Inditex.
+    </p>
 
-  <p>
-    I am working through Astro's introductory tutorial. This is the second page
-    on my website, and it's the first one I built myself!
-  </p>
+    <p>
+      Siempre supe que me quería dedicar a lo que me dedico. Me fue fácil elegir
+      mis estudios y nunca tuve dudas de dónde quería llegar. Sin embargo, la
+      programación no es algo que me emocione especialmente. Veo la
+      programación, el código, como un medio para llegar a un fin y creo que los
+      ingenieros tenemos un objetivo mucho más noble que simplemente
+      desarrollar. Los ingenieros tenemos la complicada labor de ser los
+      intermediarios entre la tecnología y la sociedad.
+    </p>
 
-  <p>
-    This site will update as I complete more of the tutorial, so keep checking
-    back and see how my journey is going!
-  </p>
-  <p>Here are a few facts about me:</p>
-  <ul>
-    <li>My name is {identity.firstName}.</li>
-    <li>
-      I live in {identity.country} and I work as a {identity.occupation}.
-    </li>
-    {
-      identity.hobbies.length >= 2 && (
-        <li>
-          Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}
-        </li>
-      )
-    }
-  </ul>
-  <p>My skills are:</p>
-  <ul>
-    {skills.map((skill) => <li style={`color: ${skillColor}; font-weight: ${fontWeight}; text-transform: ${textCase};`}>{skill}</li>)}
-  </ul>
-  {happy && <p>I am happy to be learning Astro!</p>}
+    <h2>Principales logros</h2>
+    <ul>
+      <li>
+        <strong>Zara Boost</strong>: Ganar el <a
+          href="https://www.zaratalent.com/es/tech/"
+          target="_blank"
+          rel="noopener noreferrer">Programa de Talento Joven de Inditex</a
+        > me permitió empezar a trabajar en la empresa (más de 3000 participantes,
+        20 ganadores).
+      </li>
+      <li>
+        <strong>I National Cyber League</strong>: Finalista en la <a
+          href="https://www.um.es/web/informatica/inicio/-/asset_publisher/9oPl8OoMB0qA/content/final-de-la-i-national-cyberleague"
+          target="_blank"
+          rel="noopener noreferrer">1ª National Cyberleague</a
+        > organizada por la Guardia Civil.
+      </li>
+    </ul>
 
-  {finished && <p>I finished this tutorial!</p>}
+    <h2>Proyectos de los que estoy más orgulloso</h2>
+    <ul>
+      <li>
+        <strong>Herramienta de gestión de catálogo de Inditex</strong>. Aquí
+        empecé a construir producto de verdad. Todo lo que sé sobre desarrollo,
+        producto y diseño lo aprendí aquí. Construimos una de las herramientas
+        mejor valoradas de toda la compañía, desde la que se podía gestionar uno
+        de los ecommerces más grandes del mundo: Zara.
+      </li>
+      <li>
+        <strong>Omnia</strong>. Herramienta de análisis de posicionamiento de
+        marcas en modelos LLMs. Colaboré con Daniel Espejo en las las primeras
+        etapas de definición y desarrollo del producto. (<a
+          href="https://www.useomnia.com/"
+          target="_blank"
+          rel="noopener noreferrer">Web</a
+        >)
+      </li>
+      <li>
+        <strong>Bot de vacunación COVID</strong>. Bot de Twitter que desarrollé
+        durante la pandemia de COVID-19 para informar sobre el estado de la
+        vacunación en España (<a
+          href="https://twitter.com/CovidVacunaES"
+          target="_blank"
+          rel="noopener noreferrer">X</a
+        > / <a
+          href="https://github.com/juanoa/vacunas-bot"
+          target="_blank"
+          rel="noopener noreferrer">GitHub</a
+        >)
+      </li>
+      <li>
+        <strong>Wateralo</strong>. Mientras estaba en la universidad, cofundé
+        una marca de botellas de agua reutilizables con dos compañeros de clase.
+        Nos encargamos de todo: compras, logística, página web, envíos,
+        marketing y más. Fue una experiencia increíble.
+      </li>
+    </ul>
 
-  {
-    goal === 3 ? (
-      <p>My goal is to finish in 3 days.</p>
-    ) : (
-      <p>My goal is not 3 days.</p>
-    )
-  }
+    <h3>Otros proyectos</h3>
+    <p>Otros side-projects pequeños que tengo publicados en Internet:</p>
+    <ul>
+      <li>
+        <strong>Share the gym</strong>. Crea rutinas de gimnasio y compártelas
+        con tus amigos (<a
+          href="https://github.com/juanoa/share-the-gym"
+          target="_blank"
+          rel="noopener noreferrer">GitHub</a
+        > / <a
+          href="https://share-the-gym.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer">Web</a
+        >)
+      </li>
+      <li>
+        <strong>Package-lock beautify</strong>: Web para entender cómo funciona
+        un package-lock.json subiendo el tuyo (<a
+          href="https://github.com/juanoa/package-lock-beautify"
+          target="_blank"
+          rel="noopener noreferrer">GitHub</a
+        > / <a
+          href="https://package-lock-beautify.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer">Web</a
+        >)
+      </li>
+    </ul>
+
+    <h2>Experiencia</h2>
+    <ul>
+      <li>
+        <strong>MITO</strong> (Oct. 2025 - Presente). Startup dedicada a la producción
+        audiovisual a través de inteligencia artificial.
+      </li>
+      <li>
+        <strong>Inditex</strong> (Oct. 2021 - Oct. 2025). <a
+          href="https://www.inditex.com/"
+          target="_blank"
+          rel="noopener noreferrer">Inditex</a
+        > es un líder mundial en retail de moda conocido por su diverso portafolio
+        de marcas, incluyendo <a
+          href="https://www.zara.com/"
+          target="_blank"
+          rel="noopener noreferrer">Zara</a
+        >. He ayudado a construir la herramienta de gestión de productos y
+        catálogos para los e-commerce de la compañía.
+      </li>
+      <li>
+        <strong>PcComponentes</strong> (Feb. 2020 - Mar. 2020). <a
+          href="https://www.pccomponentes.com/"
+          target="_blank"
+          rel="noopener noreferrer">PcComponentes</a
+        > es un e-commerce español líder especializado en productos electrónicos
+        y tecnológicos. Trabajo backend en la tienda online usando PHP y Symphony.
+      </li>
+    </ul>
+
+    <h2>Más sobre mí</h2>
+    <p>Algunos datos básicos:</p>
+    <ul>
+      <li>
+        Nací el <strong>25 de mayo de 1999</strong>, en <strong>Alicante</strong
+        > (España), pero me mudé a Murcia unos años después.
+      </li>
+      <li>
+        Después de estudiar Ingeniería Informática, fui aceptado en el programa
+        de talentos de Inditex y me mudé a A Coruña (Galicia, España), <strong
+          >donde me siento como en casa</strong
+        >.
+      </li>
+      <li>
+        Mudarme a A Coruña me enseñó que <strong
+          >salir de mi zona de confort</strong
+        > da miedo, pero los resultados merecen la pena.
+      </li>
+      <li>
+        Durante los últimos años, me he vuelto muy activo. Escalo, corro y hago
+        surf.
+      </li>
+      <li>
+        Desde que empecé a surfear, <strong>el mar</strong> se ha convertido en mi
+        lugar favorito del mundo.
+      </li>
+      <li>
+        Hace 2 año, compré un <strong>piano</strong>, y desde entonces, disfruto
+        aún más de la música.
+      </li>
+      <li>
+        Me gusta establecerme nuevos retos y metas de vez en cuando para seguir
+        creciendo tanto personal como profesionalmente.
+      </li>
+      <li>
+        Soy adicto a <strong>Notion</strong>, gestiono toda mi vida desde ahí.
+      </li>
+    </ul>
+
+    <h2>Mis valores trabajando en tecnología</h2>
+    <p>
+      Lo que realmente marca la diferencia son las personas, la cultura y la
+      forma en la que trabajamos. Estos son los valores que intento aplicar cada
+      día para construir con sentido.
+    </p>
+
+    <h3>Lo que me motiva</h3>
+    <ul>
+      <li>
+        <strong>El producto es clave</strong>. Necesito creer en el producto que
+        estoy construyendo y en cómo puede afectar positivamente a la sociedad.
+      </li>
+      <li>
+        Un entorno <strong>multidisciplinar</strong>, donde, a pesar de que cada
+        uno tenga sus propias fortalezas, podamos compartir nuestras opiniones
+        en diferentes áreas como diseño o negocio.
+      </li>
+      <li>
+        Valoro cuando el equipo de ingeniería puede <strong
+          >interaccionar con usuarios y con el negocio</strong
+        > sin intermediarios.
+      </li>
+      <li>
+        Me encanta <strong>arrancar proyectos desde cero</strong>, aplicando el
+        principio de Pareto para conseguir rápidamente el 80% de los resultados
+        con el 20% del esfuerzo.
+      </li>
+    </ul>
+
+    <h3>Lo que me decepciona</h3>
+    <ul>
+      <li>
+        Las jerarquías y <strong>burocracia innecesaria</strong>. Me abruma.
+      </li>
+      <li>
+        La sobreingeniería, pasar más tiempo en la implementación que en
+        resolver el problema real, y <strong
+          >equipos que priorizan soluciones técnicas sobre las funcionales</strong
+        >.
+      </li>
+    </ul>
+
+    <h3>Fortalezas</h3>
+    <ul>
+      <li>
+        Destaco <strong
+          >entendiendo el negocio y sus principales puntos de dolor</strong
+        >, traduciéndolos en soluciones que abordan problemas reales.
+      </li>
+      <li>
+        Soy bueno <strong>traduciendo el lenguaje de negocio a código</strong>,
+        haciéndolo más mantenible y escalable. <em
+          >Si alguien de negocio entendiera de programación, debería ser capaz
+          de entender nuestro código</em
+        >.
+      </li>
+    </ul>
+
+    <h3>Puntos de mejora</h3>
+    <ul>
+      <li>
+        Debido a mi enfoque multidisciplinar, no he dedicado el 100% de mi
+        tiempo a ser el mejor técnicamente. En cambio, he elegido también
+        centrarme en áreas como diseño, producto, resolución de problemas
+        complejos y comunicación. Es decir, <strong
+          >puede que nunca sea el mejor desarrollador</strong
+        > del equipo.
+      </li>
+    </ul>
+
+    <h2>Visión</h2>
+    <p>
+      Creo que el trabajo es <strong>más que ganar un salario</strong>. Se trata
+      de contribuir a la sociedad, ayudar a colectivos con sus problemas y a
+      hacerlos crecer. También es una forma de hacernos crecer individualmente y
+      sacar provecho a nuestro potencial. Esto no se trata de servir a un
+      sistema, se trata de servirse a uno mismo. Como dice Rosalía, "oficio y
+      maestría":
+    </p>
+
+    <div
+      style="display: flex; justify-content: center; max-width: 400px; margin: 50px auto;"
+    >
+      <blockquote class="twitter-tweet">
+        <p lang="es" dir="ltr">
+          Oficio. <a href="https://t.co/WVI3SewycY"
+            >pic.twitter.com/WVI3SewycY</a
+          >
+        </p>
+        &mdash; José Luis Antúnez (@jlantunez)
+        <a
+          href="https://twitter.com/jlantunez/status/1740745121375863106?ref_src=twsrc%5Etfw"
+          >December 29, 2023</a
+        >
+      </blockquote>
+      <script
+        async
+        src="https://platform.twitter.com/widgets.js"
+        charset="utf-8"></script>
+    </div>
+
+    <p>
+      Gracias por llegar hasta aquí. Siempre me gustó como Apple hace la
+      publicidad, sobre todo en la época de Jobs. No hablé de ello, pero es de
+      mis marcas favoritas. Aquí va uno de mis anuncios favoritos:
+    </p>
+
+    <div
+      style="display: flex; justify-content: center; width: 100%; margin: 40px 0;"
+    >
+      <iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/tjgtLSHhTPg?si=xAYzE-IArt56nwEq"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      >
+      </iframe>
+    </div>
+  </article>
 </BaseLayout>
+
+<style>
+  .prose {
+    color: #333;
+    line-height: 1.8;
+  }
+
+  .prose a {
+    color: #2563eb;
+    text-decoration: none;
+  }
+
+  .prose a:hover {
+    text-decoration: underline;
+  }
+
+  .prose h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .prose h3 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .prose ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .prose li {
+    margin: 0.5rem 0;
+  }
+
+  .prose .lead {
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    color: #4a4a4a;
+  }
+
+  .prose blockquote {
+    border-left: 4px solid #e5e7eb;
+    padding-left: 1rem;
+    font-style: italic;
+    color: #6b7280;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .prose {
+      color: #e5e7eb;
+    }
+
+    .prose h2,
+    .prose h3 {
+      color: #f3f4f6;
+    }
+
+    .prose a {
+      color: #60a5fa;
+    }
+
+    .prose .lead {
+      color: #d1d5db;
+    }
+
+    .prose blockquote {
+      border-left-color: #4b5563;
+      color: #9ca3af;
+    }
+  }
+</style>
