@@ -1,8 +1,8 @@
 ---
 import Logo from "./logo.astro";
-import SharpRightArrowIcon from "./SharpRightArrowIcon.astro";
 import MenuIcon from "./MenuIcon.astro";
 import CloseIcon from "./CloseIcon.astro";
+import PrimaryLinks from "./PrimaryLinks.astro";
 ---
 
 <header class="fixed top-0 left-0 w-full bg-transparent z-[60] p-10">
@@ -19,13 +19,13 @@ import CloseIcon from "./CloseIcon.astro";
         >About</a
       >
       <a
-        href="/handbook"
-        class="text-black no-underline hover:opacity-80 transition-opacity"
+        href="#"
+        class="text-black no-underline opacity-30 transition-opacity cursor-not-allowed"
         >Handbook</a
       >
       <a
-        href="/opinion"
-        class="text-black no-underline hover:opacity-80 transition-opacity"
+        href="#"
+        class="text-black no-underline opacity-30 transition-opacity cursor-not-allowed"
         >Opinion</a
       >
     </div>
@@ -61,29 +61,7 @@ import CloseIcon from "./CloseIcon.astro";
       </button>
     </div>
 
-    <div class="flex flex-col gap-8">
-      <a
-        href="/about"
-        class="flex justify-between items-center pb-5 border-b border-[#ccc] no-underline text-black hover:opacity-80 transition-opacity"
-      >
-        <span class="text-[32px] lg:text-[48px] font-light">About</span>
-        <SharpRightArrowIcon class="w-12 h-12 lg:w-16 lg:h-16" />
-      </a>
-      <div
-        class="flex justify-between items-center pb-5 border-b border-[#ccc]"
-      >
-        <span class="text-[32px] lg:text-[48px] font-light"
-          >Frontend Handbook</span
-        >
-        <span class="text-[48px] lg:text-[72px] font-light">WIP</span>
-      </div>
-      <div
-        class="flex justify-between items-center pb-5 border-b border-[#ccc]"
-      >
-        <span class="text-[32px] lg:text-[48px] font-light">Opinion</span>
-        <span class="text-[48px] lg:text-[72px] font-light">WIP</span>
-      </div>
-    </div>
+    <PrimaryLinks />
   </div>
 </header>
 

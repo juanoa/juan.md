@@ -1,0 +1,26 @@
+---
+import SharpRightArrowIcon from "./SharpRightArrowIcon.astro";
+
+const { class: additionalClass } = Astro.props;
+const containerClass = ["flex flex-col gap-8", additionalClass]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<div class={containerClass}>
+  <a
+    href="/about"
+    class="flex justify-between items-center pb-5 border-b border-[#ccc] no-underline text-black hover:opacity-80 transition-opacity"
+  >
+    <span class="text-[32px] lg:text-[48px] font-light">About</span>
+    <SharpRightArrowIcon class="w-12 h-12 lg:w-16 lg:h-16" />
+  </a>
+  <div class="flex justify-between items-center pb-5 border-b border-[#ccc]">
+    <span class="text-[32px] lg:text-[48px] font-light">Frontend Handbook</span>
+    <span class="text-[48px] lg:text-[72px] font-light">WIP</span>
+  </div>
+  <div class="flex justify-between items-center pb-5 border-b border-[#ccc]">
+    <span class="text-[32px] lg:text-[48px] font-light">Opinion</span>
+    <span class="text-[48px] lg:text-[72px] font-light">WIP</span>
+  </div>
+</div>

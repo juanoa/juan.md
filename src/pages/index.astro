@@ -1,7 +1,7 @@
 ---
 import Logo from "../components/logo.astro";
-import SharpRightArrowIcon from "../components/SharpRightArrowIcon.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PrimaryLinks from "../components/PrimaryLinks.astro";
 const pageTitle = "Juan Otálora";
 ---
 
@@ -80,29 +80,7 @@ const pageTitle = "Juan Otálora";
             class="text-black no-underline font-medium">LinkedIn</a
           >
         </div>
-        <div class="flex flex-col gap-8">
-          <a
-            href="/about"
-            class="flex justify-between items-center pb-5 border-b border-[#ccc] no-underline text-black hover:opacity-80 transition-opacity"
-          >
-            <span class="text-[32px] lg:text-[48px] font-light">About</span>
-            <SharpRightArrowIcon class="w-12 h-12 lg:w-16 lg:h-16" />
-          </a>
-          <div
-            class="flex justify-between items-center pb-5 border-b border-[#ccc]"
-          >
-            <span class="text-[32px] lg:text-[48px] font-light"
-              >Frontend Handbook</span
-            >
-            <span class="text-[48px] lg:text-[72px] font-light">WIP</span>
-          </div>
-          <div
-            class="flex justify-between items-center pb-5 border-b border-[#ccc]"
-          >
-            <span class="text-[32px] lg:text-[48px] font-light">Opinion</span>
-            <span class="text-[48px] lg:text-[72px] font-light">WIP</span>
-          </div>
-        </div>
+        <PrimaryLinks />
       </div>
     </div>
   </div>
