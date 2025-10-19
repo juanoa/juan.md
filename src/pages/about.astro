@@ -6,7 +6,7 @@ const description = "Una breve historia sobre mí";
 ---
 
 <BaseLayout pageTitle={pageTitle} showHeader>
-  <article class="max-w-4xl mx-auto px-4 py-8 prose">
+  <article class="prose prose-lg mx-auto">
     <p>
       ¡Hola! Soy Juan y me dedico a la tecnología. Soy Ingeniero Informático de
       profesión y construyo productos digitales, actualmente para MITO. Hasta
@@ -303,82 +303,3 @@ const description = "Una breve historia sobre mí";
     </div>
   </article>
 </BaseLayout>
-
-<style>
-  .prose {
-    color: #333;
-    line-height: 1.8;
-  }
-
-  .prose a {
-    color: #2563eb;
-    text-decoration: none;
-  }
-
-  .prose a:hover {
-    text-decoration: underline;
-  }
-
-  .prose h2 {
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    font-size: 1.875rem;
-    font-weight: 700;
-    color: #1a1a1a;
-  }
-
-  .prose h3 {
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1a1a1a;
-  }
-
-  .prose ul {
-    margin: 1rem 0;
-    padding-left: 1.5rem;
-  }
-
-  .prose li {
-    margin: 0.5rem 0;
-  }
-
-  .prose .lead {
-    font-size: 1.25rem;
-    font-weight: 400;
-    margin-bottom: 2rem;
-    color: #4a4a4a;
-  }
-
-  .prose blockquote {
-    border-left: 4px solid #e5e7eb;
-    padding-left: 1rem;
-    font-style: italic;
-    color: #6b7280;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .prose {
-      color: #e5e7eb;
-    }
-
-    .prose h2,
-    .prose h3 {
-      color: #f3f4f6;
-    }
-
-    .prose a {
-      color: #60a5fa;
-    }
-
-    .prose .lead {
-      color: #d1d5db;
-    }
-
-    .prose blockquote {
-      border-left-color: #4b5563;
-      color: #9ca3af;
-    }
-  }
-</style>
