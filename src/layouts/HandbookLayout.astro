@@ -1,0 +1,26 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import HandbookSidebar from "../components/HandbookSidebar.astro";
+import HandbookMobileNav from "../components/HandbookMobileNav.astro";
+
+const { pageTitle, chapters, currentSlug } = Astro.props;
+---
+
+<BaseLayout pageTitle={pageTitle} showHeader={true}>
+  <div class="min-h-screen">
+    <!-- Mobile Navigation -->
+    <div class="lg:hidden pb-4 px-6">
+      <HandbookMobileNav chapters={chapters} currentSlug={currentSlug} />
+    </div>
+
+    <aside class="hidden lg:block w-64 fixed left-0 top-[228px] overflow-y-auto">
+      <HandbookSidebar chapters={chapters} currentSlug={currentSlug} />
+    </aside>
+
+    <main class="w-full px-6">
+      <article class="prose prose-lg mx-auto">
+        <slot />
+      </article>
+    </main>
+  </div>
+</BaseLayout>

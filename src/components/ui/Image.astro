@@ -1,0 +1,41 @@
+---
+import { Image as AstroImage } from 'astro:assets';
+
+export interface Props {
+  src: any;
+  alt: string;
+  caption?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const { caption, class: className, ...imageProps } = Astro.props;
+---
+
+<figure class={`image-wrapper ${className || ''}`}>
+  <AstroImage class="image-image" {...imageProps} />
+  {caption && (
+    <figcaption class="image-caption">
+      {caption}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .image-wrapper {
+    margin: 2rem auto;
+  }
+
+  .image-image {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 0.5rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+</style>

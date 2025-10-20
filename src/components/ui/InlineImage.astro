@@ -1,0 +1,53 @@
+---
+export interface Props {
+  name: string;
+  image: any; // Astro ImageMetadata object
+  alt?: string;
+  size?: "small" | "medium" | "large";
+}
+
+const { name, image, alt = `${name} image`, size = "small" } = Astro.props;
+
+const sizeClasses = {
+  small: "inline-image--small",
+  medium: "inline-image--medium",
+  large: "inline-image--large",
+};
+---
+
+<div class={`inline-image ${sizeClasses[size]}`}>
+  <img src={image.src} alt={alt} class="inline-image__img" />
+  {name && <span class="inline-image__name">{name}</span>}
+</div>
+
+<style>
+  .inline-image {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .inline-image__img {
+    flex-shrink: 0;
+    border-radius: 2px;
+  }
+
+  .inline-image--small .inline-image__img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .inline-image--medium .inline-image__img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .inline-image--large .inline-image__img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .inline-image__name {
+    font-weight: 600;
+  }
+</style>

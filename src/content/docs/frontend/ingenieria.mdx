@@ -1,0 +1,73 @@
+---
+title: Ingeniería
+description: Ingeniería como primer pilar del Product Frontend Engineer
+sidebar:
+  label: 02. Ingeniería
+  order: 2
+---
+import Image from "@/components/ui/Image.astro"
+import TechPillars from "@/components/frontend/tech-pillars.jsx"
+import Mutations from "./__assets__/ingenieria-002.png";
+
+La ingeniería es la disciplina que da solución a problemas del mundo real. Como ingenieros de software, una de nuestras principales responsabilidades es la de construir productos que solventen dificultades, haciendo la vida de las personas más sencilla y agradable.
+
+<TechPillars activePillar="engineering" client:load />
+
+Vamos a ver algunos principios fundamentales para aumentar la calidad de lo que producimos a la par que reducimos los tiempos de entrega.
+
+## Under the hood
+
+_Under the hood_ es una expresión inglesa que literalmente significa “bajo el capó”. En tecnología la usamos bastante para referirnos a todos esos detalles de implementación de los cuales nos abstraen ciertos protocolos o frameworks.
+
+La maestría en cualquier disciplina se encuentra conociendo lo que hay bajo el capó, manchándose las manos de grasa para entender qué está pasando en cada momento. Puedes conformarte con ser un conductor, o incluso convertirte en uno muy bueno, pero cuando las cosas se pongan complicadas y empiecen a fallar, no serás autosuficiente para resolver el problema.
+
+Entender qué es el _Event Loop_ de JavaScript, cómo funcionan las promesas, conocer las APIs del navegador o saber para qué sirve un DOM virtual son algunas de las cosas que podrías empezar a hacer. Te dejo más información en los recursos.
+
+## Mutaciones en el genoma
+
+Las mutaciones en el genoma se generan debido a cambios en la secuencia de ADN, y pueden ocurrir de manera espontánea o ser inducidas por factores externos.
+
+Aunque nos asusten, han sido necesarias para que la naturaleza haya podido esculpir la figura del Ser Humano tal y como la conocemos.
+
+La teoría es sencilla. Al reproducirse una célula pueden generarse alteraciones en el ADN. Esta alteración puede no derivar en un gran cambio en el individuo, mientras que otras mutaciones pueden repercutir significativamente. Naturalmente, aquellas mutaciones positivas serán beneficiosas para la reproducción, mientras que las negativas generaran el efecto contrario. **Es la naturaleza iterando cruelmente sobre el _Homo Sapiens_**.
+
+Seguro que se te ocurren mil sitios donde aplicar esta práctica tan antigua como la vida misma (aunque algunos _agile coaches_ la describan como “novedosa”).
+
+Cuando tengas que empezar un nuevo proyecto, **sal de tu zona de confort con alguna tecnología**. ¿Qué tal un nuevo framework de React? ¿Igual Tailwind tiene más sentido del que creía? ¿Podría reemplazar Redux por Zustand?
+
+<Image src={Mutations} alt="Varias tecnologías pintadas, algunas con cambios." />
+
+No olvides que no trabajas solo. No tomes la decisión en solitario y consulta a quienes lo hayan probado. La experiencia es un grado.
+
+## Arquitectura
+
+Siempre digo que los avances en frontend van años atrasados con respecto a los que van sucediendo en backend. Por suerte, la tendencia se está revirtiendo poco a poco y aunque el meme de que todos los lunes sale un nuevo _framework_ de JavaScript no está tan lejos de ser real, el universo del desarrollo web y móvil está avanzando a pasos agigantados.
+
+Sin embargo, hay algo que sigo echando de menos y es la falta de madurez en cuanto a la arquitectura de muchos de los proyectos web. Tenemos conceptos como los microfrontends, los backend for frontends, patrones de diseño complejos como los que veréis en el siguiente apartado, pero sin embargo se sigue sin hablar mucho de arquitectura. Solo en grandes proyectos en los que múltiples equipos están involucrados.
+
+No es necesario que obsesionarse con el tema. La arquitectura es una consecuencia de la madurez del proyecto, no la causa. No tienes que seguir a rajatabla lo que pone en los libros. Tienes que ser capaz de analizar tu código y saber qué decisiones de arquitectura te pide en cada momento. Lo más importante es contar con los foros necesarios para que estas conversaciones ocurran e involucrar al máximo número de miembros del equipo posible. Las decisiones de arquitectura, aunque muchas veces vengan dadas por un arquitecto o alguien con más seniority, deben de ser aceptadas y entendidas por todos, si no no se seguirán y el proyecto acabará convirtiéndose en un Frankenstein indomable.
+
+## Patrones de diseño
+
+Puede que te hayan pedido muchas veces que tu aplicación sea más rápida, prácticamente inmediata. Puedes llegar a pensar que eso solo está al alcance de aquellos equipos que tienen un servidor potente y optimizado, o si introduces alguna caché en algún punto intermedio de tu flujo. Estas dos soluciones son válidas, pero hay más que podrían solucionar este problema.
+
+Una de ellas es la **actualización optimista**. Alguien hace un cambio en nuestra aplicación, por ejemplo, crea una tarea en un proyecto, y antes de que el servicio haya devuelto un 200-OK, en el frontal ya mostramos esa nueva tarea. Estamos siendo optimistas, confiamos en que nuestro servidor va a ejecutar bien la tarea, que es lo que debería pasar la mayoría de veces. ¿Y qué pasa con ese 1% de veces? ¿Qué pasa cuando falla? Pues que se restablece el estado.
+
+Como este, hay muchos más patrones de diseño en el frontend que puedes empezar a aplicar desde ya como:
+
+- Actualización optimista
+- Deshacer cambios (ctrl + Z)
+- Auto-guardado
+
+Hay otros, que por el contrario, necesitan de una colaboración entre los ingenieros frontend y backend, como:
+
+- Histórico de cambios
+- Modo colaboración (varias personas editando a la vez la misma entidad)
+
+Conócelos para saber dar mejores soluciones a problemas que a primera vista parecen sencillos, pero que en el fondo son bastante complejos.
+
+## De vuelta a los orígenes
+
+La terminal, como ya veremos en el capítulo de diseño(/capitulos/diseno), es una de las interfaces más antiguas que existen. Una línea de comandos donde introducir órdenes y acciones con una serie de parámetros que se pueden encolar para lograr resultados bastante fascinantes para aquellos que saben dominarla bien.
+
+No subestimes el poder de un script de bash, sobre todo si lo combinas con otros comandos, scripts o CLIs que puedas tener. Automatiza procesos de despliegue, creación de PRs, migraciones de datos, … Además, se pueden compartir fácilmente, ya que no necesitan de más dependencias que los comandos que uses dentro de tu script.

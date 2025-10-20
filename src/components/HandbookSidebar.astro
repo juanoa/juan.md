@@ -1,0 +1,27 @@
+---
+const { chapters, currentSlug } = Astro.props;
+---
+
+<nav class="p-6">
+  <ul class="space-y-1">
+    {
+      chapters.map((chapter) => {
+        const isActive = chapter.slug === currentSlug;
+        return (
+          <li>
+            <a
+              href={`/frontend/${chapter.slug}`}
+              class={`block px-3 py-2 text-sm transition-colors ${
+                isActive
+                  ? "bg-black text-white"
+                  : "text-black hover:bg-black/5"
+              }`}
+            >
+              {chapter.data.sidebar.label || chapter.data.title}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>
