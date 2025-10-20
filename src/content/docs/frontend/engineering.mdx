@@ -1,0 +1,73 @@
+---
+title: Engineering
+description: Engineering as the first pillar of the Product Frontend Engineer
+sidebar:
+  label: 02. Engineering
+  order: 2
+---
+
+import Image from "@/components/ui/Image.astro";
+import TechPillars from "@/components/frontend/tech-pillars.jsx";
+import Mutations from "./__assets__/ingenieria-002.png";
+
+Engineering is the discipline that solves real‑world problems. As software engineers, one of our core responsibilities is to build products that remove friction—making people’s lives easier and more pleasant.
+
+<TechPillars activePillar="engineering" client:load />
+
+Let’s look at a few fundamentals to improve quality while reducing delivery time.
+
+## Under the hood
+
+“Under the hood” is how we refer to the implementation details that frameworks and protocols abstract away.
+
+Mastery comes from looking under the hood—getting your hands dirty so you understand what’s happening at all times. You can be a great driver, but when things get tough and fail, you won’t be self‑sufficient unless you can pop the hood.
+
+Learn the JavaScript Event Loop, how promises work, browser APIs, and what a virtual DOM is for. See the resources for more.
+
+## Mutations in the genome
+
+Genetic mutations arise from changes in DNA sequences—spontaneously or due to external factors. Though they can be scary, they were essential for nature to sculpt humans as we know them.
+
+As cells reproduce, alterations may appear in DNA. Some cause no visible change; others have significant impact. Positive mutations help reproduction; negative ones hinder it. It’s nature iterating—sometimes cruelly—on Homo Sapiens.
+
+You can apply this age‑old pattern everywhere (even if some agile coaches market it as “new”). When starting a new project, step out of your comfort zone with a technology. Try a different React framework. Maybe Tailwind makes more sense than you thought. Could Zustand replace Redux?
+
+<Image
+  src={Mutations}
+  alt="Various technologies depicted, some with changes."
+/>
+
+Remember you don’t work alone. Don’t decide in isolation—consult those with hands‑on experience. Experience matters.
+
+## Arquitectura
+
+Frontend has historically lagged a few years behind backend. Fortunately, that’s changing fast. While the meme about “a new JS framework every Monday” isn’t far off, web and mobile are making huge strides.
+
+What’s still lacking in many web projects is architectural maturity. We talk about micro‑frontends, backends for frontends, and complex patterns (see next section), but we don’t discuss architecture itself enough—except in very large, multi‑team projects.
+
+Don’t obsess over it. Architecture is a consequence of a project’s maturity, not the cause. Don’t follow books dogmatically. Analyze your code and decide which architectural choices it’s asking for. Above all, create forums where these conversations happen and involve as many team members as possible. Even if an architect or senior person proposes decisions, they must be understood and accepted by the team—or they won’t stick.
+
+## Design patterns
+
+You’ve probably been asked to make your app “instant.” You might think that requires powerful servers or mid‑flow caching. Those help, but there’s more.
+
+One powerful pattern is optimistic updates. When someone creates a task, you show it immediately in the UI before the server returns 200‑OK. You’re being optimistic—most of the time the server will succeed. And when it doesn’t? You roll back state.
+
+Other frontend patterns to consider right away:
+
+- Optimistic updates
+- Undo (Ctrl/Cmd + Z)
+- Auto‑save
+
+Some patterns require FE/BE collaboration:
+
+- Change history
+- Collaboration mode (multiple users editing the same entity)
+
+Know these patterns to propose better solutions to problems that seem simple but are actually complex.
+
+## Back to the origins
+
+The terminal—one of the oldest interfaces—will reappear in the [design chapter](/frontend/design). A command line where you can chain commands and parameters to achieve fascinating results when wielded well.
+
+Don’t underestimate a bash script, especially when combined with other commands and CLIs. Automate deploys, PR creation, data migrations, and more. They’re easy to share and usually require no extra dependencies beyond the commands you use.

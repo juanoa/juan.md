@@ -5,17 +5,17 @@ const TechPillars = ({ activePillar }) => {
 
   const pillars = {
     product: {
-      label: "Producto",
+      label: "Product",
       color: "#FFE4B5", // Light orange
       highlightColor: "#FFA500", // Orange for hover and active
     },
     engineering: {
-      label: "Ingeniería",
+      label: "Engineering",
       color: "#B3D9FF", // Light blue
       highlightColor: "#80BFFF", // Blue for hover and active
     },
     design: {
-      label: "Diseño",
+      label: "Design",
       color: "#D4F1D4", // Light green
       highlightColor: "#B4DFB4", // Green for hover and active
     },

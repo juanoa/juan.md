@@ -2,14 +2,14 @@ import { useState, useEffect } from 'preact/hooks';
 import './utilitas-delectus.css';
 
 export default function UtilitasDelectus() {
-  const [position, setPosition] = useState(50); // Porcentaje de posición (0-100)
+  const [position, setPosition] = useState(50); // Position percentage (0-100)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // Generar posición aleatoria entre 33% y 66%
+      // Generate random position between 30% and 70%
       let newPosition;
       let attempts = 0;
-      const minDistance = 15; // Distancia mínima del 8% para que se note el movimiento
+      const minDistance = 15; // Minimum distance so movement is noticeable
 
       do {
         newPosition = 30 + Math.random() * (70 - 30);
@@ -48,7 +48,7 @@ export default function UtilitasDelectus() {
 
       <div className="utilitas-delectus-description">
         <p>
-          La solución correcta casi siempre suele estar en un lugar intermedio entre el utilitas y el delectus.
+          The right solution is almost always somewhere between utilitas and delectus.
         </p>
       </div>
     </div>

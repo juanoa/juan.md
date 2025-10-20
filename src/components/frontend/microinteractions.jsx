@@ -9,15 +9,15 @@ export default function Microinteractions() {
 
   return (
     <div className="microinteractions-container">
-      <h3>Ejemplos de microinteracciones</h3>
+      <h3>Microinteraction examples</h3>
       <p className="microinteractions-description">
-        Interactúa con los elementos de abajo para experimentar diferentes tipos de microinteracciones:
+        Interact with the elements below to experience different types of microinteractions:
       </p>
 
       <div className="microinteractions-grid">
-        {/* 1. Botón con hover y click */}
+        {/* 1. Button with hover and click */}
         <div className="microinteraction-item">
-          <h4>Botón con hover</h4>
+          <h4>Button with hover</h4>
           <button
             className={`micro-button ${hoveredButton ? 'hovered' : ''}`}
             onMouseEnter={() => setHoveredButton(true)}
@@ -32,9 +32,9 @@ export default function Microinteractions() {
           </button>
         </div>
 
-        {/* 2. Card con hover y click */}
+        {/* 2. Card with hover and click */}
         <div className="microinteraction-item">
-          <h4>Card interactiva</h4>
+          <h4>Interactive card</h4>
           <div
             className={`micro-card ${clickedCard ? 'clicked' : ''}`}
             onClick={() => {
@@ -45,19 +45,19 @@ export default function Microinteractions() {
             <div className="card-header">
               <div className="card-avatar"></div>
               <div className="card-info">
-                <div className="card-title">Usuario</div>
-                <div className="card-subtitle">Haz click</div>
+                <div className="card-title">User</div>
+                <div className="card-subtitle">Click me</div>
               </div>
             </div>
             <div className="card-content">
-              <p>Esta card reacciona al hover y click con animaciones sutiles.</p>
+              <p>This card reacts to hover and click with subtle animations.</p>
             </div>
           </div>
         </div>
 
-        {/* 3. Input con focus */}
+        {/* 3. Input with focus */}
         <div className="microinteraction-item">
-          <h4>Input con focus</h4>
+          <h4>Input with focus</h4>
           <div className="input-container">
             <input
               type="text"
@@ -81,7 +81,7 @@ export default function Microinteractions() {
               <div className="toggle-handle"></div>
             </div>
             <span className="toggle-label">
-              {toggleActive ? 'Activado' : 'Desactivado'}
+              {toggleActive ? 'On' : 'Off'}
             </span>
           </div>
         </div>
