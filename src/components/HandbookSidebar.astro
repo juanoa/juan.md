@@ -1,4 +1,11 @@
 ---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  chapters: (CollectionEntry<"docs"> & { slug: string })[];
+  currentSlug: string;
+}
+
 const { chapters, currentSlug } = Astro.props;
 ---
 
