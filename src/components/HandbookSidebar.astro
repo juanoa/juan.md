@@ -2,7 +2,7 @@
 const { chapters, currentSlug } = Astro.props;
 ---
 
-<nav class="p-6">
+<nav class="pl-10">
   <ul class="space-y-1">
     {
       chapters.map((chapter) => {
@@ -11,11 +11,7 @@ const { chapters, currentSlug } = Astro.props;
           <li>
             <a
               href={`/frontend/${chapter.slug}`}
-              class={`block px-3 py-2 text-sm transition-colors ${
-                isActive
-                  ? "bg-black text-white"
-                  : "text-black hover:bg-black/5"
-              }`}
+              class={`block py-2 text-sm uppercase transition-colors text-black hover:text-black/70 ${isActive&& "font-bold"}`}
             >
               {chapter.data.sidebar.label || chapter.data.title}
             </a>

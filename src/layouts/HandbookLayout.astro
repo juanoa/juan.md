@@ -13,11 +13,11 @@ const { pageTitle, chapters, currentSlug } = Astro.props;
       <HandbookMobileNav chapters={chapters} currentSlug={currentSlug} />
     </div>
 
-    <aside class="hidden lg:block w-64 fixed left-0 top-[228px] overflow-y-auto">
+    <aside class="hidden lg:block w-xs fixed left-0 top-[228px] overflow-y-auto">
       <HandbookSidebar chapters={chapters} currentSlug={currentSlug} />
     </aside>
 
-    <main class="w-full px-6">
+    <main class="w-full px-10">
       <article class="prose prose-lg mx-auto">
         <slot />
       </article>

@@ -1,6 +1,5 @@
 .utilitas-delectus-container {
-  margin: 2rem 0;
-  padding: 1.5rem;
+  margin: 5rem 0;
   text-align: center;
 }
 
@@ -10,37 +9,28 @@
   margin-bottom: 1rem;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--sl-color-text);
+  color: black;
 }
 
 .label-left,
 .label-right {
   position: relative;
   padding: 0.5rem 1rem;
-  background: var(--sl-color-gray-7);
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 6px;
+  border: 1px solid black;
   transition: all 0.2s ease;
-}
-
-.label-left:hover,
-.label-right:hover {
-  background: var(--sl-color-gray-6);
-  border-color: var(--sl-color-gray-4);
 }
 
 .utilitas-delectus-line {
   position: relative;
   height: 4px;
-  background: var(--sl-color-gray-4);
-  border-radius: 2px;
+  background: gray;
   cursor: pointer;
   margin: 1rem 0;
   transition: background-color 0.2s ease;
 }
 
 .utilitas-delectus-line:hover {
-  background: var(--sl-color-gray-3);
+  background: gray;
 }
 
 .utilitas-delectus-indicator {
@@ -48,22 +38,19 @@
   top: -6px;
   width: 16px;
   height: 16px;
-  background: var(--sl-color-accent);
-  border: 2px solid var(--sl-color-bg);
+  background: black;
   border-radius: 50%;
   transform: translateX(-50%);
   transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(var(--sl-color-accent-rgb), 0.3);
 }
 
 .utilitas-delectus-indicator:hover {
-  transform: translateX(-50%) scale(1.1);
-  box-shadow: 0 4px 12px rgba(var(--sl-color-accent-rgb), 0.4);
+  transform: translateX(-50%) scale(2);
 }
 
 .utilitas-delectus-description {
   margin-top: 1.5rem;
-  color: var(--sl-color-text-2);
+  color: black;
   font-size: 0.9rem;
   line-height: 1.6;
 }
@@ -74,7 +61,7 @@
 
 .position-info {
   font-size: 0.8rem;
-  color: var(--sl-color-text-3);
+  color: black;
   font-style: italic;
   margin-top: 1rem;
 }
