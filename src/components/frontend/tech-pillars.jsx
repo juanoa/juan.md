@@ -25,6 +25,7 @@ const TechPillars = ({ activePillar }) => {
     if (pillarKey === activePillar || hoveredPillar === pillarKey) {
       return pillars[pillarKey].highlightColor;
     }
+
     return pillars[pillarKey].color;
   };
 
