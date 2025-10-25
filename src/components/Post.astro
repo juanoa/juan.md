@@ -1,5 +1,5 @@
 ---
-
+const { showToc } = Astro.props;
 ---
 
 <div class="relative">
@@ -8,9 +8,13 @@
   </article>
 
   <!-- Table of Contents - Desktop only -->
-  <nav id="toc-nav" class="hidden lg:block fixed right-0 top-[228px]">
-    <div id="toc-content" class="flex flex-col items-end"></div>
-  </nav>
+  {
+    showToc && (
+      <nav id="toc-nav" class="fixed top-[228px] right-0 hidden lg:block">
+        <div id="toc-content" class="flex flex-col items-end" />
+      </nav>
+    )
+  }
 </div>
 
 <script>
@@ -78,7 +82,7 @@
       },
       {
         rootMargin: "-50% 0px -50% 0px",
-      },
+      }
     );
 
     headings.forEach((heading) => {

@@ -1,7 +1,7 @@
 ---
 import Header from "../components/Header.astro";
 import "../styles/global.css";
-const { pageTitle, showHeader } = Astro.props;
+const { pageTitle, showHeader, freeLayout } = Astro.props;
 ---
 
 <html lang="en">
@@ -13,7 +13,7 @@ const { pageTitle, showHeader } = Astro.props;
   </head>
   <body>
     {showHeader && <Header />}
-    <div class={showHeader ? "pt-[228px]" : ""}>
+    <div class={showHeader && freeLayout ? "pt-[228px]" : ""}>
       <slot />
     </div>
   </body>

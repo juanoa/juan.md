@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Post from "../components/Post.astro";
+
+const pageTitle = "About me";
+---
+
+<BaseLayout pageTitle={pageTitle} showHeader>
+  <div
+    class="relative flex h-lvh w-full flex-col items-center justify-center overflow-hidden text-4xl font-bold uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
+  >
+    <video
+      class="absolute inset-0 h-full w-full object-cover"
+      src="/videos/here-is-to-the-crazy-ones.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+      aria-hidden="true"></video>
+    <span class="relative z-10 text-white mix-blend-difference">
+      I build because
+    </span>
+    <span class="relative z-10 text-white mix-blend-difference">I believe</span>
+  </div>
+</BaseLayout>
