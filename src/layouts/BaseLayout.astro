@@ -13,7 +13,7 @@ const { pageTitle, showHeader, freeLayout } = Astro.props;
   </head>
   <body>
     {showHeader && <Header />}
-    <div class={showHeader && freeLayout ? "pt-[228px]" : ""}>
+    <div class={showHeader && !freeLayout ? "pt-[228px]" : ""}>
       <slot />
     </div>
   </body>
