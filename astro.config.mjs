@@ -17,4 +17,7 @@ export default defineConfig({
       },
     },
   },
+  redirects: {
+    "/frontend": "/frontend/introduction",
+  },
 });
