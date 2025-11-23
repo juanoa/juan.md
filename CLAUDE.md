@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal website for Juan Otalora built with Astro 5, Tailwind CSS v4, and Preact. The site features a portfolio landing page, blog functionality with RSS feed, and responsive navigation with theme toggle.
+Personal website for Juan Otalora built with Astro 5, Tailwind CSS v4, and React. The site features a portfolio landing page, blog functionality with RSS feed, and responsive navigation with theme toggle.
 
 **Prerequisites:** Node.js 18.18+ and npm 9+
 

@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useState } from "react";
 
 const TechPillars = ({ activePillar }) => {
   const [hoveredPillar, setHoveredPillar] = useState(null);

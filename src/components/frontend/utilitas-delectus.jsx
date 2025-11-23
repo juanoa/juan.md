@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'preact/hooks';
 import './utilitas-delectus.css';
+import { useEffect, useState } from "react";
 
 export default function UtilitasDelectus() {
   const [position, setPosition] = useState(50); // Position percentage (0-100)

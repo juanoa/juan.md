@@ -1,5 +1,5 @@
-import { useState } from 'preact/hooks';
 import './microinteractions.css';
+import { useState } from "react";
 
 export default function Microinteractions() {
   const [hoveredButton, setHoveredButton] = useState(null);

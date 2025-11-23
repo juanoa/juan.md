@@ -1,14 +1,13 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
-
-import preact from "@astrojs/preact";
 import mdx from "@astrojs/mdx";
+import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://juan.md",
-  integrations: [preact(), mdx()],
+  integrations: [mdx(), react()],
   vite: {
     plugins: [tailwindcss()],
     resolve: {

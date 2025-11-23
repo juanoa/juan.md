@@ -1,6 +1,6 @@
 # juan.md
 
-Personal site for Juan Otalora built with Astro 5, Tailwind CSS v4, and a dash of Preact for interactive touches.
+Personal site for Juan Otalora built with Astro 5, Tailwind CSS v4, and a dash of React for interactive touches.
 
 ## Overview
 - Landing page pairs a bold vertical layout with location highlights, contact links, and work-in-progress callouts.
@@ -11,7 +11,7 @@ Personal site for Juan Otalora built with Astro 5, Tailwind CSS v4, and a dash o
 ## Tech Stack
 - Astro 5 with content collections driven by filesystem routes
 - Tailwind CSS (via `@tailwindcss/vite`) for utility-first styling
-- Preact islands for interactive UI (`src/components/Greeting.jsx`)
+- React islands for interactive UI (`src/components/Greeting.jsx`)
 - TypeScript-ready tooling (see `tsconfig.json`)
 
 ## Getting Started
@@ -36,7 +36,7 @@ npm run preview
 .
 ├─ public/               # Static assets (fonts, images, favicon)
 ├─ src/
-│  ├─ components/        # Astro/Preact UI fragments (menu, footer, theme toggle, etc.)
+│  ├─ components/        # Astro/React UI fragments (menu, footer, theme toggle, etc.)
 │  ├─ layouts/           # Shared page shells, including MarkdownPostLayout
 │  ├─ pages/             # Route-based pages, RSS feed, and Markdown blog posts
 │  ├─ scripts/           # Small enhancement scripts (mobile menu toggle)
