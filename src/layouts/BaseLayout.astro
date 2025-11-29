@@ -1,7 +1,8 @@
 ---
 import Header from "../components/Header.astro";
 import "../styles/global.css";
-import { Analytics } from '@vercel/analytics/next';
+import Analytics from '@vercel/analytics/astro';
+
 const { pageTitle, showHeader, freeLayout } = Astro.props;
 ---
 
