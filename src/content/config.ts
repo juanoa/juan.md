@@ -14,6 +14,16 @@ const docs = defineCollection({
   }),
 });
 
+const posts = defineCollection({
+  loader: glob({ pattern: "**/index.mdx", base: "./src/content/posts" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    draft: z.boolean().optional().default(false),
+  }),
+});
+
 export const collections = {
   docs,
+  posts,
 };
