@@ -4,6 +4,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PrimaryLinks from "../components/PrimaryLinks.astro";
 import Globe from "../components/Globe";
 const pageTitle = "Juan Otálora";
+const socialLinkClass =
+  "relative w-fit font-medium text-black no-underline after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-black after:transition-transform after:duration-200 after:ease-out hover:after:scale-x-100";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
@@ -43,31 +45,28 @@ const pageTitle = "Juan Otálora";
           <a
             href="https://github.com/juanoa"
             target="_blank"
-            class="order-1 font-medium text-black no-underline md:order-1"
-            >GitHub</a
+            class:list={[socialLinkClass, "order-1 md:order-1"]}>GitHub</a
           >
           <a
             href="mailto:juanoa.otalora@gmail.com"
             target="_blank"
-            class="order-4 font-medium text-black no-underline md:order-2"
+            class:list={[socialLinkClass, "order-4 md:order-2"]}
             >juanoa.otalora@gmail.com</a
           >
           <a
             href="https://x.com/juanoa_"
             target="_blank"
-            class="order-2 font-medium text-black no-underline md:order-3">X</a
+            class:list={[socialLinkClass, "order-2 md:order-3"]}>X</a
           >
           <a
             href="mailto:juan@mito.ai"
             target="_blank"
-            class="order-5 font-medium text-black no-underline md:order-4"
-            >juan@mito.ai</a
+            class:list={[socialLinkClass, "order-5 md:order-4"]}>juan@mito.ai</a
           >
           <a
             href="https://linkedin.com/in/juanoa"
             target="_blank"
-            class="order-3 font-medium text-black no-underline md:order-5"
-            >LinkedIn</a
+            class:list={[socialLinkClass, "order-3 md:order-5"]}>LinkedIn</a
           >
         </div>
         <PrimaryLinks />
