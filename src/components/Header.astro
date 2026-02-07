@@ -1,95 +1,18 @@
 ---
-import Logo from "./logo.astro";
-import MenuIcon from "./MenuIcon.astro";
-import CloseIcon from "./CloseIcon.astro";
-import PrimaryLinks from "./PrimaryLinks.astro";
+const { isHomePage } = Astro.props;
 ---
 
-<header class="fixed top-0 left-0 w-full bg-transparent z-[60] p-10">
-  <nav class="flex items-start justify-between">
-    <Logo />
-
-    <!-- Desktop nav -->
-    <div
-      class="hidden lg:flex items-center gap-8 text-sm uppercase tracking-wide"
-    >
-      <a
-        href="/about"
-        class="text-black no-underline hover:opacity-80 transition-opacity"
-        >About</a
-      >
-      <a
-        href="/frontend"
-        class="text-black no-underline hover:opacity-80 transition-opacity"
-        >Handbook</a
-      >
-      <a
-        href="#"
-        class="text-black no-underline opacity-30 transition-opacity cursor-not-allowed"
-        >Opinion</a
-      >
-    </div>
-
-    <!-- Mobile toggle button -->
-    <button
-      id="openMobileNav"
-      class="lg:hidden inline-flex items-center justify-center pr-3"
-      aria-controls="mobileNav"
-      aria-expanded="false"
-    >
-      <MenuIcon class="w-6 h-6" />
-      <span class="sr-only">Open navigation menu</span>
-    </button>
-  </nav>
-
-  <!-- Mobile full-screen nav -->
-  <div
-    id="mobileNav"
-    class="hidden fixed inset-0 z-[70] bg-[#f5f5f5] p-10 overflow-y-auto"
-    role="dialog"
-    aria-modal="true"
-  >
-    <div class="flex justify-between items-start mb-10">
-      <Logo />
-      <button
-        id="closeMobileNav"
-        class="inline-flex items-center justify-center pr-3"
-        aria-label="Close menu"
-      >
-        <CloseIcon class="w-6 h-6" />
-        <span class="sr-only">Close navigation menu</span>
-      </button>
-    </div>
-
-    <PrimaryLinks />
-  </div>
+<header class="mb-10 text-lg">
+  {
+    isHomePage ? (
+      <h1>
+        <a href="https://juan.md">Juan Otálora</a>
+      </h1>
+    ) : (
+      <p>
+        <a href="https://juan.md">Juan Otálora</a>
+      </p>
+    )
+  }
+  <p class="text-muted-foreground leading-none">Engineer @ MITO AI</p>
 </header>
-
-<script>
-  const openBtn = document.getElementById("openMobileNav");
-  const closeBtn = document.getElementById("closeMobileNav");
-  const panel = document.getElementById("mobileNav");
-
-  const open = () => {
-    if (!panel) return;
-    panel.classList.remove("hidden");
-    openBtn?.setAttribute("aria-expanded", "true");
-    // prevent background scroll when menu is open
-    document.documentElement.style.overflow = "hidden";
-  };
-
-  const close = () => {
-    if (!panel) return;
-    panel.classList.add("hidden");
-    openBtn?.setAttribute("aria-expanded", "false");
-    document.documentElement.style.overflow = "";
-  };
-
-  openBtn?.addEventListener("click", open);
-  closeBtn?.addEventListener("click", close);
-
-  // Close on Escape
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") close();
-  });
-</script>

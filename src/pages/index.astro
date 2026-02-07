@@ -1,76 +1,40 @@
 ---
-import Logo from "../components/logo.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import PrimaryLinks from "../components/PrimaryLinks.astro";
-import Globe from "../components/Globe";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 const pageTitle = "Juan Otálora";
-const socialLinkClass =
-  "relative w-fit font-medium text-black no-underline after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-black after:transition-transform after:duration-200 after:ease-out hover:after:scale-x-100";
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-  <div class="flex h-screen flex-col lg:flex-row">
-    <!-- Left Panel -->
-    <div
-      class="relative hidden flex-1 flex-col overflow-hidden bg-black text-white lg:flex"
-    >
-      <div
-        class="relative z-10 p-10 text-xs leading-[1.4] tracking-[2px] uppercase"
-      >
-        Frontend<br />Design<br />Product
-      </div>
-      <!-- Globe -->
-      <div class="absolute inset-0 flex items-center justify-center">
-        <div class="h-[115%] w-[115%]">
-          <Globe client:only="react" />
-        </div>
-      </div>
-    </div>
+<BaseLayout pageTitle={pageTitle} isHomepage={true}>
+  <section class="prose prose-sm max-w-full">
+    <h2>Work</h2>
+    <p>
+      I work on the founding team at MITO, designing and building interfaces for
+      our first customers next to amazing people like Danny Saltaren, Dani
+      Latorre, Nacho González and Keyvan Akbari.
+    </p>
+    <p>
+      I previously worked at Inditex (zara.com) crafting the interfaces of the
+      product and catalog management tool for all the e-commerces in the
+      company.
+    </p>
+    <h2>A man on a mission</h2>
+    <p>
+      I’ve always trusted technology, not just as a tool, but as an extension of
+      human intent. Some learned to fear it. I chose to believe in it.
+    </p>
+    <p>
+      Technology reflects who we are. In the right hands, it gives people
+      agency, clarity, and the power to shape their lives.
+    </p>
+    <p>
+      What would it take to reclaim the web as a space for creativity, intimacy
+      and intellectualism?
+    </p>
 
-    <!-- Right Panel -->
-    <div class="flex flex-1 flex-col justify-between gap-20 bg-[#f5f5f5] p-10">
-      <div class="flex items-start justify-between">
-        <Logo />
-        <img
-          src="/images/me.webp"
-          alt="Juan Otalora"
-          class="hidden h-20 w-20 rounded-full object-cover sm:block"
-        />
-      </div>
+    <hr />
 
-      <div class="flex flex-col">
-        <div
-          class="mb-10 grid grid-cols-1 gap-x-10 gap-y-2.5 border-b border-[#ccc] pb-10 text-sm tracking-wide uppercase md:grid-cols-2"
-        >
-          <a
-            href="https://github.com/juanoa"
-            target="_blank"
-            class:list={[socialLinkClass, "order-1 md:order-1"]}>GitHub</a
-          >
-          <a
-            href="mailto:juanoa.otalora@gmail.com"
-            target="_blank"
-            class:list={[socialLinkClass, "order-4 md:order-2"]}
-            >juanoa.otalora@gmail.com</a
-          >
-          <a
-            href="https://x.com/juanoa_"
-            target="_blank"
-            class:list={[socialLinkClass, "order-2 md:order-3"]}>X</a
-          >
-          <a
-            href="mailto:juan@mito.ai"
-            target="_blank"
-            class:list={[socialLinkClass, "order-5 md:order-4"]}>juan@mito.ai</a
-          >
-          <a
-            href="https://linkedin.com/in/juanoa"
-            target="_blank"
-            class:list={[socialLinkClass, "order-3 md:order-5"]}>LinkedIn</a
-          >
-        </div>
-        <PrimaryLinks />
-      </div>
-    </div>
-  </div>
+    <p>
+      <a href="https://x.com/juanoa_">X</a> / <a
+        href="https://linkedin.com/in/juanoa">LinkedIn</a>
+    </p>
+  </section>
 </BaseLayout>

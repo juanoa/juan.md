@@ -1,9 +1,9 @@
 ---
-import Header from "../components/Header.astro";
+import Header from "@/components/Header.astro";
 import "../styles/global.css";
-import Analytics from '@vercel/analytics/astro';
+import Analytics from "@vercel/analytics/astro";
 
-const { pageTitle, showHeader, freeLayout } = Astro.props;
+const { pageTitle, isHomePage } = Astro.props;
 ---
 
 <html lang="en">
@@ -14,9 +14,9 @@ const { pageTitle, showHeader, freeLayout } = Astro.props;
     <Analytics />
     <title>{pageTitle}</title>
   </head>
-  <body>
-    {showHeader && <Header />}
-    <div class={showHeader && !freeLayout ? "pt-[228px]" : ""}>
+  <body class="bg-neutral-50">
+    <div class="mx-auto max-w-[65ch] px-6 py-12">
+      <Header isHomePage={isHomePage} />
       <slot />
     </div>
   </body>
