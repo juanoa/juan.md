@@ -2,6 +2,7 @@
 import Logo from "../components/logo.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PrimaryLinks from "../components/PrimaryLinks.astro";
+import Globe from "../components/Globe";
 const pageTitle = "Juan Otálora";
 ---
 
@@ -16,24 +17,10 @@ const pageTitle = "Juan Otálora";
       >
         Frontend<br />Design<br />Product
       </div>
-      <!-- Spain Map -->
-      <div
-        class="absolute top-1/2 right-[-50%] w-[100%] -translate-y-2/5 -rotate-[355deg]"
-      >
-        <img src="/images/shape-spain.svg" alt="Spain" class="h-auto w-full" />
-        <!-- Red pulsing dot -->
-        <div class="absolute top-[11%] left-[9%] -rotate-[5deg]">
-          <div class="relative">
-            <span
-              class="absolute top-1/2 right-[calc(100%+20px)] -translate-y-1/2 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm whitespace-nowrap text-white backdrop-blur-sm"
-              >Based in A Coruña, Spain</span
-            >
-            <div class="h-5 w-5 animate-pulse rounded-full bg-red-500"></div>
-            <div
-              class="absolute top-0 left-0 h-5 w-5 animate-ping rounded-full bg-red-300"
-            >
-            </div>
-          </div>
+      <!-- Globe -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="h-[115%] w-[115%]">
+          <Globe client:only="react" />
         </div>
       </div>
     </div>
