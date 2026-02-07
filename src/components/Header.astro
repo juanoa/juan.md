@@ -1,18 +1,25 @@
 ---
+import { ThemeTabs } from "@/components/ThemeTabs";
+
 const { isHomePage } = Astro.props;
 ---
 
-<header class="mb-10 text-lg">
-  {
-    isHomePage ? (
-      <h1>
-        <a href="https://juan.md">Juan Otálora</a>
-      </h1>
-    ) : (
-      <p>
-        <a href="https://juan.md">Juan Otálora</a>
-      </p>
-    )
-  }
-  <p class="text-muted-foreground leading-none">Engineer @ MITO AI</p>
+<header class="mb-10 flex items-start justify-between">
+  <nav class="text-lg">
+    {
+      isHomePage ? (
+        <h1>
+          <a href="https://juan.md">Juan Otálora</a>
+        </h1>
+      ) : (
+        <p>
+          <a href="https://juan.md">Juan Otálora</a>
+        </p>
+      )
+    }
+    <p class="text-muted-foreground leading-none">Engineer @ MITO AI</p>
+  </nav>
+  <div>
+    <ThemeTabs client:load />
+  </div>
 </header>
