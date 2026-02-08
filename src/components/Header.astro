@@ -4,16 +4,16 @@ import { ThemeTabs } from "@/components/ThemeTabs";
 const { isHomePage } = Astro.props;
 ---
 
-<header class="mb-10 flex items-start justify-between">
+<header class="mb-20 flex items-start justify-between">
   <nav class="text-lg">
     {
       isHomePage ? (
         <h1>
-          <a href="https://juan.md">Juan Otálora</a>
+          <a href="/">Juan Otálora</a>
         </h1>
       ) : (
         <p>
-          <a href="https://juan.md">Juan Otálora</a>
+          <a href="/">Juan Otálora</a>
         </p>
       )
     }
