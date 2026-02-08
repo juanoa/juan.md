@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Item, ItemActions, ItemMedia } from "@/components/ui/item";
+import { Item, ItemActions } from "@/components/ui/item";
 import { Spinner } from "@/components/ui/spinner";
 import {
   Tooltip,
@@ -10,7 +10,6 @@ import {
 import {
   BeerBottleIcon,
   DropIcon,
-  InfoIcon,
   ShoppingBagIcon,
 } from "@phosphor-icons/react";
 import { useState } from "react";
