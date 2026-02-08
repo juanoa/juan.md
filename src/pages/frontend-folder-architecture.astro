@@ -1,0 +1,114 @@
+---
+import { BadFolderStructure } from "@/components/logs/react-folder-architecture/bad-folder-structure";
+import { GoodFolderStructure } from "@/components/logs/react-folder-architecture/good-folder-structure";
+import { StoreWeb } from "@/components/logs/react-folder-architecture/store-web";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+const pageTitle = "Frontend folder architecture";
+---
+
+<BaseLayout pageTitle={pageTitle}>
+  <section class="prose prose-sm dark:prose-invert">
+    <h1>Frontend folder architecture</h1>
+    <p>
+      Certainly, the folder structure is one of those decisions that, if not
+      made well from the beginning, can lead to many problems as the code
+      scales.
+    </p>
+    <p>
+      Bad folder skeletons exist, just as good ones do. Fortunately, modern IDE
+      refactoring tools and AI coding agents allow files and folders to be moved
+      without many complications.
+    </p>
+    <p>
+      In this post, we will look at the folder structure that I propose for a
+      clean architecture for React with TS, so you will see naming specific to
+      these technologies, but it can be applied to any other frontend
+      library/framework. Feel free to adapt it to your needs 🙂
+    </p>
+    <h2>Do we still need an architecture in the AI era?</h2>
+    <p>
+      This is not the first time I write this article. A few years ago I
+      published one similar on <a
+        href="https://juanoa.medium.com/folder-structure-in-a-react-hexagonal-architecture-f926437c0c1a"
+        >Medium</a
+      > and dev.to. It was one of my most read articles. In 2023, AI was in its infancy,
+      the first LLMs appeared, but coding didn't change yet.
+    </p>
+    <p>
+      Today, it changes a lot. Claude Code, Codex, Copilot and many other tools
+      are almost mandatory in every tech job. At MITO, we write the most of the
+      web code using those tools. However, I know where almost every piece of
+      code is located in the project. I remember the file names, the types, the
+      components, ... It might seem unnecessary in this AI era, but it saves me
+      a lot of time when I need to get my hands dirty.
+    </p>
+    <h2>It's all about domain</h2>
+    <p>
+      DDD (Domain Driven Design) is not only about backend. Frontend should
+      split the code in different domains. Let's take a look to this example:
+    </p>
+  </section>
+  <div class="my-20">
+    <StoreWeb client:load />
+  </div>
+  <section class="prose prose-sm dark:prose-invert">
+    <p>
+      Welcome to the biggest water e-commerce: Water-Commerce! I'm sorry, I've
+      worked for 4 years on one of the biggest e-commerce on Earth, the example
+      must be another online store.
+    </p>
+    <p>As you can see, we can differentiate 3 domains:</p>
+    <ul>
+      <li>Product</li>
+      <li>Cart</li>
+      <li>Payment</li>
+    </ul>
+    <p>A common folder structure for this project would look like this:</p>
+  </section>
+  <div class="my-20">
+    <BadFolderStructure client:load />
+  </div>
+  <section class="prose prose-sm dark:prose-invert">
+    <p>
+      Do you see the problem? Distance is the problem. Imagine you're working on
+      a new payment feature, like adding a new payment method. Do you want to
+      add a new component while you update the <em>usePayment.ts</em> hook? Good
+      luck, because they are in completely different folders.
+    </p>
+    <p>
+      What I propose it's to apply vertical slicing to our project. Instead of
+      divide our file by type (components, hooks, REST clients, ...), group them
+      by domain, and then, by type. This way, if you are working in a new
+      functionality related on the cart, the distance between files is lower,
+      more comfortable and navigation is better.
+    </p>
+    <p>I refactor the example above to this new architecture:</p>
+  </section>
+  <div class="my-20">
+    <GoodFolderStructure client:load />
+  </div>
+  <section class="prose prose-sm dark:prose-invert">
+    <p>
+      In the previous versions of this article I was more opinionated about how
+      to name this folders, but in this case I prefer to stay away. Code evolves
+      faster than ever and what I did in the past, now it's practically legacy.
+      So now I prefer to write about things that can be evergreen so I don’t
+      have to re-write this article again so soon.
+    </p>
+    <h2>Resources</h2>
+    <ul>
+      <li>
+        <a
+          href="https://juanoa.medium.com/folder-structure-in-a-react-hexagonal-architecture-f926437c0c1a"
+          >Folder structure in a React hexagonal architecture (v1)</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://blog.cleancoder.com/uncle-bob/2011/09/30/Screaming-Architecture.html"
+          >Screaming architecture</a
+        >
+      </li>
+    </ul>
+  </section>
+</BaseLayout>

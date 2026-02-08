@@ -1,4 +1,10 @@
 ---
+import {
+  ItemDescription,
+  ItemContent,
+  ItemTitle,
+  Item,
+} from "@/components/ui/item";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 const pageTitle = "Juan Otálora";
 ---
@@ -30,6 +36,22 @@ const pageTitle = "Juan Otálora";
       and intellectualism?
     </p>
 
+    <h2>Logs</h2>
+  </section>
+  <div class="mt-6">
+    <a href="/frontend-folder-architecture">
+      <Item variant="outline">
+        <ItemContent>
+          <ItemTitle>Frontend folder architecture</ItemTitle>
+          <ItemDescription>
+            A short reflection on why folder structure still matters in the AI
+            era.
+          </ItemDescription>
+        </ItemContent>
+      </Item>
+    </a>
+  </div>
+  <section class="prose prose-sm dark:prose-invert mt-10">
     <hr />
 
     <p>

@@ -7,77 +7,11 @@ import {
 } from "@/components/ui/collapsible";
 import { CaretRightIcon, FileIcon, FolderIcon } from "@phosphor-icons/react";
 
-type FileTreeItem = { name: string } | { name: string; items: FileTreeItem[] };
+export type FileTreeItem =
+  | { name: string }
+  | { name: string; items: FileTreeItem[] };
 
-export const FolderStructure = () => {
-  const fileTree: FileTreeItem[] = [
-    {
-      name: "components",
-      items: [
-        {
-          name: "products",
-          items: [
-            { name: "ProductName.tsx" },
-            { name: "ProductImage.tsx" },
-            { name: "ProductPrice.tsx" },
-            { name: "ProductDescription.tsx" },
-          ],
-        },
-        {
-          name: "cart",
-          items: [{ name: "AddToCartButton.tsx" }, { name: "CartItem.tsx" }],
-        },
-        {
-          name: "payment",
-          items: [{ name: "PayButton.tsx" }],
-        },
-        {
-          name: "shared",
-          items: [{ name: "Logo.tsx" }],
-        },
-      ],
-    },
-    {
-      name: "hooks",
-      items: [
-        {
-          name: "products",
-          items: [{ name: "useProduct.ts" }],
-        },
-        {
-          name: "cart",
-          items: [{ name: "useAddToCard.ts" }],
-        },
-        {
-          name: "payment",
-          items: [{ name: "usePay.ts" }],
-        },
-      ],
-    },
-    {
-      name: "types",
-      items: [
-        {
-          name: "products",
-          items: [{ name: "Product.ts" }],
-        },
-        {
-          name: "cart",
-          items: [{ name: "CartItem.ts" }],
-        },
-        {
-          name: "payment",
-          items: [{ name: "Payment.ts" }],
-        },
-      ],
-    },
-    { name: "main.tsx" },
-    { name: "globals.css" },
-    { name: "package.json" },
-    { name: "tsconfig.json" },
-    { name: "README.md" },
-  ];
-
+export const FolderStructure = ({ fileTree }: { fileTree: FileTreeItem[] }) => {
   const renderItem = (fileItem: FileTreeItem) => {
     if ("items" in fileItem) {
       return (
