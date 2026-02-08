@@ -11,6 +11,10 @@
     @apply box-border;
   }
 
+  .prose {
+    max-width: 100% !important;
+  }
+
   .prose h1,
   .prose h2,
   .prose h3,
