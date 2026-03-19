@@ -1,57 +1,51 @@
 # juan.md
 
-Personal site for Juan Otalora built with Astro 5, Tailwind CSS v4, and a dash of React for interactive touches.
+Monorepo for the `juan.md` sites, managed with `pnpm` workspaces and Turborepo.
 
 ## Overview
-- Landing page pairs a bold vertical layout with location highlights, contact links, and work-in-progress callouts.
-- Blog section sources Markdown posts and ships an automatically generated RSS feed.
-- Persistent light/dark theme toggle and responsive navigation are progressively enhanced with vanilla JS.
-- Custom Neue Haas Display typefaces are served locally for consistent typography.
+- Current app lives in `apps/www` and serves the main `juan.md` website.
+- Repo is structured to add more sites later, such as `apps/ai` or `apps/cv`.
+- Builds and local development are orchestrated from the monorepo root with Turbo.
 
 ## Tech Stack
-- Astro 5 with content collections driven by filesystem routes
-- Tailwind CSS (via `@tailwindcss/vite`) for utility-first styling
-- React islands for interactive UI (`src/components/Greeting.jsx`)
-- TypeScript-ready tooling (see `tsconfig.json`)
+- `pnpm` workspaces for package/app management
+- Turborepo for task orchestration and caching
+- Astro 5, Tailwind CSS v4, and React inside `apps/www`
 
 ## Getting Started
 ```bash
 # install dependencies
-npm install
+pnpm install
 
-# start the development server
-npm run dev
+# start the current website
+pnpm dev
 
-# build for production
-npm run build
+# build all workspace apps/packages
+pnpm build
 
-# preview the production build locally
-npm run preview
+# build only the main site
+pnpm build:www
+
+# preview the main site locally
+pnpm preview
 ```
 
-> **Prerequisites:** Node.js 18.18+ (Astro’s current LTS baseline) and npm 9+.
+> **Prerequisites:** Node.js 18.18+ and `pnpm`.
 
 ## Project Structure
 ```text
 .
-├─ public/               # Static assets (fonts, images, favicon)
-├─ src/
-│  ├─ components/        # Astro/React UI fragments (menu, footer, theme toggle, etc.)
-│  ├─ layouts/           # Shared page shells, including MarkdownPostLayout
-│  ├─ pages/             # Route-based pages, RSS feed, and Markdown blog posts
-│  ├─ scripts/           # Small enhancement scripts (mobile menu toggle)
-│  └─ styles/            # Global Tailwind entry point and custom layers
-├─ astro.config.mjs      # Astro configuration, integrations, and site metadata
-├─ package.json          # Scripts and dependencies
-└─ tsconfig.json         # Optional TypeScript/IDE support
+├─ apps/
+│  └─ www/               # Main Astro site for juan.md
+├─ package.json          # Root scripts for Turbo
+├─ pnpm-workspace.yaml   # Workspace package discovery
+└─ turbo.json            # Task graph and cache config
 ```
 
-## Customization Notes
-- Hero content and contact links live in `src/pages/index.astro`; update copy, imagery, and email addresses there.
-- Blog posts are Markdown files under `src/pages/posts/`; include frontmatter to surface metadata in the list and RSS feed.
-- Adjust typography or add Tailwind design tokens in `src/styles/global.css`. Font files are served from `public/fonts/`.
-- The theme toggle persists state via `src/components/ThemeIcon.astro`; tweak SVG artwork or behavior as needed.
-- Navigation and responsive behavior are handled by `src/components/Menu.astro`, `src/components/Navigation.astro`, and `src/scripts/menu.js`.
+## App Commands
+- Run commands directly inside the site with `pnpm --filter www <command>`.
+- Main app source lives under `apps/www/src`.
+- Static assets for the main app live under `apps/www/public`.
 
 ## Deployment
-Run `npm run build` and serve the generated `dist/` directory with any static host (Astro sets the canonical site URL to `https://juan.md` in `astro.config.mjs`). When deploying elsewhere, remember to update that `site` value for accurate canonical links and RSS metadata.
+For Vercel, create a project for `www` and point it to `apps/www`. The app already includes a [`vercel.json`](/Users/juan/Develop/juan.md/apps/www/vercel.json) that builds through Turbo and outputs `dist/`. If you add more sites later, create one Vercel project per app and give each app its own domain and `vercel.json` as needed.
