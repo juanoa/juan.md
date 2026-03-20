@@ -1,6 +1,6 @@
 import { LaptopIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@juan/ui/components/ui/tabs";
 import { useEffect, useState } from "react";
 
 type Theme = "system" | "light" | "dark";
@@ -55,7 +55,7 @@ export function ThemeTabs() {
     <>
       <Tabs
         value={theme}
-        onValueChange={(value) => setTheme(value as Theme)}
+        onValueChange={(value: string) => setTheme(value as Theme)}
         className="hidden lg:block"
       >
         <TabsList variant="line">

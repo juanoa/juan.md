@@ -1,5 +1,6 @@
 ---
-
+import { Button } from "@juan/ui/components/ui/button";
+import "@juan/ui/styles.css";
 ---
 
 <html lang="en">
@@ -10,7 +11,23 @@
     <meta name="generator" content={Astro.generator} />
     <title>English Collocations</title>
   </head>
-  <body>
-    <h1>Astro</h1>
+  <body class="min-h-screen">
+    <main class="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6">
+      <section class="border-border bg-card flex w-full flex-col gap-4 border p-8">
+        <div class="space-y-2">
+          <p class="text-muted-foreground text-xs uppercase tracking-[0.2em]">
+            Shared UI
+          </p>
+          <h1 class="text-2xl">English Collocations</h1>
+          <p class="text-muted-foreground text-sm">
+            This app now consumes the shared shadcn styles and components from
+            the common `ui` package.
+          </p>
+        </div>
+        <div>
+          <Button>Start learning</Button>
+        </div>
+      </section>
+    </main>
   </body>
 </html>

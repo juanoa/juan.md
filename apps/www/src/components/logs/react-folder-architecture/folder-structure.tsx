@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@juan/ui/components/ui/button";
+import { Card, CardContent, CardHeader } from "@juan/ui/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from "@juan/ui/components/ui/collapsible";
 import { CaretRightIcon, FileIcon, FolderIcon } from "@phosphor-icons/react";
 
 export type FileTreeItem =

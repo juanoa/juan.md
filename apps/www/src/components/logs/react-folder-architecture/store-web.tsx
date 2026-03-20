@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { Item, ItemActions } from "@/components/ui/item";
-import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@juan/ui/components/ui/button";
+import { Item, ItemActions } from "@juan/ui/components/ui/item";
+import { Spinner } from "@juan/ui/components/ui/spinner";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@juan/ui/components/ui/tooltip";
 import {
   BeerBottleIcon,
   DropIcon,
