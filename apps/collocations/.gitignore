@@ -1,9 +1,10 @@
-# turbo
-.turbo/
+# build output
+dist/
+# generated types
+.astro/
 
 # dependencies
 node_modules/
-**/node_modules/
 
 # logs
 npm-debug.log*
@@ -15,9 +16,6 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
-
-# vercel
-.vercel/
 
 # macOS-specific files
 .DS_Store

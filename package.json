@@ -5,10 +5,13 @@
   "scripts": {
     "build": "turbo build",
     "build:www": "turbo build --filter=www",
+    "build:collocations": "turbo build --filter=collocations",
     "dev": "turbo dev --filter=www",
     "dev:www": "turbo dev --filter=www",
+    "dev:collocations": "turbo dev --filter=collocations",
     "preview": "turbo preview --filter=www",
-    "preview:www": "turbo preview --filter=www"
+    "preview:www": "turbo preview --filter=www",
+    "preview:collocations": "turbo preview --filter=collocations"
   },
   "devDependencies": {
     "turbo": "^2.5.8"
