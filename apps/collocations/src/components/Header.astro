@@ -1,0 +1,17 @@
+---
+import { CollocationsSearchBar } from "src/components/CollocationsSearchBar";
+
+interface Props {
+  showSearchBar?: boolean;
+}
+
+const { showSearchBar = true } = Astro.props;
+
+if (!showSearchBar) {
+  return null;
+}
+---
+
+<header class="flex justify-center p-6 max-w-xl mx-auto w-full">
+  <CollocationsSearchBar client:load />
+</header>

@@ -1,14 +1,17 @@
 ---
 import "@juan/ui/styles.css";
+import Header from "src/components/Header.astro";
 
 interface Props {
   title?: string;
   description?: string;
+  showSearchBar?: boolean;
 }
 
 const {
   title = "English Collocations",
   description = "Learn English collocations with shared UI components and styles.",
+  showSearchBar = true,
 } = Astro.props;
 ---
 
@@ -21,7 +24,19 @@ const {
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen">
-    <slot />
+  <body class="min-h-screen flex flex-col">
+    <Header showSearchBar={showSearchBar} />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <footer class="px-4 py-6 text-center text-xs text-slate-600">
+      Built by
+      <a
+        href="https://juan.md"
+        class="font-medium text-slate-900 underline underline-offset-4"
+      >
+        Juan
+      </a>
+    </footer>
   </body>
 </html>

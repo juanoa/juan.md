@@ -1,28 +1,39 @@
 ---
-import { Button } from "@juan/ui/components/ui/button";
+import collocations from "content/collocations.json";
 import Layout from "src/layouts/Layout.astro";
+import { CollocationsSearchBar } from "src/components/CollocationsSearchBar";
+import type { Collocation } from "src/types/Collocation";
+
+const latestCollocations = (collocations as Collocation[]).slice(-9).reverse();
 ---
 
-<Layout>
-  <main
-    class="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6"
-  >
-    <section
-      class="border-border bg-card flex w-full flex-col gap-4 border p-8"
-    >
-      <div class="space-y-2">
-        <p class="text-muted-foreground text-xs uppercase tracking-[0.2em]">
-          Shared UI
-        </p>
-        <h1 class="text-2xl">English Collocations</h1>
-        <p class="text-muted-foreground text-sm">
-          This app now consumes the shared shadcn styles and components from the
-          common `ui` package.
-        </p>
-      </div>
-      <div>
-        <Button>Start learning</Button>
-      </div>
+<Layout showSearchBar={false}>
+  <main class="mx-auto w-full max-w-4xl items-start justify-center px-6">
+    <section class="mb-10 mt-48 space-y-2 w-full max-w-xl mx-auto">
+      <h1 class="text-4xl font-bold tracking-tight">Collocations</h1>
+      <p class="tracking-tight text-muted-foreground font-serif text-xl">
+        /ˌkɑː.ləˈkeɪ.ʃənz/
+      </p>
+    </section>
+    <section class="w-full max-w-xl mx-auto">
+      <CollocationsSearchBar client:load />
+    </section>
+    <section class="mt-24 space-y-2 w-full">
+      <h2 class="font-semibold">Last</h2>
+      <ul class="grid grid-cols-3 gap-3 text-muted-foreground">
+        {
+          latestCollocations.map((item) => (
+            <li>
+              <a
+                class="hover:text-foreground transition-colors text-sm"
+                href={`/${item.slug}`}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </section>
   </main>
 </Layout>

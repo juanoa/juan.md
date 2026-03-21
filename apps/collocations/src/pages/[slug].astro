@@ -1,0 +1,91 @@
+---
+import type { Collocation } from "src/types/Collocation";
+import collocations from "content/collocations.json";
+import functionWords from "content/function-words.json";
+import Layout from "src/layouts/Layout.astro";
+
+export function getStaticPaths() {
+  return (collocations as Collocation[]).map((collocation) => ({
+    params: { slug: collocation.slug },
+    props: { collocation },
+  }));
+}
+
+const { collocation } = Astro.props as { collocation: Collocation };
+const allCollocations = collocations as Collocation[];
+const functionWordSet = new Set(functionWords as string[]);
+
+const normalizeWords = (label: string) =>
+  label.toLowerCase().split(/\s+/).filter(Boolean);
+
+const originalWords = normalizeWords(collocation.label);
+const originalWordSet = new Set(originalWords);
+
+const related = allCollocations
+  .filter((candidate) => candidate.slug !== collocation.slug)
+  .map((candidate) => {
+    const sharedWords = normalizeWords(candidate.label).filter(
+      (word) => originalWordSet.has(word) && !functionWordSet.has(word),
+    );
+
+    const uniqueSharedWords = [...new Set(sharedWords)];
+    const sharedWordsCount = uniqueSharedWords.length;
+    const sharedLettersCount = uniqueSharedWords.reduce(
+      (total, word) => total + word.length,
+      0,
+    );
+
+    return {
+      ...candidate,
+      sharedWordsCount,
+      sharedLettersCount,
+    };
+  })
+  .filter((candidate) => candidate.sharedWordsCount > 0)
+  .sort((a, b) => {
+    if (b.sharedWordsCount !== a.sharedWordsCount) {
+      return b.sharedWordsCount - a.sharedWordsCount;
+    }
+
+    if (b.sharedLettersCount !== a.sharedLettersCount) {
+      return b.sharedLettersCount - a.sharedLettersCount;
+    }
+
+    return a.label.localeCompare(b.label);
+  })
+  .slice(0, 9);
+---
+
+<Layout title={collocation.label}>
+  <main class="mx-auto max-w-4xl px-6">
+    <h1 class="text-3xl font-semibold mt-48">{collocation.label}</h1>
+    <section class="mt-5 space-y-2">
+      <ul class="text-muted-foreground">
+        {
+          collocation.examples.map((example) => (
+            <li class="first-letter:uppercase italic">{example}</li>
+          ))
+        }
+      </ul>
+    </section>
+    {
+      related.length > 0 && (
+        <section class="mt-15 space-y-2">
+          <h2 class="font-semibold">Related</h2>
+          <ul class="grid grid-cols-3 gap-3 text-muted-foreground">
+            {related.map((item) => (
+              <li>
+                <a
+                  class="hover:text-foreground transition-colors text-sm"
+                  href={`/${item.slug}`}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </main>
+</Layout>
