@@ -21,6 +21,7 @@ import {
 
 interface Collocation {
   label: string
+  slug: string
 }
 
 interface MatchSegment {
@@ -44,14 +45,6 @@ function SearchIcon(props: React.ComponentProps<"svg">) {
       <path d="m21 21-4.35-4.35" />
     </svg>
   )
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
 }
 
 function normalize(value: string) {
@@ -204,7 +197,7 @@ export function CollocationsSearchBar() {
                   key={collocation.label}
                   value={collocation.label}
                   onSelect={() => {
-                    window.location.href = `/${slugify(collocation.label)}`
+                    window.location.href = `/${collocation.slug}`
                   }}
                 >
                   <span className="flex flex-wrap gap-x-1">
