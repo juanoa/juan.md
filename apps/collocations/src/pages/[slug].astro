@@ -3,6 +3,7 @@ import type { Collocation } from "src/types/Collocation";
 import collocations from "content/collocations.json";
 import functionWords from "content/function-words.json";
 import Layout from "src/layouts/Layout.astro";
+import { CopyButton } from "src/components/CopyButton";
 
 export function getStaticPaths() {
   return (collocations as Collocation[]).map((collocation) => ({
@@ -58,7 +59,10 @@ const related = allCollocations
 
 <Layout title={collocation.label}>
   <main class="mx-auto max-w-4xl px-6">
-    <h1 class="text-3xl font-semibold mt-48">{collocation.label}</h1>
+    <h1 class="text-3xl font-semibold mt-48 flex items-center gap-3 group">
+      {collocation.label}
+      <CopyButton client:load text={collocation.label} />
+    </h1>
     <section class="mt-5 space-y-2">
       <ul class="text-muted-foreground">
         {
