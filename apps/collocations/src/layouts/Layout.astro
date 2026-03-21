@@ -24,8 +24,19 @@ const {
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen">
+  <body class="min-h-screen flex flex-col">
     <Header showSearchBar={showSearchBar} />
-    <slot />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <footer class="px-4 py-6 text-center text-xs text-slate-600">
+      Built by
+      <a
+        href="https://juan.md"
+        class="font-medium text-slate-900 underline underline-offset-4"
+      >
+        Juan
+      </a>
+    </footer>
   </body>
 </html>
