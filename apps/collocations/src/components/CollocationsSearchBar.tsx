@@ -172,7 +172,7 @@ export function CollocationsSearchBar() {
           />
           <CommandList>
             <CommandEmpty>No collocations found.</CommandEmpty>
-            <CommandGroup heading="Collocations">
+            <CommandGroup>
               {filteredCollocations.map((collocation) => (
                 <CommandItem
                   key={collocation.label}
