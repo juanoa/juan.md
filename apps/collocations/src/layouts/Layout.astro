@@ -1,6 +1,7 @@
 ---
 import "@juan/ui/styles.css";
 import Header from "src/components/Header.astro";
+import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   title?: string;
@@ -41,5 +42,6 @@ const {
         class="font-medium text-slate-900 underline underline-offset-4">Juan</a
       >
     </footer>
+    <Analytics />
   </body>
 </html>
