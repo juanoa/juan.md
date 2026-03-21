@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://collocations.juan.md",
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
