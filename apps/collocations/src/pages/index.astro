@@ -3,8 +3,10 @@ import Layout from "src/layouts/Layout.astro";
 import { CollocationsSearchBar } from "src/components/CollocationsSearchBar";
 ---
 
-<Layout>
-  <main class="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6">
+<Layout showSearchBar={false}>
+  <main
+    class="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6"
+  >
     <CollocationsSearchBar client:load />
   </main>
 </Layout>
