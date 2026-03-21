@@ -1,50 +1,10 @@
 ---
-import { Button } from "@juan/ui/components/ui/button";
 import Layout from "src/layouts/Layout.astro";
-import collocations from "../../content/collocations.json";
-
-interface Collocation {
-  label: string;
-}
-
-const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-");
+import { CollocationsSearchBar } from "src/components/CollocationsSearchBar";
 ---
 
 <Layout>
-  <main
-    class="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6"
-  >
-    <section
-      class="border-border bg-card flex w-full flex-col gap-4 border p-8"
-    >
-      <div class="space-y-2">
-        <p class="text-muted-foreground text-xs uppercase tracking-[0.2em]">
-          Shared UI
-        </p>
-        <h1 class="text-2xl">English Collocations</h1>
-        <p class="text-muted-foreground text-sm">
-          This app now consumes the shared shadcn styles and components from the
-          common `ui` package.
-        </p>
-      </div>
-      <div>
-        <Button>Start learning</Button>
-      </div>
-      <div class="space-y-2">
-        {(collocations as Collocation[]).map((collocation) => (
-          <a
-            class="text-sm underline underline-offset-4"
-            href={`/${slugify(collocation.label)}`}
-          >
-            {collocation.label}
-          </a>
-        ))}
-      </div>
-    </section>
+  <main class="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6">
+    <CollocationsSearchBar client:load />
   </main>
 </Layout>
