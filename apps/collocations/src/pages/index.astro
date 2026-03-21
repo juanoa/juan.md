@@ -28,12 +28,12 @@ const latestCollocations = (collocations as Collocation[]).slice(-9).reverse();
     </section>
     <section class="mt-24 w-full space-y-2">
       <h2 class="font-semibold">Last</h2>
-      <ul class="text-muted-foreground grid grid-cols-3 gap-3">
+      <ul class="text-muted-foreground grid grid-cols-2 gap-3 md:grid-cols-3">
         {
           latestCollocations.map((item) => (
             <li>
               <a
-                class="hover:text-foreground text-sm transition-colors"
+                class="hover:text-foreground line-clamp-1 text-sm transition-colors"
                 href={`/${item.slug}`}>
                 {item.label}
               </a>
