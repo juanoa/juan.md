@@ -129,7 +129,7 @@ export function CollocationsSearchBar() {
 
   return (
     <>
-      <InputGroup className="bg-background h-10 max-w-xl">
+      <InputGroup className="bg-background h-10">
         <InputGroupAddon>
           <MagnifyingGlassIcon className="size-4" />
         </InputGroupAddon>

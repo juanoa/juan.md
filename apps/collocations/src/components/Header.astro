@@ -1,5 +1,7 @@
 ---
+import { Button } from "@juan/ui/components/ui/button";
 import { CollocationsSearchBar } from "src/components/CollocationsSearchBar";
+import { Logo } from "src/components/Logo";
 
 interface Props {
   showSearchBar?: boolean;
@@ -12,6 +14,12 @@ if (!showSearchBar) {
 }
 ---
 
-<header class="mx-auto flex w-full max-w-xl justify-center p-6">
+<header
+  class="mx-auto flex w-full max-w-xl items-center justify-center gap-2 p-6">
+  <Button variant="ghost" className="size-10">
+    <a href="/">
+      <Logo className="size-8" />
+    </a>
+  </Button>
   <CollocationsSearchBar client:load />
 </header>
