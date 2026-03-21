@@ -21,6 +21,18 @@ const {
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
+    <script is:inline>
+      (() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const applySystemTheme = () => {
+          document.documentElement.classList.toggle("dark", mediaQuery.matches);
+        };
+
+        window.localStorage.removeItem("theme");
+        applySystemTheme();
+        mediaQuery.addEventListener("change", applySystemTheme);
+      })();
+    </script>
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <title>{title}</title>
@@ -30,16 +42,16 @@ const {
     <main class="flex-1">
       <slot />
     </main>
-    <footer class="px-4 py-6 text-center text-xs text-slate-600">
+    <footer class="text-muted-foreground px-4 py-6 text-center text-xs">
       <a
         href="/about"
-        class="font-medium text-slate-900 underline underline-offset-4">About</a
+        class="text-foreground font-medium underline underline-offset-4">About</a
       >
-      <span class="mx-1 text-slate-400">·</span>
+      <span class="text-muted-foreground/70 mx-1">·</span>
       Built by
       <a
         href="https://juan.md"
-        class="font-medium text-slate-900 underline underline-offset-4">Juan</a
+        class="text-foreground font-medium underline underline-offset-4">Juan</a
       >
     </footer>
     <Analytics />
