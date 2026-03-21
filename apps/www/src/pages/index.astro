@@ -4,60 +4,86 @@ import {
   ItemContent,
   ItemTitle,
   Item,
+  ItemMedia,
 } from "@juan/ui/components/ui/item";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { CollocationsLogo } from "@/components/projects/CollocationsLogo";
 const pageTitle = "Juan Otálora";
 ---
 
 <BaseLayout pageTitle={pageTitle} isHomepage={true}>
-  <section class="prose prose-sm dark:prose-invert">
-    <h2>Work</h2>
-    <p>
-      I work on the founding team at MITO, designing and building interfaces for
-      our first customers next to amazing people like Danny Saltaren, Dani
-      Latorre, Nacho González and Keyvan Akbari.
-    </p>
-    <p>
-      I previously worked at Inditex (zara.com) crafting the interfaces of the
-      product and catalog management tool for all the e-commerces in the
-      company.
-    </p>
-    <h2>A man on a mission</h2>
-    <p>
-      I’ve always trusted technology, not just as a tool, but as an extension of
-      human intent. Some learned to fear it. I chose to believe in it.
-    </p>
-    <p>
-      Technology reflects who we are. In the right hands, it gives people
-      agency, clarity, and the power to shape their lives.
-    </p>
-    <p>
-      What would it take to reclaim the web as a space for creativity, intimacy
-      and intellectualism?
-    </p>
+  <article class="prose prose-sm dark:prose-invert">
+    <section>
+      <h2>Work</h2>
+      <p>
+        I work on the founding team at MITO, designing and building interfaces
+        for our first customers next to amazing people like Danny Saltaren, Dani
+        Latorre, Nacho González and Keyvan Akbari.
+      </p>
+      <p>
+        I previously worked at Inditex (zara.com) crafting the interfaces of the
+        product and catalog management tool for all the e-commerces in the
+        company.
+      </p>
+      <h2>A man on a mission</h2>
+      <p>
+        I’ve always trusted technology, not just as a tool, but as an extension
+        of human intent. Some learned to fear it. I chose to believe in it.
+      </p>
+      <p>
+        Technology reflects who we are. In the right hands, it gives people
+        agency, clarity, and the power to shape their lives.
+      </p>
+      <p>
+        What would it take to reclaim the web as a space for creativity,
+        intimacy and intellectualism?
+      </p>
+    </section>
 
-    <h2>Logs</h2>
-  </section>
-  <div class="mt-6">
-    <a href="/frontend-folder-architecture">
-      <Item variant="outline">
-        <ItemContent>
-          <ItemTitle>Frontend folder architecture</ItemTitle>
-          <ItemDescription>
-            A short reflection on why folder structure still matters in the AI
-            era.
-          </ItemDescription>
-        </ItemContent>
-      </Item>
-    </a>
-  </div>
-  <section class="prose prose-sm dark:prose-invert mt-10">
-    <hr />
+    <section>
+      <h2>Projects</h2>
+      <div class="mt-6 not-prose">
+        <a href="https://collocations.juan.md">
+          <Item variant="outline">
+            <ItemMedia variant="image">
+              <CollocationsLogo />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>Collocations</ItemTitle>
+              <ItemDescription>
+                A search engine for English collocations
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </a>
+      </div>
+    </section>
 
-    <p>
-      <a href="https://x.com/juanoa_">X</a> / <a
-        href="https://linkedin.com/in/juanoa">LinkedIn</a
-      >
-    </p>
-  </section>
+    <section class="mt-10">
+      <h2>Logs</h2>
+      <div class="not-prose mt-6">
+        <a href="/frontend-folder-architecture">
+          <Item variant="outline">
+            <ItemContent>
+              <ItemTitle>Frontend folder architecture</ItemTitle>
+              <ItemDescription>
+                A short reflection on why folder structure still matters in the
+                AI era.
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </a>
+      </div>
+    </section>
+
+    <section class='mt-10"'>
+      <hr />
+
+      <p>
+        <a href="https://x.com/juanoa_">X</a> / <a
+          href="https://linkedin.com/in/juanoa">LinkedIn</a
+        >
+      </p>
+    </section>
+  </article>
 </BaseLayout>
