@@ -71,12 +71,12 @@ const related = allCollocations
     {
       related.length > 0 && (
         <section class="mt-15 space-y-2">
-          <h2 class="text-lg">Related</h2>
-          <ul class="grid grid-cols-3 gap-4 text-muted-foreground">
+          <h2 class="font-semibold">Related</h2>
+          <ul class="grid grid-cols-3 gap-3 text-muted-foreground">
             {related.map((item) => (
               <li>
                 <a
-                  class="hover:text-foreground transition-colors"
+                  class="hover:text-foreground transition-colors text-sm"
                   href={`/${item.slug}`}
                 >
                   {item.label}
