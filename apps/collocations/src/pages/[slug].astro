@@ -1,11 +1,7 @@
 ---
-import collocations from "../../content/collocations.json";
+import type { Collocation } from "src/types/Collocation";
+import collocations from "content/collocations.json";
 import Layout from "src/layouts/Layout.astro";
-
-interface Collocation {
-  label: string;
-  slug: string;
-}
 
 export function getStaticPaths() {
   return (collocations as Collocation[]).map((collocation) => ({
@@ -18,7 +14,16 @@ const { collocation } = Astro.props as { collocation: Collocation };
 ---
 
 <Layout title={collocation.label}>
-  <main class="mx-auto flex min-h-screen max-w-4xl px-6">
+  <main class="mx-auto min-h-screen max-w-4xl px-6">
     <h1 class="text-3xl font-semibold mt-48">{collocation.label}</h1>
+    <section class="mt-5 space-y-2">
+      <ul class="text-muted-foreground">
+        {
+          collocation.examples.map((example) => (
+            <li class="first-letter:uppercase">{example}</li>
+          ))
+        }
+      </ul>
+    </section>
   </main>
 </Layout>

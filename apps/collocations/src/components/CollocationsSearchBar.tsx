@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import collocations from "../../content/collocations.json"
+import collocations from "content/collocations.json"
 import {
   Command,
   CommandDialog,
@@ -18,33 +18,14 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@juan/ui/components/ui/input-group"
+import { MagnifyingGlassIcon } from "@juan/ui/icons/phosphor"
+import type { Collocation } from "src/types/Collocation"
 
-interface Collocation {
-  label: string
-  slug: string
-}
+
 
 interface MatchSegment {
   text: string
   highlighted: boolean
-}
-
-function SearchIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      {...props}
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.35-4.35" />
-    </svg>
-  )
 }
 
 function normalize(value: string) {
@@ -153,7 +134,7 @@ export function CollocationsSearchBar() {
     <>
       <InputGroup className="h-10 max-w-xl bg-background">
         <InputGroupAddon>
-          <SearchIcon className="size-4" />
+          <MagnifyingGlassIcon className="size-4" />
         </InputGroupAddon>
         <InputGroupInput
           readOnly
@@ -173,7 +154,7 @@ export function CollocationsSearchBar() {
           aria-label="Open collocations search"
           onClick={() => setOpen(true)}
         >
-          <SearchIcon />
+          <MagnifyingGlassIcon />
         </InputGroupButton>
       </InputGroup>
 
