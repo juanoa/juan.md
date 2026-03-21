@@ -1,6 +1,18 @@
 ---
 import { Button } from "@juan/ui/components/ui/button";
 import Layout from "src/layouts/Layout.astro";
+import collocations from "../../content/collocations.json";
+
+interface Collocation {
+  label: string;
+}
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
 ---
 
 <Layout>
@@ -22,6 +34,16 @@ import Layout from "src/layouts/Layout.astro";
       </div>
       <div>
         <Button>Start learning</Button>
+      </div>
+      <div class="space-y-2">
+        {(collocations as Collocation[]).map((collocation) => (
+          <a
+            class="text-sm underline underline-offset-4"
+            href={`/${slugify(collocation.label)}`}
+          >
+            {collocation.label}
+          </a>
+        ))}
       </div>
     </section>
   </main>

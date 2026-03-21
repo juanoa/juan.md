@@ -1,0 +1,30 @@
+---
+import collocations from "../../content/collocations.json";
+import Layout from "src/layouts/Layout.astro";
+
+interface Collocation {
+  label: string;
+}
+
+export function getStaticPaths() {
+  const slugify = (value: string) =>
+    value
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-");
+
+  return (collocations as Collocation[]).map((collocation) => ({
+    params: { slug: slugify(collocation.label) },
+    props: { collocation },
+  }));
+}
+
+const { collocation } = Astro.props as { collocation: Collocation };
+---
+
+<Layout title={collocation.label}>
+  <main class="mx-auto flex min-h-screen max-w-4xl px-6">
+    <h1 class="text-3xl font-semibold mt-48">{collocation.label}</h1>
+  </main>
+</Layout>
