@@ -662,5 +662,20 @@
     "slug": "stub-a-response",
     "label": "stub a response",
     "examples": ["we stubbed a response in the integration test."]
+  },
+  {
+    "slug": "commit-code",
+    "label": "commit code",
+    "examples": ["i'll commit the code once the tests pass."]
+  },
+  {
+    "slug": "commit-a-fix",
+    "label": "commit a fix",
+    "examples": ["i just committed a fix for the login redirect bug."]
+  },
+  {
+    "slug": "push-a-commit",
+    "label": "push a commit",
+    "examples": ["i'll push the commit after the final review."]
   }
 ]
