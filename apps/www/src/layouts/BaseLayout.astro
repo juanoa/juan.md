@@ -12,12 +12,16 @@ const { pageTitle, isHomePage } = Astro.props;
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <script is:inline>
-      document.documentElement.classList.toggle(
-        "dark",
-        localStorage.theme === "dark" ||
-          (!("theme" in localStorage) &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches),
-      );
+      (() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const applySystemTheme = () => {
+          document.documentElement.classList.toggle("dark", mediaQuery.matches);
+        };
+
+        window.localStorage.removeItem("theme");
+        applySystemTheme();
+        mediaQuery.addEventListener("change", applySystemTheme);
+      })();
     </script>
     <Analytics />
     <title>{pageTitle}</title>

@@ -1,10 +1,8 @@
 ---
-import { ThemeTabs } from "@/components/ThemeTabs";
-
 const { isHomePage } = Astro.props;
 ---
 
-<header class="mb-20 flex items-start justify-between">
+<header class="mb-20">
   <nav class="text-lg">
     {
       isHomePage ? (
@@ -19,7 +17,4 @@ const { isHomePage } = Astro.props;
     }
     <p class="text-muted-foreground leading-none">Engineer @ MITO AI</p>
   </nav>
-  <div>
-    <ThemeTabs client:load />
-  </div>
 </header>
