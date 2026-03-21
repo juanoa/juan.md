@@ -10,33 +10,31 @@ const latestCollocations = (collocations as Collocation[]).slice(-9).reverse();
 
 <Layout showSearchBar={false}>
   <main class="mx-auto w-full max-w-4xl items-start justify-center px-6">
-    <section class="mb-10 mt-48 space-y-2 w-full max-w-xl mx-auto">
+    <section class="mx-auto mt-48 mb-10 w-full max-w-xl space-y-2">
       <h1 class="text-4xl font-bold tracking-tight">Collocations</h1>
-      <div class="flex items-center gap-2 text-muted-foreground">
-        <p class="tracking-tight font-serif text-xl">/ˌkɑː.ləˈkeɪ.ʃənz/</p>
+      <div class="text-muted-foreground flex items-center gap-2">
+        <p class="font-serif text-xl tracking-tight">/ˌkɑː.ləˈkeɪ.ʃənz/</p>
         <button
           type="button"
           aria-label="Play pronunciation"
           class="mt-1 hover:cursor-pointer"
-          id="play-pronunciation"
-        >
+          id="play-pronunciation">
           <PlayIcon size={14} weight="fill" />
         </button>
       </div>
     </section>
-    <section class="w-full max-w-xl mx-auto">
+    <section class="mx-auto w-full max-w-xl">
       <CollocationsSearchBar client:load />
     </section>
-    <section class="mt-24 space-y-2 w-full">
+    <section class="mt-24 w-full space-y-2">
       <h2 class="font-semibold">Last</h2>
-      <ul class="grid grid-cols-3 gap-3 text-muted-foreground">
+      <ul class="text-muted-foreground grid grid-cols-3 gap-3">
         {
           latestCollocations.map((item) => (
             <li>
               <a
-                class="hover:text-foreground transition-colors text-sm"
-                href={`/${item.slug}`}
-              >
+                class="hover:text-foreground text-sm transition-colors"
+                href={`/${item.slug}`}>
                 {item.label}
               </a>
             </li>

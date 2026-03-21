@@ -1,5 +1,5 @@
 export type Collocation = {
-  label: string
-  slug: string
-  examples: string[]
-}
+  label: string;
+  slug: string;
+  examples: string[];
+};

@@ -1,49 +1,48 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { CheckIcon, CopyIcon } from "@juan/ui/icons/phosphor"
-import { AnimatePresence, motion } from "motion/react"
+import { CheckIcon, CopyIcon } from "@juan/ui/icons/phosphor";
+import { AnimatePresence, motion } from "motion/react";
 
 interface CopyButtonProps {
-  text: string
+  text: string;
 }
 
 const variants = {
   hidden: { opacity: 0, scale: 0.5 },
   visible: { opacity: 1, scale: 1 },
-}
+};
 
 const transition = {
   duration: 0.2,
-}
+};
 
 export function CopyButton({ text }: CopyButtonProps) {
-  const [copied, setCopied] = React.useState(false)
+  const [copied, setCopied] = React.useState(false);
 
   const copy = React.useCallback(async () => {
-    await navigator.clipboard.writeText(text)
-    setCopied(true)
-  }, [text])
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+  }, [text]);
 
   React.useEffect(() => {
     if (!copied) {
-      return
+      return;
     }
 
     const timeoutId = window.setTimeout(() => {
-      setCopied(false)
-    }, 1500)
+      setCopied(false);
+    }, 1500);
 
-    return () => window.clearTimeout(timeoutId)
-  }, [copied])
+    return () => window.clearTimeout(timeoutId);
+  }, [copied]);
 
   return (
     <button
       type="button"
       aria-label={`Copy "${text}" to clipboard`}
-      onClick={copy}
-    >
+      onClick={copy}>
       <AnimatePresence mode="wait" initial={false}>
         {copied ? (
           <motion.span
@@ -52,11 +51,10 @@ export function CopyButton({ text }: CopyButtonProps) {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            transition={transition}
-          >
+            transition={transition}>
             <CheckIcon
               size={20}
-              className="mt-1 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground"
+              className="text-muted-foreground mt-1 opacity-0 transition-opacity group-hover:opacity-100"
             />
           </motion.span>
         ) : (
@@ -66,15 +64,14 @@ export function CopyButton({ text }: CopyButtonProps) {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            transition={transition}
-          >
+            transition={transition}>
             <CopyIcon
               size={20}
-              className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground"
+              className="text-muted-foreground mt-2 opacity-0 transition-opacity group-hover:opacity-100"
             />
           </motion.span>
         )}
       </AnimatePresence>
     </button>
-  )
+  );
 }

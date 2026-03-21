@@ -59,7 +59,7 @@ const related = allCollocations
 
 <Layout title={collocation.label}>
   <main class="mx-auto max-w-4xl px-6">
-    <h1 class="text-3xl font-semibold mt-48 flex items-center gap-3 group">
+    <h1 class="group mt-48 flex items-center gap-3 text-3xl font-semibold">
       {collocation.label}
       <CopyButton client:load text={collocation.label} />
     </h1>
@@ -67,7 +67,7 @@ const related = allCollocations
       <ul class="text-muted-foreground">
         {
           collocation.examples.map((example) => (
-            <li class="first-letter:uppercase italic">{example}</li>
+            <li class="italic first-letter:uppercase">{example}</li>
           ))
         }
       </ul>
@@ -76,13 +76,12 @@ const related = allCollocations
       related.length > 0 && (
         <section class="mt-15 space-y-2">
           <h2 class="font-semibold">Related</h2>
-          <ul class="grid grid-cols-3 gap-3 text-muted-foreground">
+          <ul class="text-muted-foreground grid grid-cols-3 gap-3">
             {related.map((item) => (
               <li>
                 <a
-                  class="hover:text-foreground transition-colors text-sm"
-                  href={`/${item.slug}`}
-                >
+                  class="hover:text-foreground text-sm transition-colors"
+                  href={`/${item.slug}`}>
                   {item.label}
                 </a>
               </li>

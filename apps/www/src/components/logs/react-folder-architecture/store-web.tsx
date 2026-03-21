@@ -112,8 +112,7 @@ export const StoreWeb = () => {
                 <Button
                   variant="secondary"
                   onClick={handlePay}
-                  disabled={paymentState !== "idle" || numberOfBottles === 0}
-                >
+                  disabled={paymentState !== "idle" || numberOfBottles === 0}>
                   {paymentState === "idle" && "Pay"}
                   {paymentState === "pending" && <Spinner />}
                   {paymentState === "done" && "Complete"}

@@ -56,8 +56,7 @@ export function ThemeTabs() {
       <Tabs
         value={theme}
         onValueChange={(value: string) => setTheme(value as Theme)}
-        className="hidden lg:block"
-      >
+        className="hidden lg:block">
         <TabsList variant="line">
           <TabsTrigger value="system" aria-label="System theme">
             <LaptopIcon />

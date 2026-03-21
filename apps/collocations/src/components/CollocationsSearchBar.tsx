@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import collocations from "content/collocations.json"
+import collocations from "content/collocations.json";
 import {
   Command,
   CommandDialog,
@@ -11,128 +11,125 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@juan/ui/components/ui/command"
+} from "@juan/ui/components/ui/command";
 import {
   InputGroup,
   InputGroupAddon,
-  InputGroupButton,
   InputGroupInput,
-} from "@juan/ui/components/ui/input-group"
-import { MagnifyingGlassIcon } from "@juan/ui/icons/phosphor"
-import type { Collocation } from "src/types/Collocation"
-
-
+} from "@juan/ui/components/ui/input-group";
+import { MagnifyingGlassIcon } from "@juan/ui/icons/phosphor";
+import type { Collocation } from "src/types/Collocation";
 
 interface MatchSegment {
-  text: string
-  highlighted: boolean
+  text: string;
+  highlighted: boolean;
 }
 
 function normalize(value: string) {
-  return value.toLowerCase().trim()
+  return value.toLowerCase().trim();
 }
 
 function getWordMatches(label: string, query: string) {
-  const words = label.split(/\s+/)
-  const normalizedWords = words.map(normalize)
-  const tokens = query.split(/\s+/).map(normalize).filter(Boolean)
+  const words = label.split(/\s+/);
+  const normalizedWords = words.map(normalize);
+  const tokens = query.split(/\s+/).map(normalize).filter(Boolean);
 
   if (tokens.length === 0) {
     return {
       matches: true,
       matchedWordIndexes: new Map<number, string>(),
-    }
+    };
   }
 
-  const matchedWordIndexes = new Map<number, string>()
-  let wordIndex = 0
+  const matchedWordIndexes = new Map<number, string>();
+  let wordIndex = 0;
 
   for (const token of tokens) {
-    let found = false
+    let found = false;
 
     while (wordIndex < normalizedWords.length) {
       if (normalizedWords[wordIndex].includes(token)) {
-        matchedWordIndexes.set(wordIndex, token)
-        wordIndex += 1
-        found = true
-        break
+        matchedWordIndexes.set(wordIndex, token);
+        wordIndex += 1;
+        found = true;
+        break;
       }
 
-      wordIndex += 1
+      wordIndex += 1;
     }
 
     if (!found) {
       return {
         matches: false,
         matchedWordIndexes: new Map<number, string>(),
-      }
+      };
     }
   }
 
-  return { matches: true, matchedWordIndexes }
+  return { matches: true, matchedWordIndexes };
 }
 
 function getHighlightedSegments(word: string, token?: string): MatchSegment[] {
   if (!token) {
-    return [{ text: word, highlighted: false }]
+    return [{ text: word, highlighted: false }];
   }
 
-  const normalizedWord = normalize(word)
-  const start = normalizedWord.indexOf(token)
+  const normalizedWord = normalize(word);
+  const start = normalizedWord.indexOf(token);
 
   if (start === -1) {
-    return [{ text: word, highlighted: false }]
+    return [{ text: word, highlighted: false }];
   }
 
-  const end = start + token.length
-  const segments: MatchSegment[] = []
+  const end = start + token.length;
+  const segments: MatchSegment[] = [];
 
   if (start > 0) {
-    segments.push({ text: word.slice(0, start), highlighted: false })
+    segments.push({ text: word.slice(0, start), highlighted: false });
   }
 
-  segments.push({ text: word.slice(start, end), highlighted: true })
+  segments.push({ text: word.slice(start, end), highlighted: true });
 
   if (end < word.length) {
-    segments.push({ text: word.slice(end), highlighted: false })
+    segments.push({ text: word.slice(end), highlighted: false });
   }
 
-  return segments
+  return segments;
 }
 
 export function CollocationsSearchBar() {
-  const [open, setOpen] = React.useState(false)
-  const [query, setQuery] = React.useState("")
+  const [open, setOpen] = React.useState(false);
+  const [query, setQuery] = React.useState("");
 
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault()
-        setOpen((current) => !current)
+        event.preventDefault();
+        setOpen((current) => !current);
       }
-    }
+    };
 
-    window.addEventListener("keydown", onKeyDown)
+    window.addEventListener("keydown", onKeyDown);
 
-    return () => window.removeEventListener("keydown", onKeyDown)
-  }, [])
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const filteredCollocations = React.useMemo(() => {
     return (collocations as Collocation[])
       .map((collocation) => {
-        const result = getWordMatches(collocation.label, query)
+        const result = getWordMatches(collocation.label, query);
 
         return {
           ...collocation,
           ...result,
-        }
+        };
       })
-      .filter((collocation) => collocation.matches)
-  }, [query])
+      .filter((collocation) => collocation.matches);
+  }, [query]);
 
   return (
     <>
-      <InputGroup className="h-10 max-w-xl bg-background">
+      <InputGroup className="bg-background h-10 max-w-xl">
         <InputGroupAddon>
           <MagnifyingGlassIcon className="size-4" />
         </InputGroupAddon>
@@ -148,15 +145,13 @@ export function CollocationsSearchBar() {
             Cmd+K
           </kbd>
         </InputGroupAddon>
-
       </InputGroup>
 
       <CommandDialog
         open={open}
         onOpenChange={setOpen}
         title="Search collocations"
-        description="Search available collocations."
-      >
+        description="Search available collocations.">
         <Command shouldFilter={false}>
           <CommandInput
             value={query}
@@ -171,30 +166,27 @@ export function CollocationsSearchBar() {
                   key={collocation.label}
                   value={collocation.label}
                   onSelect={() => {
-                    window.location.href = `/${collocation.slug}`
-                  }}
-                >
+                    window.location.href = `/${collocation.slug}`;
+                  }}>
                   <span className="flex flex-wrap gap-x-1">
                     {collocation.label.split(/\s+/).map((word, index) => (
                       <span key={`${collocation.label}-${index}`}>
                         {getHighlightedSegments(
                           word,
-                          collocation.matchedWordIndexes.get(index)
+                          collocation.matchedWordIndexes.get(index),
                         ).map((segment, segmentIndex) =>
                           segment.highlighted ? (
                             <strong
                               key={`${collocation.label}-${index}-${segmentIndex}`}
-                              className="font-semibold"
-                            >
+                              className="font-semibold">
                               {segment.text}
                             </strong>
                           ) : (
                             <React.Fragment
-                              key={`${collocation.label}-${index}-${segmentIndex}`}
-                            >
+                              key={`${collocation.label}-${index}-${segmentIndex}`}>
                               {segment.text}
                             </React.Fragment>
-                          )
+                          ),
                         )}
                       </span>
                     ))}
@@ -206,5 +198,5 @@ export function CollocationsSearchBar() {
         </Command>
       </CommandDialog>
     </>
-  )
+  );
 }

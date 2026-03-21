@@ -9,6 +9,10 @@
     "dev": "turbo dev --filter=www",
     "dev:www": "turbo dev --filter=www",
     "dev:collocations": "turbo dev --filter=collocations",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "format": "turbo run format",
+    "format:check": "turbo run format:check",
     "preview": "turbo preview --filter=www",
     "preview:www": "turbo preview --filter=www",
     "preview:collocations": "turbo preview --filter=collocations",
@@ -16,7 +20,17 @@
     "ui:add:collocations": "shadcn add --cwd apps/collocations"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "eslint": "^9.39.4",
+    "eslint-plugin-astro": "^1.6.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^17.4.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "0.7.1",
     "shadcn": "^3.8.5",
-    "turbo": "^2.5.8"
+    "turbo": "^2.5.8",
+    "typescript-eslint": "^8.57.1"
   }
 }

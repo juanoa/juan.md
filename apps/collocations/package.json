@@ -9,7 +9,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "pnpm exec eslint . --max-warnings=0",
+    "lint:fix": "pnpm exec eslint . --fix",
+    "format": "pnpm exec prettier . --write --config ../../prettier.config.mjs --ignore-path ../../.prettierignore",
+    "format:check": "pnpm exec prettier . --check --config ../../prettier.config.mjs --ignore-path ../../.prettierignore"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",

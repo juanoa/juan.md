@@ -1,0 +1,11 @@
+.astro
+.idea
+.next
+.pnpm-store
+.turbo
+build
+coverage
+dist
+node_modules
+pnpm-lock.yaml
+public

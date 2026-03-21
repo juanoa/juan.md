@@ -9,6 +9,18 @@
       "cache": false,
       "persistent": true
     },
+    "lint": {
+      "outputs": []
+    },
+    "lint:fix": {
+      "cache": false
+    },
+    "format": {
+      "cache": false
+    },
+    "format:check": {
+      "outputs": []
+    },
     "preview": {
       "dependsOn": ["build"],
       "cache": false,
