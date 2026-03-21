@@ -148,14 +148,7 @@ export function CollocationsSearchBar() {
             Cmd+K
           </kbd>
         </InputGroupAddon>
-        <InputGroupButton
-          size="icon-xs"
-          className="mr-1"
-          aria-label="Open collocations search"
-          onClick={() => setOpen(true)}
-        >
-          <MagnifyingGlassIcon />
-        </InputGroupButton>
+
       </InputGroup>
 
       <CommandDialog
