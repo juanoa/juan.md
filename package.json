@@ -11,7 +11,9 @@
     "dev:collocations": "turbo dev --filter=collocations",
     "preview": "turbo preview --filter=www",
     "preview:www": "turbo preview --filter=www",
-    "preview:collocations": "turbo preview --filter=collocations"
+    "preview:collocations": "turbo preview --filter=collocations",
+    "ui:add": "shadcn add --cwd apps/www",
+    "ui:add:collocations": "shadcn add --cwd apps/collocations"
   },
   "devDependencies": {
     "shadcn": "^3.8.5",
