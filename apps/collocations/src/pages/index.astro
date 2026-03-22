@@ -3,9 +3,12 @@ import collocations from "content/collocations.json";
 import Layout from "src/layouts/Layout.astro";
 import { CollocationsSearchBar } from "src/components/CollocationsSearchBar";
 import PronunciationButton from "src/components/PronunciationButton.astro";
+import { RandomCollocationButton } from "src/components/RandomCollocationButton";
 import type { Collocation } from "src/types/Collocation";
 
-const latestCollocations = (collocations as Collocation[]).slice(-9).reverse();
+const allCollocations = collocations as Collocation[];
+const latestCollocations = allCollocations.slice(-9).reverse();
+const collocationSlugs = allCollocations.map(({ slug }) => slug);
 ---
 
 <Layout showSearchBar={false}>
@@ -17,8 +20,14 @@ const latestCollocations = (collocations as Collocation[]).slice(-9).reverse();
         <PronunciationButton />
       </div>
     </section>
-    <section class="mx-auto w-full max-w-xl">
+    <section
+      class="mx-auto flex w-full max-w-xl flex-col items-center gap-2 md:flex-row">
       <CollocationsSearchBar client:load />
+      <RandomCollocationButton
+        client:load
+        slugs={collocationSlugs}
+        className="h-10 w-full md:w-fit"
+      />
     </section>
     <section class="mt-24 w-full space-y-2">
       <h2 class="font-semibold">Last</h2>
