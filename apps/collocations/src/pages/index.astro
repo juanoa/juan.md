@@ -2,8 +2,8 @@
 import collocations from "content/collocations.json";
 import Layout from "src/layouts/Layout.astro";
 import { CollocationsSearchBar } from "src/components/CollocationsSearchBar";
+import PronunciationButton from "src/components/PronunciationButton.astro";
 import type { Collocation } from "src/types/Collocation";
-import { PlayIcon } from "@juan/ui/icons/phosphor";
 
 const latestCollocations = (collocations as Collocation[]).slice(-9).reverse();
 ---
@@ -14,13 +14,7 @@ const latestCollocations = (collocations as Collocation[]).slice(-9).reverse();
       <h1 class="text-4xl font-bold tracking-tight">Collocations</h1>
       <div class="text-muted-foreground flex items-center gap-2">
         <p class="font-serif text-xl tracking-tight">/ˌkɑː.ləˈkeɪ.ʃənz/</p>
-        <button
-          type="button"
-          aria-label="Play pronunciation"
-          class="mt-1 hover:cursor-pointer"
-          id="play-pronunciation">
-          <PlayIcon size={14} weight="fill" />
-        </button>
+        <PronunciationButton />
       </div>
     </section>
     <section class="mx-auto w-full max-w-xl">
@@ -44,13 +38,3 @@ const latestCollocations = (collocations as Collocation[]).slice(-9).reverse();
     </section>
   </main>
 </Layout>
-
-<script>
-  const button = document.getElementById("play-pronunciation");
-  const audio = new Audio("/pronunciation.mp3");
-
-  button?.addEventListener("click", async () => {
-    audio.currentTime = 0;
-    await audio.play();
-  });
-</script>

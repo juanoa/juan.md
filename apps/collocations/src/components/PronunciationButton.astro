@@ -1,0 +1,83 @@
+---
+import { PauseIcon, PlayIcon } from "@juan/ui/icons/phosphor";
+
+interface Props {
+  audioSrc?: string;
+  class?: string;
+}
+
+const {
+  audioSrc = "/pronunciation.mp3",
+  class: className,
+} = Astro.props;
+---
+
+<button
+  type="button"
+  aria-label="Play pronunciation"
+  class:list={["mt-1 hover:cursor-pointer", className]}
+  data-pronunciation-button
+  data-audio-src={audioSrc}>
+  <span data-play-icon>
+    <PlayIcon size={14} weight="fill" />
+  </span>
+  <span data-pause-icon class="hidden">
+    <PauseIcon size={14} weight="fill" />
+  </span>
+</button>
+
+<script>
+  const buttons = document.querySelectorAll("[data-pronunciation-button]");
+
+  for (const button of buttons) {
+    if (!(button instanceof HTMLButtonElement)) {
+      continue;
+    }
+
+    if (button.dataset.pronunciationInitialized === "true") {
+      continue;
+    }
+
+    const audioSrc = button.dataset.audioSrc;
+
+    if (!audioSrc) {
+      continue;
+    }
+
+    button.dataset.pronunciationInitialized = "true";
+
+    const playIcon = button.querySelector("[data-play-icon]");
+    const pauseIcon = button.querySelector("[data-pause-icon]");
+    const audio = new Audio(audioSrc);
+
+    const syncButtonState = () => {
+      const isPlaying = !audio.paused && !audio.ended;
+
+      playIcon?.classList.toggle("hidden", isPlaying);
+      pauseIcon?.classList.toggle("hidden", !isPlaying);
+      button.setAttribute("aria-label", isPlaying ? "Pause pronunciation" : "Play pronunciation");
+    };
+
+    audio.addEventListener("play", syncButtonState);
+    audio.addEventListener("pause", syncButtonState);
+    audio.addEventListener("ended", () => {
+      audio.currentTime = 0;
+      syncButtonState();
+    });
+
+    button.addEventListener("click", async () => {
+      if (!audio.paused && !audio.ended) {
+        audio.pause();
+        return;
+      }
+
+      if (audio.ended) {
+        audio.currentTime = 0;
+      }
+
+      await audio.play();
+    });
+
+    syncButtonState();
+  }
+</script>
