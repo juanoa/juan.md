@@ -677,5 +677,20 @@
     "slug": "push-a-commit",
     "label": "push a commit",
     "examples": ["i'll push the commit after the final review."]
+  },
+  {
+    "slug": "schedule-a-meeting",
+    "label": "schedule a meeting",
+    "examples": ["let's schedule a meeting to review the rollout plan."]
+  },
+  {
+    "slug": "schedule-a-call",
+    "label": "schedule a call",
+    "examples": ["can we schedule a call for tomorrow afternoon?"]
+  },
+  {
+    "slug": "plan-a-hangout",
+    "label": "plan a hangout",
+    "examples": ["we should plan a hangout with the team next month."]
   }
 ]
