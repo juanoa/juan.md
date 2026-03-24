@@ -14,12 +14,12 @@ const getDevCollocations = (): Collocation[] => collocationsJson as Collocation[
 const getDevFunctionWords = (): string[] => functionWordsJson as string[];
 
 const getSupabaseClient = () => {
-  const url = import.meta.env.SUPABASE_URL;
-  const key = import.meta.env.SUPABASE_ANON_KEY;
+  const url = import.meta.env.PUBLIC_SUPABASE_URL;
+  const key = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
     throw new Error(
-      "Missing Supabase environment variables. Set SUPABASE_URL and SUPABASE_ANON_KEY for build/production.",
+      "Missing Supabase environment variables. Set PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY for build/production.",
     );
   }
 
