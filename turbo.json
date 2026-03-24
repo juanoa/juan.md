@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["SUPABASE_URL", "SUPABASE_ANON_KEY"],
+  "globalEnv": ["SUPABASE_URL", "SUPABASE_ANON_KEY", "RESEND_API_KEY"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

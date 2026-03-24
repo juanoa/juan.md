@@ -1,0 +1,48 @@
+---
+export const prerender = true;
+
+import { NewsletterSignupForm } from "src/components/NewsletterSignupForm";
+import Layout from "src/layouts/Layout.astro";
+---
+
+<Layout
+  title="Newsletter"
+  description="Subscribe to get a new collocation every weekday."
+  showSearchBar={false}>
+  <section
+    class="mx-auto flex w-full max-w-5xl px-6 py-20 md:min-h-[calc(100vh-12rem)] md:items-center">
+    <div class="grid w-full gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">
+      <div class="space-y-5">
+        <p class="text-muted-foreground text-sm tracking-[0.24em] uppercase">
+          Newsletter
+        </p>
+        <div class="space-y-4">
+          <h1 class="max-w-xl text-4xl font-bold tracking-tight md:text-5xl">
+            Get a new collocation every weekday.
+          </h1>
+          <p class="text-muted-foreground max-w-xl text-base leading-7">
+            Pick your role and I will send collocations that match the kind of
+            English you actually use at work.
+          </p>
+        </div>
+        <ul class="text-muted-foreground space-y-2 text-sm">
+          <li>Software Engineer</li>
+          <li>Product Designer</li>
+          <li>Product Manager</li>
+          <li>C-Level</li>
+        </ul>
+      </div>
+
+      <div class="border-border bg-background space-y-4 border p-6 shadow-sm">
+        <div class="space-y-1">
+          <h2 class="text-lg font-semibold">Subscribe</h2>
+          <p class="text-muted-foreground text-sm">
+            Use your email and choose the audience you belong to.
+          </p>
+        </div>
+
+        <NewsletterSignupForm client:load />
+      </div>
+    </div>
+  </section>
+</Layout>
