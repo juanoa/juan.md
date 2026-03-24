@@ -1,12 +1,12 @@
 ---
-import collocations from "content/collocations.json";
 import Layout from "src/layouts/Layout.astro";
 import { CollocationsSearchBar } from "src/components/CollocationsSearchBar";
 import PronunciationButton from "src/components/PronunciationButton.astro";
 import { RandomCollocationButton } from "src/components/RandomCollocationButton";
+import { getCollocations } from "src/lib/data";
 import type { Collocation } from "src/types/Collocation";
 
-const allCollocations = collocations as Collocation[];
+const allCollocations = (await getCollocations()) as Collocation[];
 const latestCollocations = allCollocations.slice(-9).reverse();
 const collocationSlugs = allCollocations.map(({ slug }) => slug);
 ---

@@ -1,22 +1,23 @@
 ---
 import type { Collocation } from "src/types/Collocation";
-import collocations from "content/collocations.json";
-import functionWords from "content/function-words.json";
 import Layout from "src/layouts/Layout.astro";
 import { CopyButton } from "src/components/CopyButton";
 import { RandomCollocationButton } from "src/components/RandomCollocationButton";
+import { getCollocations, getFunctionWords } from "src/lib/data";
 
-export function getStaticPaths() {
-  return (collocations as Collocation[]).map((collocation) => ({
+export async function getStaticPaths() {
+  const collocations = await getCollocations();
+
+  return collocations.map((collocation) => ({
     params: { slug: collocation.slug },
     props: { collocation },
   }));
 }
 
 const { collocation } = Astro.props as { collocation: Collocation };
-const allCollocations = collocations as Collocation[];
+const allCollocations = await getCollocations();
 const collocationSlugs = allCollocations.map(({ slug }) => slug);
-const functionWordSet = new Set(functionWords as string[]);
+const functionWordSet = new Set(await getFunctionWords());
 
 const normalizeWords = (label: string) =>
   label.toLowerCase().split(/\s+/).filter(Boolean);
