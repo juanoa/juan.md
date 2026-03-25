@@ -26,6 +26,9 @@
     font-weight: 400 !important;
   }
 
+  .prose ul,
+  .prose ol,
+  .prose li,
   .prose p {
     color: var(--color-muted-foreground);
   }
