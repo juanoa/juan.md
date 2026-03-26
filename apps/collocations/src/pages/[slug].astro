@@ -1,6 +1,7 @@
 ---
 import type { Collocation } from "src/types/Collocation";
 import Layout from "src/layouts/Layout.astro";
+import CollocationsColumns from "src/components/CollocationsColumns.astro";
 import { CopyButton } from "src/components/CopyButton";
 import { RandomCollocationButton } from "src/components/RandomCollocationButton";
 import { getCollocations, getFunctionWords } from "src/lib/data";
@@ -88,17 +89,7 @@ const related = allCollocations
       related.length > 0 && (
         <section class="mt-15 space-y-2">
           <h2 class="font-semibold">Related</h2>
-          <ul class="text-muted-foreground grid grid-cols-2 gap-3 md:grid-cols-3">
-            {related.map((item) => (
-              <li>
-                <a
-                  class="hover:text-foreground line-clamp-1 text-sm transition-colors"
-                  href={`/${item.slug}`}>
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <CollocationsColumns items={related} />
         </section>
       )
     }
