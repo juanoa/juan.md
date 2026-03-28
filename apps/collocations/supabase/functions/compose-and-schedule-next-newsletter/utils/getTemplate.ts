@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { getResendApiKey } from "../auth/getResendApiKey.ts";
 
 type TemplateVariable = {
   id: string;
@@ -26,16 +27,6 @@ export type TemplateResponse = {
   text: string | null;
   variables: TemplateVariable[];
   has_unpublished_versions: boolean;
-};
-
-const getResendApiKey = () => {
-  const apiKey = Deno.env.get("RESEND_API_KEY");
-
-  if (!apiKey) {
-    throw new Error("Missing RESEND_API_KEY.");
-  }
-
-  return apiKey;
 };
 
 export const getTemplate = async (): Promise<TemplateResponse> => {

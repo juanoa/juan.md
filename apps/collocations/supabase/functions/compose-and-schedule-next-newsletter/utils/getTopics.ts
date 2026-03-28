@@ -1,7 +1,7 @@
 import { Resend } from "resend";
-import { getResendApiKey } from "../auth/getResendApiKey.ts"
+import { getResendApiKey } from "../auth/getResendApiKey.ts";
 
-type Topic = {
+export type Topic = {
   id: string;
   name: string;
   description: string | null;
@@ -15,8 +15,6 @@ export type TopicsResponse = {
   has_more: boolean;
   data: Topic[];
 };
-
-
 
 export const getTopics = async (): Promise<TopicsResponse> => {
   const resend = new Resend(getResendApiKey());
