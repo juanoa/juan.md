@@ -18,6 +18,7 @@ type NewsletterTemplateVariables = {
 
 const DEFAULT_TIME_ZONE = "Europe/Madrid";
 const SCHEDULED_AT = "in 1 minute";
+const RATE_LIMIT_DELAY_MS = 1000;
 const TOMORROW_WEEKDAYS = new Set([
   "sunday",
   "monday",
@@ -25,6 +26,11 @@ const TOMORROW_WEEKDAYS = new Set([
   "wednesday",
   "thursday",
 ]);
+
+const sleep = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 const getNextDayLabel = () => {
   const weekday = new Intl.DateTimeFormat("en-US", {
@@ -125,7 +131,13 @@ export const scheduleTopicBroadcast = async ({
 
   const segmentId = Deno.env.get("RESEND_BROADCAST_SEGMENT_ID");
 
+  if (!segmentId) {
+    throw new Error("Missing RESEND_BROADCAST_SEGMENT_ID.");
+  }
+
   const resend = new Resend(getResendApiKey());
+  await sleep(RATE_LIMIT_DELAY_MS);
+
   const { data, error } = await resend.broadcasts.create({
     segmentId,
     from,
@@ -139,9 +151,14 @@ export const scheduleTopicBroadcast = async ({
     send: true,
     scheduledAt: SCHEDULED_AT,
   });
-  
 
   if (error) {
+    if (error.statusCode === 429) {
+      console.warn(
+        `Resend rate limit reached while scheduling "${topic.name}". Aborting without retry to avoid duplicate broadcasts.`,
+      );
+    }
+
     throw Object.assign(new Error(error.message), {
       status: error.statusCode ?? 502,
     });

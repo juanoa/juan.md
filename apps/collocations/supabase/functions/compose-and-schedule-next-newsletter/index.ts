@@ -13,24 +13,27 @@ Deno.serve(async () => {
       getTopics(),
     ]);
 
-    const topicsWithNewsletterContent = await Promise.all(
-      topics.data.map(async (topic) => {
-        const newsletterContent = await generateTopicNewsletterContent({ collocation,topic });
+    const topicsWithNewsletterContent = [];
 
-        const broadcast = await scheduleTopicBroadcast({
-          collocation,
-          newsletterContent,
-          template,
-          topic,
-        });
+    for (const topic of topics.data) {
+      const newsletterContent = await generateTopicNewsletterContent({
+        collocation,
+        topic,
+      });
 
-        return {
-          ...topic,
-          newsletterContent,
-          broadcast,
-        };
-      }),
-    );
+      const broadcast = await scheduleTopicBroadcast({
+        collocation,
+        newsletterContent,
+        template,
+        topic,
+      });
+
+      topicsWithNewsletterContent.push({
+        ...topic,
+        newsletterContent,
+        broadcast,
+      });
+    }
 
     return new Response(
       JSON.stringify({
