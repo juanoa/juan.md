@@ -41,22 +41,21 @@ import Layout from "src/layouts/Layout.astro";
       </div>
     </div>
   </section>
-  <section class="mx-auto mb-20 max-w-4xl">
+  <section class="mx-auto mb-20 max-w-4xl px-6">
     <div class="mb-10 space-y-2">
       <h2 class="text-2xl">Example</h2>
       <p class="text-muted-foreground">
         This is what you should expect to receive:
       </p>
     </div>
-    <div class="relative space-y-6 border p-10">
-      <div class="text-muted-foreground absolute top-10 right-10">
+    <div class="relative space-y-6 border p-4 md:p-10">
+      <div
+        class="text-muted-foreground absolute top-4 right-4 md:top-10 md:right-10">
         <EnvelopeIcon />
       </div>
       <div class="text-muted-foreground text-sm">
         From:
-        <span class="text-foreground">
-          {`Collocations Daily<newsletter@collocations.juan.md>`}
-        </span>
+        <span class="text-foreground"> newsletter@collocations.juan.md </span>
       </div>
       <div>
         <p class="text-muted-foreground text-md">Subject</p>
