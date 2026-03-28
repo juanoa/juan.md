@@ -1,4 +1,4 @@
-import { getSupabaseClient } from "./getSupabaseClient.ts";
+import { getSupabaseClient } from "../auth/getSupabaseClient.ts";
 
 export type CollocationRow = {
   id: number;

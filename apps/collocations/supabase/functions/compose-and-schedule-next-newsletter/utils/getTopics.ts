@@ -1,3 +1,6 @@
+import { Resend } from "resend";
+import { getResendApiKey } from "../auth/getResendApiKey.ts"
+
 type Topic = {
   id: string;
   name: string;
@@ -13,35 +16,17 @@ export type TopicsResponse = {
   data: Topic[];
 };
 
-const getResendApiKey = () => {
-  const apiKey = Deno.env.get("RESEND_API_KEY");
 
-  console.log(apiKey);
-  
-
-  if (!apiKey) {
-    throw new Error("Missing RESEND_API_KEY.");
-  }
-
-  return apiKey;
-};
 
 export const getTopics = async (): Promise<TopicsResponse> => {
-  const response = await fetch("https://api.resend.com/topics", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${getResendApiKey()}`,
-    },
-  });
+  const resend = new Resend(getResendApiKey());
+  const { data, error } = await resend.topics.list();
 
-  if (!response.ok) {
-    const errorBody = await response.text();
-
-    throw Object.assign(
-      new Error(`Failed to load topics: ${response.status} ${errorBody}`),
-      { status: response.status },
-    );
+  if (error) {
+    throw Object.assign(new Error(error.message), {
+      status: error.statusCode ?? 502,
+    });
   }
 
-  return await response.json() as TopicsResponse;
+  return data as TopicsResponse;
 };
