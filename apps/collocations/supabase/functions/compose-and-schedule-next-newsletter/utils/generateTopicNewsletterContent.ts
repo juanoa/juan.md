@@ -22,6 +22,18 @@ export const generateTopicNewsletterContent = async ({
   collocation: CollocationRow;
   topic: Topic;
 }): Promise<TopicNewsletterContent> => {
+  const shouldMockAiResponse = Deno.env.get("MOCK_AI_RESPONSE") || false;
+
+  if (shouldMockAiResponse) {
+    return {
+        INTRODUCTION: "Today is a special day. You're going to learn one of the most used collocations for your day-to-day work.",
+        EXAMPLE_1: "can we schedule a call for tomorrow afternoon?",
+        EXAMPLE_2: "can we do a quick call?",
+        HOW_TO_USE: "<div><p>In your daily:</p><ul><li>can we schedule a call for tomorrow afternoon?</li><li>can we do a quick call?</li></ul></div>",
+    }
+  }
+
+
   const model = Deno.env.get("AI_SDK_MODEL") || "openai/gpt-5-nano";
 
   const { object } = await generateObject({
