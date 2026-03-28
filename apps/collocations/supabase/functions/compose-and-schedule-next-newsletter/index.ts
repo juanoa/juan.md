@@ -1,15 +1,17 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { getNextCollocation } from "./utils/getNextCollocation.ts";
+import { getTemplate } from "./utils/getTemplate.ts";
 import { getTopics } from "./utils/getTopics.ts";
 
 Deno.serve(async () => {
   try {
-    const [collocation, topics] = await Promise.all([
+    const [collocation, template, topics] = await Promise.all([
       getNextCollocation(),
+      getTemplate(),
       getTopics(),
     ]);
 
-    return new Response(JSON.stringify({ collocation, topics }), {
+    return new Response(JSON.stringify({ collocation, templateVars: template.variables, topics }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
