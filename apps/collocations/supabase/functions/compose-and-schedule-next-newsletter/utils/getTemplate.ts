@@ -32,7 +32,7 @@ export type TemplateResponse = {
 export const getTemplate = async (): Promise<TemplateResponse> => {
   const templateId = Deno.env.get("RESEND_BROADCAST_TEMPLATE_ID");
 
-  if (!apiKey) {
+  if (!templateId) {
     throw new Error("Missing RESEND_BROADCAST_TEMPLATE_ID.");
   }
 

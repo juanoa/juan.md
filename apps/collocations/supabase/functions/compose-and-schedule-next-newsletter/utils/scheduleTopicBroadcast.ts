@@ -1,102 +1,23 @@
 import { Resend } from "resend";
 
 import { getResendApiKey } from "../auth/getResendApiKey.ts";
+import type { TopicNewsletterContent } from "./generateTopicNewsletterContent.ts";
 import type { CollocationRow } from "./getNextCollocation.ts";
 import type { TemplateResponse } from "./getTemplate.ts";
 import type { Topic } from "./getTopics.ts";
-import type { TopicNewsletterContent } from "./generateTopicNewsletterContent.ts";
+import {
+  buildNewsletterTemplateVariables,
+  renderTemplateString,
+  resolveTemplateVariables,
+} from "./sendOwnerNewsletterPreview.ts";
 
-type NewsletterTemplateVariables = {
-  ROLE: string;
-  NEXT_DAY: string;
-  COLLOCATION: string;
-  EXAMPLE_1: string;
-  EXAMPLE_2: string;
-  INTRODUCTION: string;
-  HOW_TO_USE: string;
-};
-
-const DEFAULT_TIME_ZONE = "Europe/Madrid";
 const SCHEDULED_AT = "tomorrow at 9am";
 const RATE_LIMIT_DELAY_MS = 1000;
-const TOMORROW_WEEKDAYS = new Set([
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-]);
 
 const sleep = (ms: number) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
-
-const getNextDayLabel = () => {
-  const weekday = new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    timeZone: DEFAULT_TIME_ZONE,
-  })
-    .format(new Date())
-    .toLowerCase();
-
-  return TOMORROW_WEEKDAYS.has(weekday) ? "tomorrow" : "on monday";
-};
-
-const buildTemplateVariables = ({
-  collocation,
-  newsletterContent,
-  topic,
-}: {
-  collocation: CollocationRow;
-  newsletterContent: TopicNewsletterContent;
-  topic: Topic;
-}): NewsletterTemplateVariables => ({
-  ROLE: topic.name,
-  NEXT_DAY: getNextDayLabel(),
-  COLLOCATION: collocation.label,
-  EXAMPLE_1: newsletterContent.EXAMPLE_1,
-  EXAMPLE_2: newsletterContent.EXAMPLE_2,
-  INTRODUCTION: newsletterContent.INTRODUCTION,
-  HOW_TO_USE: newsletterContent.HOW_TO_USE,
-});
-
-const TEMPLATE_VARIABLE_PATTERN = /{{{\s*([A-Z0-9_]+)(?:\|[^}]*)?\s*}}}/g;
-
-const resolveTemplateVariables = (
-  template: TemplateResponse,
-  variables: NewsletterTemplateVariables,
-) => {
-  const resolvedVariables: Record<string, string> = {};
-
-  for (const templateVariable of template.variables) {
-    const explicitValue =
-      variables[templateVariable.key as keyof NewsletterTemplateVariables];
-    const value = explicitValue ?? templateVariable.fallback_value;
-
-    if (value === null || value === undefined) {
-      throw new Error(`Missing template variable "${templateVariable.key}".`);
-    }
-
-    resolvedVariables[templateVariable.key] = String(value);
-  }
-
-  return resolvedVariables;
-};
-
-const renderTemplateString = (
-  value: string | null,
-  variables: Record<string, string>,
-) => {
-  if (!value) {
-    return value;
-  }
-
-  return value.replace(
-    TEMPLATE_VARIABLE_PATTERN,
-    (match, key: string) => variables[key] ?? match,
-  );
-};
 
 export const scheduleTopicBroadcast = async ({
   collocation,
@@ -109,12 +30,11 @@ export const scheduleTopicBroadcast = async ({
   template: TemplateResponse;
   topic: Topic;
 }) => {
-  const variables = buildTemplateVariables({
+  const variables = buildNewsletterTemplateVariables({
     collocation,
     newsletterContent,
     topic,
   });
-
   const resolvedVariables = resolveTemplateVariables(template, variables);
   const from = renderTemplateString(template.from, resolvedVariables);
   const subject = renderTemplateString(template.subject, resolvedVariables);
@@ -124,9 +44,7 @@ export const scheduleTopicBroadcast = async ({
   }
 
   if (!subject) {
-    throw new Error(
-      'Template is missing a "subject" value.',
-    );
+    throw new Error('Template is missing a "subject" value.');
   }
 
   const segmentId = Deno.env.get("RESEND_BROADCAST_SEGMENT_ID");
@@ -136,6 +54,7 @@ export const scheduleTopicBroadcast = async ({
   }
 
   const resend = new Resend(getResendApiKey());
+  
   await sleep(RATE_LIMIT_DELAY_MS);
 
   const { data, error } = await resend.broadcasts.create({

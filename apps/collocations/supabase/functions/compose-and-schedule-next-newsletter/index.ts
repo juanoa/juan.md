@@ -2,6 +2,7 @@ import "@supabase/functions-js/edge-runtime.d.ts";
 import { getNextCollocation } from "./utils/getNextCollocation.ts";
 import { generateTopicNewsletterContent } from "./utils/generateTopicNewsletterContent.ts";
 import { scheduleTopicBroadcast } from "./utils/scheduleTopicBroadcast.ts";
+import { sendOwnerNewsletterPreview } from "./utils/sendOwnerNewsletterPreview.ts";
 import { getTemplate } from "./utils/getTemplate.ts";
 import { getTopics } from "./utils/getTopics.ts";
 
@@ -21,6 +22,13 @@ Deno.serve(async () => {
         topic,
       });
 
+      const ownerPreviewEmail = await sendOwnerNewsletterPreview({
+        collocation,
+        newsletterContent,
+        template,
+        topic,
+      });
+
       const broadcast = await scheduleTopicBroadcast({
         collocation,
         newsletterContent,
@@ -31,6 +39,7 @@ Deno.serve(async () => {
       topicsWithNewsletterContent.push({
         ...topic,
         newsletterContent,
+        ownerPreviewEmail,
         broadcast,
       });
     }
