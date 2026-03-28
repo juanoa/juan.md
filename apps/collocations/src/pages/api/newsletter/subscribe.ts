@@ -11,8 +11,13 @@ const ROLE_TOPICS = {
 const TOPIC_IDS = Object.values(ROLE_TOPICS);
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const GENERIC_SUCCESS_MESSAGE = "Thanks for subscribing.";
+const TURNSTILE_ERROR_MESSAGE = "Verification failed. Try again.";
 
 type Role = keyof typeof ROLE_TOPICS;
+type TurnstileVerificationResponse = {
+  success: boolean;
+  "error-codes"?: string[];
+};
 
 function json(message: string, status = 200) {
   return Response.json({ message }, { status });
@@ -36,6 +41,55 @@ function getTopicSubscriptions(role: Role) {
     id: string;
     subscription: "opt_in" | "opt_out";
   }[];
+}
+
+async function verifyTurnstileToken(token: string): Promise<boolean | null> {
+  const secretKey = import.meta.env.TURNSTILE_SECRET_KEY;
+
+  if (!secretKey) {
+    console.error("Missing TURNSTILE_SECRET_KEY.");
+    return null;
+  }
+
+  try {
+    const response = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          secret: secretKey,
+          response: token,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      console.error(
+        "Turnstile verification request failed.",
+        response.status,
+        response.statusText,
+      );
+      return false;
+    }
+
+    const result =
+      (await response.json()) as TurnstileVerificationResponse;
+
+    if (!result.success) {
+      console.error(
+        "Turnstile verification failed.",
+        result["error-codes"] ?? [],
+      );
+    }
+
+    return result.success;
+  } catch (error) {
+    console.error("Turnstile verification failed.", error);
+    return false;
+  }
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -67,13 +121,33 @@ export const POST: APIRoute = async ({ request }) => {
     typeof payload === "object" && payload !== null && "role" in payload
       ? payload.role
       : undefined;
+  const turnstileToken =
+    typeof payload === "object" &&
+    payload !== null &&
+    "turnstileToken" in payload &&
+    typeof payload.turnstileToken === "string"
+      ? payload.turnstileToken.trim()
+      : "";
 
   if (!EMAIL_REGEX.test(email)) {
-    return genericSuccess();
+    return json("Enter a valid email.", 400);
   }
 
   if (!isRole(role)) {
-    return genericSuccess();
+    return json("Pick a role.", 400);
+  }
+
+  if (!turnstileToken) {
+    return json(TURNSTILE_ERROR_MESSAGE, 400);
+  }
+
+  const turnstileVerification = await verifyTurnstileToken(turnstileToken);
+
+  if (turnstileVerification !== true) {
+    return json(
+      TURNSTILE_ERROR_MESSAGE,
+      turnstileVerification === null ? 500 : 400,
+    );
   }
 
   const resend = new Resend(apiKey);

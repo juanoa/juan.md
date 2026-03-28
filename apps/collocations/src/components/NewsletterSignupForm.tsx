@@ -2,6 +2,8 @@
 
 import * as React from "react";
 
+import { Turnstile, type BoundTurnstileObject } from "react-turnstile";
+
 import { Button } from "@juan/ui/components/ui/button";
 import { Input } from "@juan/ui/components/ui/input";
 import {
@@ -22,12 +24,28 @@ const ROLE_OPTIONS = [
 type Role = (typeof ROLE_OPTIONS)[number];
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
+const TURNSTILE_REQUIRED_MESSAGE =
+  "Complete the verification before subscribing.";
+const TURNSTILE_ERROR_MESSAGE = "Verification failed. Try again.";
+const TURNSTILE_UNAVAILABLE_MESSAGE =
+  "Verification is unavailable right now. Try again later.";
+
 export function NewsletterSignupForm() {
   const [email, setEmail] = React.useState("");
   const [role, setRole] = React.useState<Role | "">("");
+  const [turnstileToken, setTurnstileToken] = React.useState("");
   const [submitState, setSubmitState] = React.useState<SubmitState>("idle");
   const [message, setMessage] = React.useState("");
+  const turnstileRef = React.useRef<BoundTurnstileObject | null>(null);
   const statusId = React.useId();
+  const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+  const isSubmitDisabled =
+    submitState === "submitting" || !turnstileSiteKey || !turnstileToken;
+
+  function resetTurnstile() {
+    setTurnstileToken("");
+    turnstileRef.current?.reset();
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -35,6 +53,18 @@ export function NewsletterSignupForm() {
     if (!email || !role) {
       setSubmitState("error");
       setMessage("Enter an email and pick a role.");
+      return;
+    }
+
+    if (!turnstileSiteKey) {
+      setSubmitState("error");
+      setMessage(TURNSTILE_UNAVAILABLE_MESSAGE);
+      return;
+    }
+
+    if (!turnstileToken) {
+      setSubmitState("error");
+      setMessage(TURNSTILE_REQUIRED_MESSAGE);
       return;
     }
 
@@ -47,12 +77,13 @@ export function NewsletterSignupForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, role }),
+        body: JSON.stringify({ email, role, turnstileToken }),
       });
 
       const payload = (await response.json()) as { message?: string };
 
       if (!response.ok) {
+        resetTurnstile();
         throw new Error(payload.message ?? "Something went wrong.");
       }
 
@@ -60,6 +91,7 @@ export function NewsletterSignupForm() {
       setMessage(payload.message ?? "You are subscribed.");
       setEmail("");
       setRole("");
+      resetTurnstile();
       return;
     } catch (error) {
       setSubmitState("error");
@@ -112,17 +144,49 @@ export function NewsletterSignupForm() {
         </Select>
       </div>
 
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={submitState === "submitting"}>
+      {turnstileSiteKey ? (
+        <Turnstile
+          sitekey={turnstileSiteKey}
+          fixedSize
+          responseField={false}
+          refreshExpired="auto"
+          size="flexible"
+          onLoad={(_, boundTurnstile) => {
+            turnstileRef.current = boundTurnstile;
+          }}
+          onVerify={(token, boundTurnstile) => {
+            turnstileRef.current = boundTurnstile;
+            setTurnstileToken(token);
+            setSubmitState((current) =>
+              current === "error" ? "idle" : current,
+            );
+            setMessage((current) =>
+              current === TURNSTILE_REQUIRED_MESSAGE ||
+              current === TURNSTILE_ERROR_MESSAGE
+                ? ""
+                : current,
+            );
+          }}
+          onExpire={(_, boundTurnstile) => {
+            turnstileRef.current = boundTurnstile;
+            setTurnstileToken("");
+          }}
+          onError={(_, boundTurnstile) => {
+            turnstileRef.current = boundTurnstile ?? turnstileRef.current;
+            setTurnstileToken("");
+            setSubmitState("error");
+            setMessage(TURNSTILE_ERROR_MESSAGE);
+          }}
+        />
+      ) : (
+        <p className="text-sm">{TURNSTILE_UNAVAILABLE_MESSAGE}</p>
+      )}
+
+      <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
         {submitState === "submitting" ? "Subscribing..." : "Subscribe"}
       </Button>
 
-      <p
-        id={statusId}
-        aria-live="polite"
-        className="text-muted-foreground min-h-5 text-xs">
+      <p id={statusId} aria-live="polite" className="min-h-5 text-xs">
         {message}
       </p>
     </form>
