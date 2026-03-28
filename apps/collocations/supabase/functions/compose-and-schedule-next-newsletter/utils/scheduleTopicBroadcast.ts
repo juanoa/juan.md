@@ -120,12 +120,12 @@ export const scheduleTopicBroadcast = async ({
   const subject = renderTemplateString(template.subject, resolvedVariables);
 
   if (!from) {
-    throw new Error('Template "daily-collocation" is missing a "from" value.');
+    throw new Error('Template is missing a "from" value.');
   }
 
   if (!subject) {
     throw new Error(
-      'Template "daily-collocation" is missing a "subject" value.',
+      'Template is missing a "subject" value.',
     );
   }
 

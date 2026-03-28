@@ -30,8 +30,14 @@ export type TemplateResponse = {
 };
 
 export const getTemplate = async (): Promise<TemplateResponse> => {
+  const templateId = Deno.env.get("RESEND_BROADCAST_TEMPLATE_ID");
+
+  if (!apiKey) {
+    throw new Error("Missing RESEND_BROADCAST_TEMPLATE_ID.");
+  }
+
   const resend = new Resend(getResendApiKey());
-  const { data, error } = await resend.templates.get("daily-collocation");
+  const { data, error } = await resend.templates.get(templateId);
 
   if (error) {
     throw Object.assign(new Error(error.message), {
