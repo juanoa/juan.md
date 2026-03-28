@@ -17,7 +17,7 @@ type NewsletterTemplateVariables = {
 };
 
 const DEFAULT_TIME_ZONE = "Europe/Madrid";
-const SCHEDULED_AT = "in 1 minute";
+const SCHEDULED_AT = "tomorrow at 9am";
 const RATE_LIMIT_DELAY_MS = 1000;
 const TOMORROW_WEEKDAYS = new Set([
   "sunday",
