@@ -26,8 +26,17 @@
     font-weight: 400 !important;
   }
 
+  .prose ul,
+  .prose ol,
+  .prose li,
   .prose p {
     color: var(--color-muted-foreground);
+  }
+
+  /* For me, buttons should have cursor: pointer */
+  button:not([disabled]),
+  [role="button"]:not([disabled]) {
+    cursor: pointer;
   }
 }
 

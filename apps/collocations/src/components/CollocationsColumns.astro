@@ -1,0 +1,55 @@
+---
+import type { Collocation } from "src/types/Collocation";
+
+interface Props {
+  items: Array<Pick<Collocation, "label" | "slug">>;
+}
+
+const { items } = Astro.props as Props;
+
+const columns: Array<Props["items"]> = [[], [], []];
+const desktopColumnClasses = ["mr-auto", "mx-auto", "ml-auto"];
+
+// Precompute three columns so desktop can align each list independently.
+items.forEach((item, index) => {
+  columns[index % columns.length].push(item);
+});
+---
+
+{/* Desktop: render three separate columns with independent alignment. */}
+<div class="mt-2 hidden md:flex">
+  {
+    columns.map((column, index) => (
+      <div class="flex-1">
+        <ul
+          class:list={[
+            "text-muted-foreground w-max space-y-3",
+            desktopColumnClasses[index],
+          ]}>
+          {column.map((item) => (
+            <li>
+              <a
+                class="hover:text-foreground block text-left text-sm transition-colors"
+                href={`/${item.slug}`}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>
+
+{/* Mobile: render a single vertical list instead of split columns. */}
+<ul class="text-muted-foreground mt-2 space-y-3 md:hidden">
+  {items.map((item) => (
+    <li>
+      <a
+        class="hover:text-foreground block text-left text-sm transition-colors"
+        href={`/${item.slug}`}>
+        {item.label}
+      </a>
+    </li>
+  ))}
+</ul>
