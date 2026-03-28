@@ -1,6 +1,7 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { getNextCollocation } from "./utils/getNextCollocation.ts";
 import { generateTopicNewsletterContent } from "./utils/generateTopicNewsletterContent.ts";
+import { saveUsedCollocation } from "./utils/saveUsedCollocation.ts";
 import { scheduleTopicBroadcast } from "./utils/scheduleTopicBroadcast.ts";
 import { sendOwnerNewsletterPreview } from "./utils/sendOwnerNewsletterPreview.ts";
 import { getTemplate } from "./utils/getTemplate.ts";
@@ -43,6 +44,8 @@ Deno.serve(async () => {
         broadcast,
       });
     }
+
+    await saveUsedCollocation(collocation);
 
     return new Response(
       JSON.stringify({
