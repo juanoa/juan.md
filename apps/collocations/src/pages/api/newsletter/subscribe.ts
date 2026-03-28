@@ -35,6 +35,7 @@ function getTopicSubscriptions(role: Role) {
 
 export const POST: APIRoute = async ({ request }) => {
   const apiKey = import.meta.env.RESEND_API_KEY;
+  const segmentId = import.meta.env.RESEND_BROADCAST_SEGMENT_ID;
 
   if (!apiKey) {
     return json("Missing RESEND_API_KEY.", 500);
@@ -110,6 +111,7 @@ export const POST: APIRoute = async ({ request }) => {
   const createdContact = await resend.contacts.create({
     email,
     unsubscribed: false,
+    segmentId,
     topics: getTopicSubscriptions(role),
   });
 
