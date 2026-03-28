@@ -80,7 +80,7 @@ export function NewsletterSignupForm() {
           type="email"
           inputMode="email"
           autoComplete="email"
-          placeholder="you@company.com"
+          placeholder="email@provider.com"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           disabled={submitState === "submitting"}
