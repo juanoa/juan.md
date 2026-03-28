@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import {
+  ItemDescription,
+  ItemContent,
+  ItemTitle,
+  Item,
+} from "@juan/ui/components/ui/item";
+
+const isProduction = import.meta.env.PROD;
+
+const logs = (
+  await getCollection("logs", (entry) => !isProduction || !entry.data.draft)
+).sort((left, right) => {
+  const createdAtDifference =
+    right.data.createdAt.getTime() - left.data.createdAt.getTime();
+
+  if (createdAtDifference !== 0) {
+    return createdAtDifference;
+  }
+
+  return left.data.title.localeCompare(right.data.title);
+});
+---
+
+{
+  logs.map((log) => (
+    <div class="not-prose mt-6">
+      <a href={`/${log.id}`}>
+        <Item variant="outline">
+          <ItemContent>
+            <ItemTitle>{log.data.title}</ItemTitle>
+            <ItemDescription>{log.data.description}</ItemDescription>
+          </ItemContent>
+        </Item>
+      </a>
+    </div>
+  ))
+}

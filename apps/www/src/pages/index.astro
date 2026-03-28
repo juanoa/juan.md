@@ -6,12 +6,14 @@ import {
   Item,
   ItemMedia,
 } from "@juan/ui/components/ui/item";
+import LogList from "@/components/content/LogList.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { CollocationsLogo } from "@/components/projects/CollocationsLogo";
+
 const pageTitle = "Juan Otálora";
 ---
 
-<BaseLayout pageTitle={pageTitle} isHomepage={true}>
+<BaseLayout pageTitle={pageTitle} isHomePage={true}>
   <article class="prose prose-sm dark:prose-invert">
     <section>
       <h2>Work</h2>
@@ -61,35 +63,10 @@ const pageTitle = "Juan Otálora";
 
     <section class="mt-10">
       <h2>Logs</h2>
-      <div class="not-prose mt-6">
-        <a href="/overscroll-behavior-none">
-          <Item variant="outline">
-            <ItemContent>
-              <ItemTitle>Why you should disable overscroll behavior</ItemTitle>
-              <ItemDescription>
-                When Browser Gestures Break Your App: Why I Disable Overscroll
-                in Complex UIs
-              </ItemDescription>
-            </ItemContent>
-          </Item>
-        </a>
-      </div>
-      <div class="not-prose mt-6">
-        <a href="/frontend-folder-architecture">
-          <Item variant="outline">
-            <ItemContent>
-              <ItemTitle>Frontend folder architecture</ItemTitle>
-              <ItemDescription>
-                A short reflection on why folder structure still matters in the
-                AI era.
-              </ItemDescription>
-            </ItemContent>
-          </Item>
-        </a>
-      </div>
+      <LogList />
     </section>
 
-    <section class='mt-10"'>
+    <section class="mt-10">
       <hr />
 
       <p>

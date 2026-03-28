@@ -1,0 +1,83 @@
+---
+title: "Frontend folder architecture"
+description: "A short reflection on why folder structure still matters in the AI era."
+createdAt: 2026-02-01
+---
+
+import { BadFolderStructure } from "@/components/logs/react-folder-architecture/bad-folder-structure";
+import { GoodFolderStructure } from "@/components/logs/react-folder-architecture/good-folder-structure";
+import { StoreWeb } from "@/components/logs/react-folder-architecture/store-web";
+
+Certainly, the folder structure is one of those decisions that, if not made well
+from the beginning, can lead to many problems as the code scales.
+
+Bad folder skeletons exist, just as good ones do. Fortunately, modern IDE
+refactoring tools and AI coding agents allow files and folders to be moved
+without many complications.
+
+In this post, we will look at the folder structure that I propose for a clean
+architecture for React with TS, so you will see naming specific to these
+technologies, but it can be applied to any other frontend library/framework.
+Feel free to adapt it to your needs 🙂
+
+## Do we still need an architecture in the AI era?
+
+This is not the first time I write this article. A few years ago I published one
+similar on
+[Medium](https://juanoa.medium.com/folder-structure-in-a-react-hexagonal-architecture-f926437c0c1a)
+and dev.to. It was one of my most read articles. In 2023, AI was in its
+infancy, the first LLMs appeared, but coding didn't change yet.
+
+Today, it changes a lot. Claude Code, Codex, Copilot and many other tools are
+almost mandatory in every tech job. At MITO, we write the most of the web code
+using those tools. However, I know where almost every piece of code is located
+in the project. I remember the file names, the types, the components, ... It
+might seem unnecessary in this AI era, but it saves me a lot of time when I
+need to get my hands dirty.
+
+## It's all about domain
+
+DDD (Domain Driven Design) is not only about backend. Frontend should split the
+code in different domains. Let's take a look to this example:
+
+<StoreWeb client:load />
+
+Welcome to the biggest water e-commerce: Water-Commerce! I'm sorry, I've worked
+for 4 years on one of the biggest e-commerce on Earth, the example must be
+another online store.
+
+As you can see, we can differentiate 3 domains:
+
+- Product
+- Cart
+- Payment
+
+A common folder structure for this project would look like this:
+
+<BadFolderStructure client:load />
+
+Do you see the problem? Distance is the problem. Imagine you're working on a new
+payment feature, like adding a new payment method. Do you want to add a new
+component while you update the _usePayment.ts_ hook? Good luck, because they are
+in completely different folders.
+
+What I propose it's to apply vertical slicing to our project. Instead of divide
+our file by type (components, hooks, REST clients, ...), group them by domain,
+and then, by type. This way, if you are working in a new functionality related
+on the cart, the distance between files is lower, more comfortable and
+navigation is better.
+
+I refactor the example above to this new architecture:
+
+<GoodFolderStructure client:load />
+
+In the previous versions of this article I was more opinionated about how to
+name this folders, but in this case I prefer to stay away. Code evolves faster
+than ever and what I did in the past, now it's practically legacy. So now I
+prefer to write about things that can be evergreen so I don’t have to re-write
+this article again so soon.
+
+## Resources
+
+- [Folder structure in a React hexagonal architecture (v1)](https://juanoa.medium.com/folder-structure-in-a-react-hexagonal-architecture-f926437c0c1a)
+- [Screaming architecture](https://blog.cleancoder.com/uncle-bob/2011/09/30/Screaming-Architecture.html)
