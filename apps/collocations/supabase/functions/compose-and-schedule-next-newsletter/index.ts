@@ -1,6 +1,7 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { getNextCollocation } from "./utils/getNextCollocation.ts";
 import { generateTopicNewsletterContent } from "./utils/generateTopicNewsletterContent.ts";
+import { scheduleTopicBroadcast } from "./utils/scheduleTopicBroadcast.ts";
 import { getTemplate } from "./utils/getTemplate.ts";
 import { getTopics } from "./utils/getTopics.ts";
 
@@ -13,19 +14,28 @@ Deno.serve(async () => {
     ]);
 
     const topicsWithNewsletterContent = await Promise.all(
-      topics.data.map(async (topic) => ({
-        ...topic,
-        newsletterContent: await generateTopicNewsletterContent({
+      topics.data.map(async (topic) => {
+        const newsletterContent = await generateTopicNewsletterContent({ collocation,topic });
+
+        const broadcast = await scheduleTopicBroadcast({
           collocation,
+          newsletterContent,
+          template,
           topic,
-        }),
-      })),
+        });
+
+        return {
+          ...topic,
+          newsletterContent,
+          broadcast,
+        };
+      }),
     );
 
     return new Response(
       JSON.stringify({
         collocation,
-        templateVars: template.variables,
+        template,
         topics: {
           ...topics,
           data: topicsWithNewsletterContent,
