@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "@juan/ui/components/ui/select";
 
+import { CheckCircleIcon } from "@juan/ui/icons/phosphor";
+
 const ROLE_OPTIONS = [
   "Software Engineer",
   "Product Designer",
@@ -99,6 +101,16 @@ export function NewsletterSignupForm() {
         error instanceof Error ? error.message : "Something went wrong.",
       );
     }
+  }
+
+  if (submitState === "success") {
+    return (
+      <div className="flex flex-col items-center justify-center gap-2 py-10">
+        <CheckCircleIcon className="size-7 text-green-600" />
+        <p>Thanks for subscribing</p>
+        <p className="text-muted-foreground text-sm">See you tomorrow!</p>
+      </div>
+    );
   }
 
   return (
