@@ -10,11 +10,16 @@ const ROLE_TOPICS = {
 
 const TOPIC_IDS = Object.values(ROLE_TOPICS);
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const GENERIC_SUCCESS_MESSAGE = "Thanks for subscribing.";
 
 type Role = keyof typeof ROLE_TOPICS;
 
 function json(message: string, status = 200) {
   return Response.json({ message }, { status });
+}
+
+function genericSuccess() {
+  return json(GENERIC_SUCCESS_MESSAGE);
 }
 
 function isRole(value: unknown): value is Role {
@@ -38,7 +43,8 @@ export const POST: APIRoute = async ({ request }) => {
   const segmentId = import.meta.env.RESEND_BROADCAST_SEGMENT_ID;
 
   if (!apiKey) {
-    return json("Missing RESEND_API_KEY.", 500);
+    console.error("Missing RESEND_API_KEY.");
+    return genericSuccess();
   }
 
   let payload: unknown;
@@ -46,7 +52,7 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     payload = await request.json();
   } catch {
-    return json("Invalid request body.", 400);
+    return genericSuccess();
   }
 
   const email =
@@ -63,49 +69,24 @@ export const POST: APIRoute = async ({ request }) => {
       : undefined;
 
   if (!EMAIL_REGEX.test(email)) {
-    return json("Enter a valid email address.", 400);
+    return genericSuccess();
   }
 
   if (!isRole(role)) {
-    return json("Select a valid role.", 400);
+    return genericSuccess();
   }
 
   const resend = new Resend(apiKey);
   const existingContact = await resend.contacts.get({ email });
 
   if (existingContact.error && existingContact.error.name !== "not_found") {
-    return json(
-      existingContact.error.message,
-      existingContact.error.statusCode ?? 502,
-    );
+    console.error("Failed to fetch newsletter contact.", existingContact.error);
+    return genericSuccess();
   }
 
   if (existingContact.data) {
-    const updatedContact = await resend.contacts.update({
-      email,
-      unsubscribed: false,
-    });
-
-    if (updatedContact.error) {
-      return json(
-        updatedContact.error.message,
-        updatedContact.error.statusCode ?? 502,
-      );
-    }
-
-    const updatedTopics = await resend.contacts.topics.update({
-      email,
-      topics: getTopicSubscriptions(role),
-    });
-
-    if (updatedTopics.error) {
-      return json(
-        updatedTopics.error.message,
-        updatedTopics.error.statusCode ?? 502,
-      );
-    }
-
-    return json("Subscription updated.");
+    // Preserve existing contacts exactly as they are and avoid leaking state.
+    return genericSuccess();
   }
 
   const createdContact = await resend.contacts.create({
@@ -116,11 +97,9 @@ export const POST: APIRoute = async ({ request }) => {
   });
 
   if (createdContact.error) {
-    return json(
-      createdContact.error.message,
-      createdContact.error.statusCode ?? 502,
-    );
+    console.error("Failed to create newsletter contact.", createdContact.error);
+    return genericSuccess();
   }
 
-  return json("Subscription confirmed.", 201);
+  return genericSuccess();
 };
