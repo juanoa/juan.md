@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
+import MdxPage from "@/components/content/MdxPage.astro";
+
+interface Props {
+  entry: CollectionEntry<"logs">;
+}
+
+export async function getStaticPaths() {
+  const isProduction = import.meta.env.PROD;
+  const entries = await getCollection(
+    "logs",
+    (entry) => !isProduction || !entry.data.draft,
+  );
+
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<MdxPage title={entry.data.title}>
+  <Content />
+</MdxPage>

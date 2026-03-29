@@ -1,0 +1,136 @@
+---
+title: "Why you should disable overscroll behavior"
+description: "When Browser Gestures Break Your App: Why I Disable Overscroll in Complex UIs"
+createdAt: 2026-03-26
+---
+
+import { FixedToolbarCanvas } from "@/components/logs/overscroll-behavior-none/fixed-toolbar-canvas";
+import { MacosBounceScroll } from "@/components/logs/overscroll-behavior-none/macos-bounce-scroll";
+
+There’s a default behavior in browsers on macOS that almost everyone takes for
+granted: swipe left or right with two fingers, and you go back or forward in
+history.
+
+It’s great. Until it completely breaks your product.
+
+If you’re building a traditional website, you should leave it alone. It’s part
+of the platform. Users expect it. Removing it is like disabling the back
+button.
+
+But if you’re building a complex web app this behavior quickly turns from
+helpful into hostile.
+
+## The problem
+
+Imagine a user inside your app:
+
+- Moving around a canvas
+- Navigating a timeline
+- Dragging horizontally across content
+- Exploring a large workspace
+
+<FixedToolbarCanvas client:load />
+
+In this kind of layout, the canvas is supposed to pan and the toolbar is
+supposed to stay put. Neither gesture should be able to throw the user into
+browser history.
+
+Now they swipe slightly too far.
+
+Boom. They navigate away. State lost. Context gone. Flow broken.
+
+This is not a minor annoyance. This is a **fundamental UX failure**.
+
+The browser is prioritizing its own navigation model over your app’s
+interaction model.
+
+And it’s not just horizontal gestures.
+
+Vertical overscroll has its own set of problems:
+
+- Scroll “escaping” from your canvas to the page
+- Pull-to-refresh triggering unexpectedly
+- Bounce effects breaking immersion
+- Nested scroll areas behaving inconsistently
+
+<MacosBounceScroll />
+
+Same root issue. Same outcome: **loss of control**.
+
+## This is not a “nice to have”
+
+If your app has a primary horizontal interaction, you **have to** disable swipe
+navigation.
+
+And if your app is immersive enough, you should probably disable vertical
+overscroll too.
+
+Web browsers were designed for documents. You’re probably crafting an
+environment, not a document.
+
+Tools like Figma, Miro, Framer all understand this. They don’t try to coexist
+with the browser gestures. They override them.
+
+Because the alternative is worse.
+
+## The mental model shift
+
+There’s a line where a website stops being a website and starts being software.
+
+Once you cross that line:
+
+- The browser is no longer the source of truth for navigation
+- Your app feels better
+- Your interactions define the experience
+
+## How to change it?
+
+This is not about hacks or event listeners. CSS already gives you the tools:
+
+```css
+html,
+body {
+  overscroll-behavior: none;
+
+  /* or */
+
+  overscroll-behavior-x: none;
+  overscroll-behavior-y: none;
+}
+```
+
+Horizontal disables navigation gestures.
+
+Vertical prevents scroll chaining, pull-to-refresh, and bounce effects.
+
+**Important detail**: applying this to a div is not enough. It needs to be at
+the root level.
+
+<FixedToolbarCanvas client:load disableAsideOverscroll />
+
+Yes, you’re removing native behaviors.
+
+Yes, some users might notice.
+
+But in a complex app, the tradeoff is clear:
+
+- Keep them → unpredictable navigation, broken flows
+- Remove them → consistent, controlled interaction
+
+I’ll take consistency every time.
+
+## Where I draw the line
+
+I don’t disable this everywhere.
+
+- Marketing site → never
+- Dashboard → probably not
+- Editor / canvas → always
+
+And for vertical:
+
+- If the page scroll is part of the UX → keep it
+- If the app is a self-contained workspace → remove it
+
+A good rule of thumb is: **If the browser can interfere with your core
+interaction model, it shouldn’t**.
