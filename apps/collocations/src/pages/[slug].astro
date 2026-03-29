@@ -1,12 +1,12 @@
 ---
 export const prerender = true;
 
-import type { Collocation } from "src/types/Collocation";
-import Layout from "src/layouts/Layout.astro";
-import CollocationsColumns from "src/components/CollocationsColumns.astro";
-import { CopyButton } from "src/components/CopyButton";
-import { RandomCollocationButton } from "src/components/RandomCollocationButton";
-import { getCollocations, getFunctionWords } from "src/lib/data";
+import CollocationsColumns from "@/components/CollocationsColumns.astro";
+import { CopyButton } from "@/components/CopyButton";
+import { RandomCollocationButton } from "@/components/RandomCollocationButton";
+import Layout from "@/layouts/Layout.astro";
+import { getCollocations, getFunctionWords } from "@/lib/data";
+import type { Collocation } from "@/types/Collocation";
 
 export async function getStaticPaths() {
   const collocations = await getCollocations();

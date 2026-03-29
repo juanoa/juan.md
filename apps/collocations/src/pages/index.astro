@@ -1,13 +1,13 @@
 ---
 export const prerender = true;
 
-import Layout from "src/layouts/Layout.astro";
-import { CollocationsSearchBar } from "src/components/CollocationsSearchBar";
-import CollocationsColumns from "src/components/CollocationsColumns.astro";
-import PronunciationButton from "src/components/PronunciationButton.astro";
-import { RandomCollocationButton } from "src/components/RandomCollocationButton";
-import { getCollocations } from "src/lib/data";
-import type { Collocation } from "src/types/Collocation";
+import CollocationsColumns from "@/components/CollocationsColumns.astro";
+import { CollocationsSearchBar } from "@/components/CollocationsSearchBar";
+import PronunciationButton from "@/components/PronunciationButton.astro";
+import { RandomCollocationButton } from "@/components/RandomCollocationButton";
+import Layout from "@/layouts/Layout.astro";
+import { getCollocations } from "@/lib/data";
+import type { Collocation } from "@/types/Collocation";
 import { EnvelopeIcon } from "@juan/ui/icons/phosphor";
 
 const allCollocations = (await getCollocations()) as Collocation[];
