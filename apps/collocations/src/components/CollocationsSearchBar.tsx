@@ -18,7 +18,7 @@ import {
   InputGroupInput,
 } from "@juan/ui/components/ui/input-group";
 import { MagnifyingGlassIcon } from "@juan/ui/icons/phosphor";
-import type { Collocation } from "src/types/Collocation";
+import type { Collocation } from "@/types/Collocation";
 
 interface MatchSegment {
   text: string;

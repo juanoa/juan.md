@@ -1,5 +1,5 @@
 ---
-import type { Collocation } from "src/types/Collocation";
+import type { Collocation } from "@/types/Collocation";
 
 interface Props {
   items: Array<Pick<Collocation, "label" | "slug">>;
@@ -43,13 +43,15 @@ items.forEach((item, index) => {
 
 {/* Mobile: render a single vertical list instead of split columns. */}
 <ul class="text-muted-foreground mt-2 space-y-3 md:hidden">
-  {items.map((item) => (
-    <li>
-      <a
-        class="hover:text-foreground block text-left text-sm transition-colors"
-        href={`/${item.slug}`}>
-        {item.label}
-      </a>
-    </li>
-  ))}
+  {
+    items.map((item) => (
+      <li>
+        <a
+          class="hover:text-foreground block text-left text-sm transition-colors"
+          href={`/${item.slug}`}>
+          {item.label}
+        </a>
+      </li>
+    ))
+  }
 </ul>

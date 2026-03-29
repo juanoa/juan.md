@@ -1,7 +1,7 @@
+import type { Collocation } from "@/types/Collocation";
 import { createClient } from "@supabase/supabase-js";
 import collocationsJson from "content/collocations.json";
 import functionWordsJson from "content/function-words.json";
-import type { Collocation } from "src/types/Collocation";
 
 type CollocationRow = {
   slug: string;
