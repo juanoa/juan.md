@@ -8,4 +8,57 @@ draft: true
 import { FixedToolbarCanvas } from "@/components/logs/overscroll-behavior-none/fixed-toolbar-canvas";
 import { MacosBounceScroll } from "@/components/logs/overscroll-behavior-none/macos-bounce-scroll";
 
-I used to struggle with English.
+I used to struggle with English. Not my cup of tea. I perform pretty well in the school and in the high school, but English always was my kryptonite.
+
+I worked at Inditex for 4 years and I didn't need other language than Spanish. Here I started consuming English content. But not too much. I used the subtitles every single time, otherwise I didn't understand anything.
+
+I changed my mind a few years ago, when I applied to [The Exponential Fellowship](https://www.goexponential.org) for getting a Visa to work in Silicon Valley. I read the manifesto and I skipped the part of "Good English level". I thought that language wouldn't be a real problem and I'd learn it fast. I was close to be selected by startup, but when they tried to interviewed me in English, it was impossible. I was automatically discarded, obviously.
+
+Then, I understood the importance of English, specially on tech, so I took action. I started to assist conversational classes, consuming more English content, watching films and TV series without subtitles. It was pretty hard. I'm a learner. I always want to learn new things, but languages aren't easy for me.
+
+Fast forward, today my English level is better. I'm writing this post with translator tools or ChatGPT. I'm proud of my self. I feel better learning English. Now, it makes sense for me. I'm not learning English for the shake of it. I'm learning English because when you learn this language, thousands of doors are instantly open for you. New jobs, new media, new content, new interesting people you can follow.
+
+## Why collocations
+
+As I mentioned, I tried a lot of things to improve my English. There are a lot of apps out there for the most of those things. However, I was missing something.
+
+A collocation is a group of words that are commonly used together. For example:
+
+- Leave a comment
+- Ask for feedback
+
+Having in mind those collocations helped me a lot in order to compose better and faster sentences. I was collecting a lot of them these months and now, I've published all at [collocations.juan.md](collocations.juan.md).
+
+My idea with this project (and all my side projects) was to learn new things about web development. And the idea of this post is to document all the decisions I made. So, let's started.
+
+## Create a new brand or support my personal brand?
+
+I usually buy a new domain each time I've started a side project. It's like things are getting serious when you buy a new domain.
+
+This time it was different. I prefer to use my domain `juan.md` and create a new subdomain. My idea with this decision is to strengthen my personal brand.
+
+You can see similar examples with:
+
+- Shadcn UI: https://ui.shadcn.com
+- Sooner: https://sonner.emilkowal.ski (I love this domain)
+- Vaul: https://vaul.emilkowal.ski
+- Cobe: https://cobe.vercel.app (in this case strengthen Vercel)
+
+The idea was also to maintain the style and the components for this website. So I decided to __create a monorepo__, in this case using:
+
+- [pnpm workspaces](https://pnpm.io/workspaces)
+- [Turborepo](https://turborepo.dev/)
+
+The repository is open to read: https://github.com/juanoa/juan.md
+
+## Building the site
+
+- Astro
+- JSON content generated
+
+## Building the newsletter
+
+- JSON -> Supabase DB
+- Supabase Edge Functions
+- Resend
+- Open AI API
