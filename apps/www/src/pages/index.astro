@@ -10,6 +10,8 @@ import LogList from "@/components/logs/LogList.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { CollocationsLogo } from "@/components/projects/CollocationsLogo";
 import { HomePageHoverCard } from "@/components/HomePageHoverCard";
+import { MitoHoverCard } from "@/components/index/hover-cards/MitoHoverCard";
+import { InditexHoverCard } from "@/components/index/hover-cards/InditexHoverCard";
 
 const pageTitle = "Juan Otálora";
 ---
@@ -19,17 +21,17 @@ const pageTitle = "Juan Otálora";
     <section>
       <h2>Work</h2>
       <p>
-        I work on the founding team at <HomePageHoverCard
+        I work on the founding team at <MitoHoverCard
           text="MITO"
-          client:load>Hola</HomePageHoverCard
-        >, designing and building interfaces for our first customers next to
+          client:load
+        />, designing and building interfaces for our first customers next to
         amazing people like Danny Saltaren, Dani Latorre, Nacho González and
         Keyvan Akbari.
       </p>
       <p>
-        I previously worked at Inditex (zara.com) crafting the interfaces of the
-        product and catalog management tool for all the e-commerces in the
-        company.
+        I previously worked at <InditexHoverCard text="Inditex" client:load /> (zara.com)
+        crafting the interfaces of the product and catalog management tool for all
+        the e-commerces in the company.
       </p>
       <h2>A man on a mission</h2>
       <p>
