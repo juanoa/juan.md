@@ -1,0 +1,9 @@
+{
+  "imports": {
+    "@supabase/functions-js": "jsr:@supabase/functions-js@^2.100.1",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@^2.100.1",
+    "ai": "npm:ai@^6.0.141",
+    "resend": "npm:resend@6.9.4",
+    "zod": "npm:zod@^4.3.6"
+  }
+}

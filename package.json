@@ -15,9 +15,7 @@
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "format": "turbo run format",
-    "format:check": "turbo run format:check",
-    "ui:add": "shadcn add --cwd apps/www",
-    "ui:add:collocations": "shadcn add --cwd apps/collocations"
+    "format:check": "turbo run format:check"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

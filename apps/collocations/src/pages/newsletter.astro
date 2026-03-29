@@ -1,0 +1,127 @@
+---
+export const prerender = true;
+
+import { Button } from "@juan/ui/components/ui/button";
+import { EnvelopeIcon } from "@juan/ui/icons/phosphor";
+import { NewsletterSignupForm } from "src/components/NewsletterSignupForm";
+import Layout from "src/layouts/Layout.astro";
+---
+
+<Layout
+  title="Newsletter"
+  description="Subscribe to get a new collocation every weekday."
+  showSearchBar>
+  <section
+    class="mx-auto flex w-full max-w-5xl px-6 py-20 md:min-h-[calc(100vh-24rem)] md:items-center">
+    <div class="grid w-full gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">
+      <div class="space-y-5">
+        <p class="text-muted-foreground text-sm tracking-[0.24em] uppercase">
+          Newsletter
+        </p>
+        <div class="space-y-4">
+          <h1 class="max-w-xl text-4xl font-bold tracking-tight md:text-5xl">
+            Get a new collocation every weekday
+          </h1>
+          <p class="text-muted-foreground max-w-xl text-base leading-7">
+            Pick your role and I will send collocations that match the kind of
+            English you actually use at work.
+          </p>
+        </div>
+      </div>
+
+      <div class="border-border bg-background space-y-4 border p-6 shadow-sm">
+        <div class="space-y-1">
+          <h2 class="text-lg font-semibold" id="subscribe">Subscribe</h2>
+          <p class="text-muted-foreground text-sm">
+            Use your email and choose the audience you belong to.
+          </p>
+        </div>
+
+        <NewsletterSignupForm client:load />
+      </div>
+    </div>
+  </section>
+  <section class="mx-auto mb-20 max-w-4xl px-6">
+    <div class="mb-10 space-y-2">
+      <h2 class="text-2xl">Example</h2>
+      <p class="text-muted-foreground">
+        This is what you should expect to receive:
+      </p>
+    </div>
+    <div class="relative space-y-6 border p-4 md:p-10">
+      <div
+        class="text-muted-foreground absolute top-4 right-4 md:top-10 md:right-10">
+        <EnvelopeIcon />
+      </div>
+      <div class="text-muted-foreground text-sm">
+        From:
+        <span class="text-foreground"> newsletter@collocations.juan.md </span>
+      </div>
+      <div>
+        <p class="text-muted-foreground text-md">Subject</p>
+        <p class="text-sm">And the collocation of the day is...</p>
+      </div>
+      <hr class="mb-10" />
+      <div class="prose prose-sm">
+        <p class="text-neutral-700">Hi! How’s everything going?</p>
+        <p class="text-neutral-700">
+          Hey dev, the rule 'separate concerns' is like a clean merge for your
+          brain—keep UI, business logic, and data access in separate lanes and
+          debugging stays classy.
+        </p>
+        <blockquote>
+          <p class="text-2xl text-neutral-700">separate concerns</p>
+        </blockquote>
+        <p class="text-neutral-700">
+          Here you are a few examples you can use in your role as Software
+          Engineer:
+        </p>
+        <ul class="max-w-2/3 italic">
+          <li>
+            During a refactor, I separate concerns by moving authentication
+            logic into its own module.
+          </li>
+          <li>
+            When implementing a new feature, I separate concerns by splitting
+            API calls into a client service and UI state into components.
+          </li>
+        </ul>
+        <p class="text-xl text-neutral-700">
+          How to apply this collocation today?
+        </p>
+        <p class="text-neutral-700">
+          To apply this today, map your codebase into three buckets: UI,
+          business rules, and data access. Then migrate one cross-cutting
+          concern at a time.
+        </p>
+        <ul>
+          <li>
+            Identify a recent patch that touched multiple layers and move the
+            non-UI logic into a small service.
+          </li>
+          <li>
+            Introduce a clear interface between layers and wire them through
+            dependency injection or simple factories.
+          </li>
+          <li>
+            Run focused tests to ensure your separations didn't break behavior.
+          </li>
+        </ul>
+        <p class="text-neutral-700">
+          Example: break a monolithic module that handles API calls and UI state
+          into an ApiClient that talks to the backend and a separate UiState
+          module; the UI now renders based on the state provided by those
+          services.
+        </p>
+        <p class="text-neutral-700">See you on monday! 🙌</p>
+      </div>
+    </div>
+
+    <div class="mt-10 flex w-full items-center justify-center gap-2">
+      <p>Do you like it?</p>
+      <a href="#subscribe">
+        <Button>Subscribe</Button>
+      </a>
+    </div>
+  </section>
+</Layout>
