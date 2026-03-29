@@ -6,9 +6,10 @@ import {
   Item,
   ItemMedia,
 } from "@juan/ui/components/ui/item";
-import LogList from "@/components/content/LogList.astro";
+import LogList from "@/components/logs/LogList.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { CollocationsLogo } from "@/components/projects/CollocationsLogo";
+import { HomePageHoverCard } from "@/components/HomePageHoverCard";
 
 const pageTitle = "Juan Otálora";
 ---
@@ -18,9 +19,12 @@ const pageTitle = "Juan Otálora";
     <section>
       <h2>Work</h2>
       <p>
-        I work on the founding team at MITO, designing and building interfaces
-        for our first customers next to amazing people like Danny Saltaren, Dani
-        Latorre, Nacho González and Keyvan Akbari.
+        I work on the founding team at <HomePageHoverCard
+          text="MITO"
+          client:load>Hola</HomePageHoverCard
+        >, designing and building interfaces for our first customers next to
+        amazing people like Danny Saltaren, Dani Latorre, Nacho González and
+        Keyvan Akbari.
       </p>
       <p>
         I previously worked at Inditex (zara.com) crafting the interfaces of the
