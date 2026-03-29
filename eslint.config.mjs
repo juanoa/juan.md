@@ -66,5 +66,22 @@ export default [
       "react/prop-types": "off",
     },
   },
+  {
+    files: ["apps/*/**/*.{astro,js,mjs,cjs,jsx,ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["packages/ui/src/**", "**/packages/ui/src/**"],
+              message:
+                "Import shared UI through @juan/ui/* instead of packages/ui/src/*.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   ...astro.configs["flat/recommended"],
 ];

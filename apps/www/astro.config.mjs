@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import wrapMdxComponentsWithNotProse from "./src/plugins/remark-wrap-mdx-components.js";
+import { fileURLToPath } from "node:url";
 
 // https://astro.build/config
 export default defineConfig({
@@ -21,11 +22,8 @@ export default defineConfig({
     plugins: [tailwindcss()],
     resolve: {
       alias: {
-        "@": "/src",
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
     },
-  },
-  redirects: {
-    "/frontend": "/frontend/introduction",
   },
 });
