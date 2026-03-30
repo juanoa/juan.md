@@ -1,4 +1,6 @@
 ---
+export const prerender = true;
+
 import CollocationsColumns from "@/components/CollocationsColumns.astro";
 import { CollocationsSearchBar } from "@/components/CollocationsSearchBar";
 import PronunciationButton from "@/components/PronunciationButton.astro";
@@ -6,6 +8,7 @@ import { RandomCollocationButton } from "@/components/RandomCollocationButton";
 import Layout from "@/layouts/Layout.astro";
 import { getCollocations } from "@/lib/data";
 import type { Collocation } from "@/types/Collocation";
+import { EnvelopeIcon } from "@juan/ui/icons/phosphor";
 
 const allCollocations = (await getCollocations()) as Collocation[];
 const latestCollocations = allCollocations.slice(-9).reverse();
@@ -33,6 +36,14 @@ const collocationSlugs = allCollocations.map(({ slug }) => slug);
     <section class="mt-24 mb-10 w-full space-y-2">
       <h2 class="font-semibold">Last</h2>
       <CollocationsColumns items={latestCollocations} />
+    </section>
+    <section class="mt-20 text-center">
+      <a
+        href="/newsletter"
+        class="text-sm underline decoration-dotted underline-offset-4">
+        <EnvelopeIcon className="inline" />
+        <span>Get a new collocation every weekday</span>
+      </a>
     </section>
   </main>
 </Layout>
