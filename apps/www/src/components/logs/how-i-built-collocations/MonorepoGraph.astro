@@ -1,0 +1,218 @@
+---
+const titleId = `monorepo-graph-title-${crypto.randomUUID()}`;
+const descId = `monorepo-graph-desc-${crypto.randomUUID()}`;
+const arrowId = `monorepo-graph-arrow-${crypto.randomUUID()}`;
+---
+
+<figure class="monorepo-graph">
+  <svg
+    viewBox="0 0 920 540"
+    class="diagram"
+    role="img"
+    aria-labelledby={titleId}
+    aria-describedby={descId}>
+    <title id={titleId}>juan.md monorepo diagram</title>
+    <desc id={descId}>
+      A diagram showing the juan.md monorepo split into Apps and Packages, with
+      www and collocations under Apps and ui under Packages.
+    </desc>
+
+    <defs>
+      <marker
+        id={arrowId}
+        viewBox="0 0 12 12"
+        refX="8"
+        refY="6"
+        markerWidth="8"
+        markerHeight="8"
+        orient="auto-start-reverse">
+        <path d="M 1 2 L 8 6 L 1 10 z" class="arrow-head"></path>
+      </marker>
+    </defs>
+
+    <rect x="1" y="1" width="918" height="538" rx="28" class="frame"></rect>
+
+    <g class="connector-group">
+      <path d="M 460 144 V 182" class="connector"></path>
+      <path d="M 250 182 H 670" class="connector"></path>
+      <path
+        d="M 250 182 V 230"
+        class="connector"
+        marker-end={`url(#${arrowId})`}></path>
+      <path
+        d="M 670 182 V 230"
+        class="connector"
+        marker-end={`url(#${arrowId})`}></path>
+
+      <path d="M 250 320 V 360" class="connector"></path>
+      <path d="M 140 360 H 360" class="connector"></path>
+      <path
+        d="M 140 360 V 410"
+        class="connector"
+        marker-end={`url(#${arrowId})`}></path>
+      <path
+        d="M 360 360 V 410"
+        class="connector"
+        marker-end={`url(#${arrowId})`}></path>
+
+      <path
+        d="M 670 320 V 410"
+        class="connector"
+        marker-end={`url(#${arrowId})`}></path>
+    </g>
+
+    <g transform="translate(315 40)">
+      <rect x="0" y="0" width="290" height="104" rx="20" class="node node-root"
+      ></rect>
+      <text
+        x="145"
+        y="30"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        class="label-kicker">
+        repository
+      </text>
+      <text
+        x="145"
+        y="53"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        class="label-primary">
+        juan.md
+      </text>
+      <text
+        x="145"
+        y="75"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        class="label-secondary">
+        monorepo
+      </text>
+    </g>
+
+    <g transform="translate(120 230)">
+      <rect x="0" y="0" width="260" height="90" rx="18" class="node node-group"
+      ></rect>
+      <text x="130" y="35" text-anchor="middle" class="label-kicker">
+        workspace
+      </text>
+      <text x="130" y="59" text-anchor="middle" class="label-primary">
+        Apps
+      </text>
+    </g>
+
+    <g transform="translate(540 230)">
+      <rect x="0" y="0" width="260" height="90" rx="18" class="node node-group"
+      ></rect>
+      <text x="130" y="35" text-anchor="middle" class="label-kicker">
+        shared code
+      </text>
+      <text x="130" y="59" text-anchor="middle" class="label-primary">
+        Packages
+      </text>
+    </g>
+
+    <g transform="translate(60 410)">
+      <rect x="0" y="0" width="160" height="72" rx="16" class="node node-leaf"
+      ></rect>
+      <text x="80" y="44" text-anchor="middle" class="label-leaf"> www </text>
+    </g>
+
+    <g transform="translate(260 410)">
+      <rect x="0" y="0" width="180" height="72" rx="16" class="node node-leaf"
+      ></rect>
+      <text x="90" y="44" text-anchor="middle" class="label-leaf">
+        collocations
+      </text>
+    </g>
+
+    <g transform="translate(590 410)">
+      <rect x="0" y="0" width="160" height="72" rx="16" class="node node-leaf"
+      ></rect>
+      <text x="80" y="44" text-anchor="middle" class="label-leaf"> ui </text>
+    </g>
+  </svg>
+</figure>
+
+<style>
+  .monorepo-graph {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 56rem;
+  }
+
+  .diagram {
+    display: block;
+    height: auto;
+    width: 100%;
+    color: var(--foreground);
+    overflow: visible;
+  }
+
+  .frame {
+    fill: var(--background);
+  }
+
+  .connector {
+    fill: none;
+    stroke: var(--muted-foreground);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .arrow-head {
+    fill: var(--muted-foreground);
+  }
+
+  .node {
+    stroke: var(--border);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .node-root {
+    fill: var(--card);
+  }
+
+  .node-group {
+    fill: var(--muted);
+  }
+
+  .node-leaf {
+    fill: var(--background);
+  }
+
+  .label-kicker {
+    fill: var(--muted-foreground);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .label-primary {
+    fill: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 24px;
+  }
+
+  .label-secondary {
+    fill: var(--muted-foreground);
+    font-family: var(--font-sans);
+    font-size: 16px;
+  }
+
+  .label-leaf {
+    fill: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 18px;
+  }
+
+  @media (max-width: 640px) {
+    .monorepo-graph {
+      margin-block: 2rem;
+    }
+  }
+</style>

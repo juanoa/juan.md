@@ -2,62 +2,124 @@
 title: "How I built collocations.juan.md"
 description: "The entire process building the English collocations repository"
 createdAt: 2026-03-28
-draft: true
 ---
 
-I used to struggle with English. Not my cup of tea. I perform pretty well in the school and in the high school, but English always was my kryptonite.
+import MonorepoGraph from "@/components/logs/how-i-built-collocations/MonorepoGraph.astro";
 
-I worked at Inditex for 4 years and I didn't need other language than Spanish. Here I started consuming English content. But not too much. I used the subtitles every single time, otherwise I didn't understand anything.
+I used to struggle with English. Not my cup of tea. I performed pretty well in school and in high school, but English was always my kryptonite.
 
-I changed my mind a few years ago, when I applied to [The Exponential Fellowship](https://www.goexponential.org) for getting a Visa to work in Silicon Valley. I read the manifesto and I skipped the part of "Good English level". I thought that language wouldn't be a real problem and I'd learn it fast. I was close to be selected by startup, but when they tried to interviewed me in English, it was impossible. I was automatically discarded, obviously.
+I worked at Inditex for 4 years and I didn't need any language other than Spanish. That’s when I started consuming English content, but not too much. I used subtitles every single time; otherwise, I didn’t understand anything.
 
-Then, I understood the importance of English, specially on tech, so I took action. I started to assist conversational classes, consuming more English content, watching films and TV series without subtitles. It was pretty hard. I'm a learner. I always want to learn new things, but languages aren't easy for me.
+I changed my mindset a few years ago when I applied to [The Exponential Fellowship](https://www.goexponential.org) to get a visa to work in Silicon Valley. I read the manifesto and skipped the part about having a "good English level." I thought language wouldn’t be a real problem and that I’d learn it fast. I was close to being selected by a startup, but when they tried to interview me in English, it was impossible. I was automatically rejected, obviously.
 
-Fast forward, today my English level is better. I'm writing this post with translator tools or ChatGPT. I'm proud of my self. I feel better learning English. Now, it makes sense for me. I'm not learning English for the shake of it. I'm learning English because when you learn this language, thousands of doors are instantly open for you. New jobs, new media, new content, new interesting people you can follow.
+Then I understood the importance of English, especially in tech, so I took action. I started attending conversational classes, consuming more English content, and watching films and TV series without subtitles. It was pretty hard. I'm a learner. I always want to learn new things, but languages aren’t easy for me.
+
+Fast forward to today, my English level is better. I'm writing this post with translation tools or ChatGPT. I'm proud of myself. I feel better learning English. Now it makes sense to me. I'm not learning English for the sake of it. I'm learning English because when you learn this language, thousands of doors instantly open for you: new jobs, new media, new content, new interesting people you can follow.
 
 ## Why collocations
 
-As I mentioned, I tried a lot of things to improve my English. There are a lot of apps out there for the most of those things. However, I was missing something.
+As I mentioned, I tried a lot of things to improve my English. There are a lot of apps out there for most of those things. However, I was missing something.
 
 A collocation is a group of words that are commonly used together. For example:
 
 - Leave a comment
 - Ask for feedback
 
-Having in mind those collocations helped me a lot in order to compose better and faster sentences. I was collecting a lot of them these months and now, I've published all at [collocations.juan.md](collocations.juan.md).
+Keeping those collocations in mind helped me a lot in order to compose better and faster sentences. I have been collecting a lot of them over the past few months and now I’ve published them all at [collocations.juan.md](collocations.juan.md).
 
-My idea with this project (and all my side projects) was to learn new things about web development. And the idea of this post is to document all the decisions I made. So, let's started.
+![Homepage](/content/logs/how-i-built-collocations/collocations-juan-md.webp)
+
+My idea with this project (and all my side projects) was to learn new things about web development. And the idea of this post is to document all the decisions I made. So, let’s get started.
 
 ## Create a new brand or support my personal brand?
 
-I usually buy a new domain each time I've started a side project. It's like things are getting serious when you buy a new domain.
+I usually buy a new domain each time I start a side project. It feels like things are getting serious when you buy a new domain.
 
-This time it was different. I prefer to use my domain `juan.md` and create a new subdomain. My idea with this decision is to strengthen my personal brand.
+This time it was different. I preferred to use my domain `juan.md` and create a new subdomain. My idea with this decision is to strengthen my personal brand.
 
 You can see similar examples with:
 
 - Shadcn UI: https://ui.shadcn.com
-- Sooner: https://sonner.emilkowal.ski (I love this domain)
+- Sonner: https://sonner.emilkowal.ski (I love this domain)
 - Vaul: https://vaul.emilkowal.ski
-- Cobe: https://cobe.vercel.app (in this case strengthen Vercel)
+- Cobe: https://cobe.vercel.app (in this case, it strengthens Vercel)
 
-The idea was also to maintain the style and the components for this website. So I decided to __create a monorepo__, in this case using:
+The idea was also to maintain the style and components for this website. So I decided to **create a monorepo**, in this case using:
 
 - [pnpm workspaces](https://pnpm.io/workspaces)
 - [Turborepo](https://turborepo.dev/)
 
-> ⚠️ ADD A GRAPH WITH MERMAID ⚠️
+<MonorepoGraph />
 
 The repository is open to read: https://github.com/juanoa/juan.md
 
 ## Building the site
 
-- Astro
-- JSON content generated
+Let’s start with how I built the site. As you can see, it’s a simple website that I developed using Astro.
+
+It contains 3 main kinds of pages:
+
+- Home
+- Collocation page
+- Newsletter (I’ll cover this later in the article)
+
+The homepage is a basic page with a **collocations searcher** (that appears on almost all pages) and a grid with the last 9 collocations. My idea is to keep adding new collocations to this repository over time.
+
+### Style and design
+
+I used the same UI as `www.juan.md`. That was the main reason behind migrating to a monorepo. Basically, my whole design system is based on **Tailwind** and **Shadcn**, with a custom theme I generated using the [Shadcn creator mode](https://ui.shadcn.com/create).
+
+### Content
+
+My first idea was to save the collocations data in a JSON file in the repository, but this wouldn’t be compatible with the future newsletter.
+
+So I started a project on [Supabase](https://supabase.com/) and created a `collocations` database. I maintain a JSON file with some collocation examples for DEV mode, but **the production build fetches collocations from Supabase**.
+
+It would be great to automatically roll out the app every time I add a new collocation to the table, maybe using a webhook. _Adding it to my to-do list..._
+
+### Random
+
+I thought that adding a "Random" button could be a good idea. **I was inspired by the _"I'm feeling lucky"_ Google button**.
+
+The idea is to discover new collocations instead of searching for one you already have in mind. Once you start a "random session," you will see the random button on each page, so you can go down your own rabbit hole 🐇.
+
+<video
+  src="/content/logs/how-i-built-collocations/random-collocations.webm"
+  controls
+  playsInline
+  class="w-full rounded-lg"
+/>
+
+### Extra pages
+
+I added two more pages: **About** and **Privacy Policy**. The second one is a boring page that I have to include because of the newsletter and analytics data protection. I usually hate privacy policy pages, so I decided to create an easy-to-read page for those who need it.
 
 ## Building the newsletter
 
-- JSON -> Supabase DB
-- Supabase Edge Functions
-- Resend
-- Open AI API
+The second important feature of this little project is the [newsletter](https://collocations.juan.md/newsletter). The idea is to send a daily email with an English collocation and examples of how to use it at work.
+
+### Collecting the emails
+
+To collect emails, I added a small form with an email field and a job position selector. The idea is to generate custom examples according to your role: SWE, product manager, product designer, or C-level.
+
+This form is protected by [Cloudflare Turnstile](https://www.cloudflare.com/es-es/application-services/products/turnstile/), a free alternative to Google reCAPTCHA.
+
+The emails are saved in Resend, and I divide the audience by topics. Each job position (SWE, PM, PD, C-level) is a different topic in Resend.
+
+### Email template
+
+To keep the same style in every email, I created an email template using the Templates feature in Resend.
+
+![Resend template used for the collocations newsletter](/content/logs/how-i-built-collocations/resend-template.webp)
+
+### Generating the emails
+
+The newsletter is 100% AI-generated. Every weekday at 18:00, a **Supabase Edge Function** runs with the following instructions:
+
+1. **Get an unused collocation** (this is important to avoid sending duplicate emails over time).
+2. Generate the content for the Resend template variables using the **Vercel AI SDK** and GPT 5.4.
+3. Send me an email with the **draft**.
+4. **Schedule** the email for each topic for the next day at 10 AM.
+5. **Persist the used collocation** in the Supabase DB to avoid it being used again.
+
+Thanks for reading!
