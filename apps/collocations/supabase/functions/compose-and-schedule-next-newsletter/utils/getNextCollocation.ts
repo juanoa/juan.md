@@ -7,12 +7,16 @@ export type CollocationRow = {
   examples: string[] | null;
 };
 
-export const getNextCollocation = async (): Promise<CollocationRow> => {
+export const getNextCollocation = async (
+  audienceTopicId: string,
+): Promise<CollocationRow> => {
   const supabase = getSupabaseClient();
 
-  const { data: usedCollocations, error: usedCollocationsError } = await supabase
-    .from("used_collocations")
-    .select("collocation_id");
+  const { data: usedCollocations, error: usedCollocationsError } =
+    await supabase
+      .from("used_collocations")
+      .select("collocation_id")
+      .eq("audience_topic_id", audienceTopicId);
 
   if (usedCollocationsError) {
     throw new Error(
@@ -25,14 +29,16 @@ export const getNextCollocation = async (): Promise<CollocationRow> => {
   );
   let query = supabase
     .from("collocations")
-    .select("id, slug, label, examples");
+    .select("id, slug, label, examples")
+    .order("id", { ascending: true })
+    .limit(1);
 
   if (usedIds.length > 0) {
     query = query.not("id", "in", `(${usedIds.join(",")})`);
   }
 
-  const { data: availableCollocations, error: availableCollocationsError } =
-    await query;
+  const { data: nextCollocation, error: availableCollocationsError } =
+    await query.maybeSingle();
 
   if (availableCollocationsError) {
     throw new Error(
@@ -40,13 +46,9 @@ export const getNextCollocation = async (): Promise<CollocationRow> => {
     );
   }
 
-  const collocations = availableCollocations ?? [];
-
-  if (collocations.length === 0) {
+  if (!nextCollocation) {
     throw new Error("No unused collocations available.");
   }
 
-  const randomIndex = Math.floor(Math.random() * collocations.length);
-
-  return collocations[randomIndex];
+  return nextCollocation;
 };
