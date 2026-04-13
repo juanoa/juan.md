@@ -29,7 +29,6 @@ const { pageTitle, isHomePage, htmlLang = "en" } = Astro.props;
         mediaQuery.addEventListener("change", applySystemTheme);
       })();
     </script>
-    <Analytics />
     <title>{pageTitle}</title>
     <slot name="head" />
   </head>
@@ -38,5 +37,6 @@ const { pageTitle, isHomePage, htmlLang = "en" } = Astro.props;
       <Header isHomePage={isHomePage} />
       <slot />
     </div>
+    <Analytics />
   </body>
 </html>
