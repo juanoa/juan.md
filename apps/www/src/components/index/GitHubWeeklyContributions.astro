@@ -1,0 +1,325 @@
+---
+interface Props {
+  username?: string;
+  from?: string;
+}
+
+type ContributionDay = {
+  date: string;
+  contributionCount: number;
+};
+
+type GitHubResponse = {
+  data?: {
+    user: {
+      contributionsCollection: {
+        contributionCalendar: {
+          weeks: Array<{
+            contributionDays: ContributionDay[];
+          }>;
+        };
+      };
+    } | null;
+  };
+  errors?: Array<{
+    message: string;
+  }>;
+};
+
+type WeeklyContribution = {
+  start: string;
+  end: string;
+  total: number;
+  toneClass: string;
+};
+
+const { username = "juanoa", from = "2022-01-01" } = Astro.props;
+const isDevelopment = import.meta.env.DEV;
+
+const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
+const GREEN_SCALE_CLASSES = [
+  "bg-green-100",
+  "bg-green-200",
+  "bg-green-300",
+  "bg-green-400",
+  "bg-green-500",
+  "bg-green-600",
+  "bg-green-700",
+] as const;
+
+const token = import.meta.env.GITHUB_TOKEN;
+
+if (!isDevelopment && !token) {
+  throw new Error(
+    "Missing GITHUB_TOKEN. Define it in apps/www/.env or the shell environment before running Astro.",
+  );
+}
+
+const fromDate = new Date(`${from}T00:00:00.000Z`);
+const today = new Date();
+
+if (Number.isNaN(fromDate.valueOf())) {
+  throw new Error(`Invalid from date "${from}". Expected YYYY-MM-DD.`);
+}
+
+if (fromDate > today) {
+  throw new Error(`The from date "${from}" cannot be in the future.`);
+}
+
+const query = `
+  query WeeklyContributions($login: String!, $from: DateTime!, $to: DateTime!) {
+    user(login: $login) {
+      contributionsCollection(from: $from, to: $to) {
+        contributionCalendar {
+          weeks {
+            contributionDays {
+              date
+              contributionCount
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+const formatDateKey = (date: Date) =>
+  `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(
+    date.getUTCDate(),
+  ).padStart(2, "0")}`;
+
+const addDays = (date: Date, days: number) => {
+  const nextDate = new Date(date);
+  nextDate.setUTCDate(nextDate.getUTCDate() + days);
+  return nextDate;
+};
+
+const addYears = (date: Date, years: number) => {
+  const nextDate = new Date(date);
+  nextDate.setUTCFullYear(nextDate.getUTCFullYear() + years);
+  return nextDate;
+};
+
+const getStableMockWeeklyContribution = (weekStart: string) => {
+  let hash = 0;
+
+  for (const character of weekStart) {
+    hash = (hash * 31 + character.charCodeAt(0)) % 2_147_483_647;
+  }
+
+  return 25 + (hash % 176);
+};
+
+const startOfUtcDay = (date: Date) =>
+  new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
+  );
+
+const endOfUtcDay = (date: Date) =>
+  new Date(
+    Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      23,
+      59,
+      59,
+      999,
+    ),
+  );
+
+const endOfRange = new Date(
+  Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
+);
+
+const fetchContributionDays = async (): Promise<ContributionDay[]> => {
+  const aggregatedContributionDays: ContributionDay[] = [];
+
+  let segmentStart = startOfUtcDay(fromDate);
+
+  while (segmentStart <= endOfRange) {
+    const segmentEndCandidate = addDays(addYears(segmentStart, 1), -1);
+    const segmentEnd =
+      segmentEndCandidate > endOfRange ? endOfRange : segmentEndCandidate;
+
+    const response = await fetch(GITHUB_GRAPHQL_ENDPOINT, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query,
+        variables: {
+          login: username,
+          from: segmentStart.toISOString(),
+          to:
+            segmentEnd.getTime() === endOfRange.getTime()
+              ? today.toISOString()
+              : endOfUtcDay(segmentEnd).toISOString(),
+        },
+      }),
+    });
+
+    const result = (await response.json()) as GitHubResponse;
+
+    if (!response.ok || result.errors?.length || !result.data?.user) {
+      const errorMessage =
+        result.errors?.map((error) => error.message).join(", ") ??
+        `GitHub GraphQL request failed with status ${response.status}.`;
+
+      throw new Error(
+        `GitHub GraphQL request failed for ${formatDateKey(segmentStart)} to ${formatDateKey(segmentEnd)}: ${errorMessage}`,
+      );
+    }
+
+    aggregatedContributionDays.push(
+      ...result.data.user.contributionsCollection.contributionCalendar.weeks.flatMap(
+        (week) => week.contributionDays,
+      ),
+    );
+
+    segmentStart = addDays(segmentEnd, 1);
+  }
+
+  return aggregatedContributionDays;
+};
+
+const contributionDays = isDevelopment ? [] : await fetchContributionDays();
+const contributionCountByDate = new Map<string, number>(
+  contributionDays.map((day) => [day.date, day.contributionCount]),
+);
+
+const rawWeeklyContributions: Array<Omit<WeeklyContribution, "toneClass">> = [];
+
+// GitHub exposes daily contributions by calendar week, but the UI needs fixed
+// 7-day buckets starting exactly on 2022-01-01.
+for (
+  let cursor = new Date(fromDate);
+  cursor <= endOfRange;
+  cursor = addDays(cursor, 7)
+) {
+  const bucketStart = new Date(cursor);
+  const tentativeBucketEnd = addDays(bucketStart, 6);
+  const bucketEnd =
+    tentativeBucketEnd > endOfRange ? endOfRange : tentativeBucketEnd;
+  const bucketStartKey = formatDateKey(bucketStart);
+  let total = 0;
+
+  if (isDevelopment) {
+    total = getStableMockWeeklyContribution(bucketStartKey);
+  } else {
+    for (
+      let dayCursor = new Date(bucketStart);
+      dayCursor <= bucketEnd;
+      dayCursor = addDays(dayCursor, 1)
+    ) {
+      total += contributionCountByDate.get(formatDateKey(dayCursor)) ?? 0;
+    }
+  }
+
+  rawWeeklyContributions.push({
+    start: bucketStartKey,
+    end: formatDateKey(bucketEnd),
+    total,
+  });
+}
+
+const totals = rawWeeklyContributions.map((week) => week.total);
+const minimumContributions = Math.min(...totals);
+const sortedTotals = [...totals].sort((left, right) => left - right);
+
+const getPercentileValue = (values: number[], percentile: number) => {
+  if (values.length === 0) {
+    return 0;
+  }
+
+  const index = (values.length - 1) * percentile;
+  const lowerIndex = Math.floor(index);
+  const upperIndex = Math.ceil(index);
+  const lowerValue = values[lowerIndex];
+  const upperValue = values[upperIndex];
+
+  if (lowerValue === upperValue) {
+    return lowerValue;
+  }
+
+  return lowerValue + (upperValue - lowerValue) * (index - lowerIndex);
+};
+
+const p95Contributions = getPercentileValue(sortedTotals, 0.95);
+
+const getToneClass = (total: number) => {
+  if (p95Contributions === minimumContributions) {
+    return total === 0
+      ? GREEN_SCALE_CLASSES[0]
+      : GREEN_SCALE_CLASSES[GREEN_SCALE_CLASSES.length - 1];
+  }
+
+  const ratio = Math.min(
+    1,
+    (total - minimumContributions) / (p95Contributions - minimumContributions),
+  );
+  const toneIndex = Math.round(ratio * (GREEN_SCALE_CLASSES.length - 1));
+
+  return GREEN_SCALE_CLASSES[toneIndex];
+};
+
+const weeklyContributions: WeeklyContribution[] = rawWeeklyContributions.map(
+  (week) => ({
+    ...week,
+    toneClass: getToneClass(week.total),
+  }),
+);
+
+const getIsoWeekInfo = (date: Date) => {
+  const normalizedDate = startOfUtcDay(date);
+  const dayOfWeek = normalizedDate.getUTCDay() || 7;
+
+  normalizedDate.setUTCDate(normalizedDate.getUTCDate() + 4 - dayOfWeek);
+
+  const weekYear = normalizedDate.getUTCFullYear();
+  const firstDayOfYear = new Date(Date.UTC(weekYear, 0, 1));
+  const weekNumber = Math.ceil(
+    ((normalizedDate.getTime() - firstDayOfYear.getTime()) / 86_400_000 + 1) /
+      7,
+  );
+
+  return {
+    weekNumber,
+    weekYear,
+  };
+};
+
+const getWeekLabel = (start: string, end: string) => {
+  const bucketStart = new Date(`${start}T00:00:00.000Z`);
+  const bucketEnd = new Date(`${end}T00:00:00.000Z`);
+  const midpoint = addDays(
+    bucketStart,
+    Math.floor((bucketEnd.getTime() - bucketStart.getTime()) / 86_400_000 / 2),
+  );
+  const { weekNumber, weekYear } = getIsoWeekInfo(midpoint);
+
+  return `Week ${weekNumber}, ${weekYear}`;
+};
+
+const getContributionLabel = (total: number) =>
+  total === 1 ? "1 contribution" : `${total} contributions`;
+---
+
+<div class="not-prose space-y-2">
+  <div class="grid grid-cols-30 gap-0.75 sm:grid-cols-52">
+    {
+      weeklyContributions.map((week) => (
+        <div
+          class:list={["aspect-square rounded-[2px]", week.toneClass]}
+          aria-label={`${getWeekLabel(week.start, week.end)}: ${getContributionLabel(week.total)}`}
+          title={`${getWeekLabel(week.start, week.end)}: ${getContributionLabel(week.total)}`}
+        />
+      ))
+    }
+  </div>
+  <p class="text-muted-foreground text-center text-xs italic">
+    GitHub contributions per week since 2022
+  </p>
+</div>
