@@ -1,13 +1,21 @@
 ---
 import { getCollection } from "astro:content";
-import {
-  ItemDescription,
-  ItemContent,
-  ItemTitle,
-  Item,
-} from "@juan/ui/components/ui/item";
 
 const isProduction = import.meta.env.PROD;
+const logDateFormatter = new Intl.DateTimeFormat("en", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+function formatLogDate(date: Date) {
+  const parts = logDateFormatter.formatToParts(date);
+  const month = parts.find((part) => part.type === "month")?.value;
+  const year = parts.find((part) => part.type === "year")?.value;
+
+  return `${month}. ${year}`;
+}
 
 const logs = (
   await getCollection("logs", (entry) => !isProduction || !entry.data.draft)
@@ -23,17 +31,29 @@ const logs = (
 });
 ---
 
-{
-  logs.map((log) => (
-    <div class="not-prose mt-6">
-      <a href={`/${log.id}`}>
-        <Item variant="outline">
-          <ItemContent>
-            <ItemTitle>{log.data.title}</ItemTitle>
-            <ItemDescription>{log.data.description}</ItemDescription>
-          </ItemContent>
-        </Item>
-      </a>
-    </div>
-  ))
-}
+<ul class="not-prose mt-6 space-y-4">
+  {
+    logs.map((log) => (
+      <li>
+        <a href={`/${log.id}`} class="group block">
+          <div class="flex flex-col gap-1 text-sm sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline sm:gap-x-2">
+            <div class="flex min-w-0 items-baseline gap-1">
+              <span class="min-w-0 truncate font-medium hover:underline">
+                {log.data.title}
+              </span>
+              <span
+                aria-hidden="true"
+                class="hidden min-w-0 flex-1 border-b-2 border-dotted transition-all sm:block"
+              />
+            </div>
+            <time
+              datetime={log.data.createdAt.toISOString().split("T")[0]}
+              class="text-muted-foreground group-hover:text-foreground shrink-0 text-xs font-normal transition-all sm:text-sm">
+              {formatLogDate(log.data.createdAt)}
+            </time>
+          </div>
+        </a>
+      </li>
+    ))
+  }
+</ul>
