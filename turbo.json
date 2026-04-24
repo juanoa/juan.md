@@ -1,10 +1,23 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["SUPABASE_URL", "SUPABASE_ANON_KEY", "RESEND_API_KEY", "RESEND_BROADCAST_SEGMENT_ID", "TURNSTILE_SECRET_KEY", "PUBLIC_TURNSTILE_SITE_KEY"],
+  "globalEnv": [
+    "SUPABASE_URL",
+    "SUPABASE_ANON_KEY",
+    "RESEND_API_KEY",
+    "RESEND_BROADCAST_SEGMENT_ID",
+    "TURNSTILE_SECRET_KEY",
+    "PUBLIC_TURNSTILE_SITE_KEY"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".astro/**", ".vercel/output/**"]
+      "outputs": [
+        "dist/**",
+        ".astro/**",
+        ".vercel/output/**",
+        ".next/**",
+        "!.next/cache/**"
+      ]
     },
     "dev": {
       "dependsOn": ["^build"],
