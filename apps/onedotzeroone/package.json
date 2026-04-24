@@ -17,6 +17,7 @@
     "format:check": "pnpm exec prettier . --check --config ../../prettier.config.mjs --ignore-path ../../.prettierignore"
   },
   "dependencies": {
+    "@juan/ui": "workspace:*",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
