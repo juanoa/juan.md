@@ -9,6 +9,7 @@ import {
 import LogList from "@/components/logs/LogList.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { CollocationsLogo } from "@/components/projects/CollocationsLogo";
+import { OnePointZeroOneLogo } from "@/components/projects/OnePointZeroOneLogo";
 import { MitoHoverCard } from "@/components/index/hover-cards/MitoHoverCard";
 import { InditexHoverCard } from "@/components/index/hover-cards/InditexHoverCard";
 import GitHubWeeklyContributions from "@/components/index/GitHubWeeklyContributions.astro";
@@ -52,6 +53,21 @@ const pageTitle = "Juan Otálora";
     <section>
       <h2>Projects</h2>
       <div class="not-prose mt-6">
+        <a href="https://www.onepointzeroone.dev/">
+          <Item variant="outline">
+            <ItemMedia variant="image">
+              <OnePointZeroOneLogo />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>1.01^n</ItemTitle>
+              <ItemDescription>
+                An almanack of evergreen content for SWE
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </a>
+      </div>
+      <div class="not-prose mt-3">
         <a href="https://collocations.juan.md">
           <Item variant="outline">
             <ItemMedia variant="image">
