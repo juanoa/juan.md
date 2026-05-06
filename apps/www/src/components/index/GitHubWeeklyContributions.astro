@@ -250,10 +250,12 @@ const getPercentileValue = (values: number[], percentile: number) => {
 const p95Contributions = getPercentileValue(sortedTotals, 0.95);
 
 const getToneClass = (total: number) => {
+  if (total === 0) {
+    return "bg-neutral-500/20";
+  }
+
   if (p95Contributions === minimumContributions) {
-    return total === 0
-      ? GREEN_SCALE_CLASSES[0]
-      : GREEN_SCALE_CLASSES[GREEN_SCALE_CLASSES.length - 1];
+    return GREEN_SCALE_CLASSES[GREEN_SCALE_CLASSES.length - 1];
   }
 
   const ratio = Math.min(
