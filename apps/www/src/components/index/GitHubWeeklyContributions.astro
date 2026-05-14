@@ -251,7 +251,7 @@ const p95Contributions = getPercentileValue(sortedTotals, 0.95);
 
 const getToneClass = (total: number) => {
   if (total === 0) {
-    return "bg-muted";
+    return "bg-gray-100";
   }
 
   if (p95Contributions === minimumContributions) {
