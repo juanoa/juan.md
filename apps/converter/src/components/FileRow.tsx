@@ -7,9 +7,9 @@ import {
   ItemTitle,
 } from "@juan/ui/components/ui/item";
 import { formatBytes } from "../lib/file-utils";
-import { CategoryIcon } from "../lib/mime-icon";
 import type { Category } from "../lib/formats";
 import { XIcon } from "@juan/ui/icons/phosphor";
+import { FileThumbnail } from "./FileThumbnail";
 import { WaveSine } from "./WaveSine";
 
 type FileRowStatus = "pending" | "converting" | "done";
@@ -45,7 +45,7 @@ export function FileRow({
         style={{ width: `${fillPct}%` }}
       />
       <ItemMedia variant="icon" className="relative">
-        <CategoryIcon category={category} />
+        <FileThumbnail file={file} category={category} />
       </ItemMedia>
       <ItemContent className="relative">
         <ItemTitle>{file.name}</ItemTitle>
