@@ -11,12 +11,15 @@ import { targetsFor, type Category, type Target } from "../lib/formats";
 import { FormatSelect } from "./FormatSelect";
 import { FileRow } from "./FileRow";
 
+type FileRowStatus = "pending" | "converting" | "done";
+
 interface CategoryCardProps {
   category: Category;
   files: File[];
   target: Target;
   onTargetChange: (target: Target) => void;
   onRemoveFile: (file: File) => void;
+  getFileStatus?: (file: File) => { status: FileRowStatus; progress: number };
 }
 
 export function CategoryCard({
@@ -25,6 +28,7 @@ export function CategoryCard({
   target,
   onTargetChange,
   onRemoveFile,
+  getFileStatus,
 }: CategoryCardProps) {
   const options = targetsFor(category);
 
@@ -53,14 +57,19 @@ export function CategoryCard({
       </CardHeader>
       <CardContent>
         <ItemGroup>
-          {files.map((file) => (
-            <FileRow
-              key={`${file.name}-${file.size}`}
-              file={file}
-              category={category}
-              onRemove={onRemoveFile}
-            />
-          ))}
+          {files.map((file) => {
+            const fileStatus = getFileStatus?.(file);
+            return (
+              <FileRow
+                key={`${file.name}-${file.size}`}
+                file={file}
+                category={category}
+                onRemove={onRemoveFile}
+                status={fileStatus?.status}
+                progress={fileStatus?.progress}
+              />
+            );
+          })}
         </ItemGroup>
       </CardContent>
     </Card>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { RepeatIcon } from "@juan/ui/icons/phosphor";
 import { DropZone } from "./components/DropZone";
 import { CategoryCard } from "./components/CategoryCard";
@@ -23,6 +23,31 @@ export default function App() {
     }
     return next as Record<Category, Target>;
   }, [groups, targets]);
+
+  const fileIndex = useMemo(() => {
+    const map = new Map<File, number>();
+    let i = 0;
+    for (const g of groups) for (const f of g.files) map.set(f, i++);
+    return map;
+  }, [groups]);
+
+  const getFileStatus = useCallback(
+    (file: File) => {
+      const idx = fileIndex.get(file) ?? -1;
+      if (state.status === "done") {
+        return { status: "done" as const, progress: 1 };
+      }
+      if (state.status !== "converting") {
+        return { status: "pending" as const, progress: 0 };
+      }
+      const current = state.current - 1;
+      if (idx < current) return { status: "done" as const, progress: 1 };
+      if (idx === current)
+        return { status: "converting" as const, progress: state.progress };
+      return { status: "pending" as const, progress: 0 };
+    },
+    [state, fileIndex],
+  );
 
   const handleConvert = () => {
     const jobs: ConversionJob[] = groups.map((g) => ({
@@ -67,6 +92,7 @@ export default function App() {
                   setTargets((prev) => ({ ...prev, [g.category]: t }))
                 }
                 onRemoveFile={remove}
+                getFileStatus={getFileStatus}
               />
             ))}
 
