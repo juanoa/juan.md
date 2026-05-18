@@ -39,10 +39,13 @@ export default function App() {
     <div className="bg-background text-foreground min-h-screen font-mono">
       <div className="mx-auto max-w-2xl px-4 py-12">
         <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-sm font-medium flex items-center gap-2">
-            <RepeatIcon />
-            Converter
-          </h1>
+          <div className="space-y-2">
+            <h1 className="text-sm font-medium flex items-center gap-2">
+              <RepeatIcon />
+              Serverless Converter
+            </h1>
+            <p className="text-xs text-muted-foreground">Convert all your media right in your browser</p>
+          </div>
           {total > 0 && (
             <span className="text-muted-foreground text-xs">
               {total} file{total !== 1 ? "s" : ""}
