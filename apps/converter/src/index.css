@@ -1,0 +1,16 @@
+@import "@juan/ui/styles.css";
+
+@source "./**/*.{ts,tsx}";
+
+@keyframes wave-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--wave-period, -16) * 16));
+  }
+}
+
+@theme {
+  --animate-wave-slide: wave-slide 3s linear infinite;
+}

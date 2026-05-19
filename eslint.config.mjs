@@ -13,6 +13,7 @@ export default [
       "**/.next/**",
       "**/.pnpm-store/**",
       "**/.turbo/**",
+      "**/.vercel/**",
       "**/build/**",
       "**/coverage/**",
       "**/dist/**",
