@@ -18,7 +18,10 @@ function formatLogDate(date: Date) {
 }
 
 const logs = (
-  await getCollection("logs", (entry) => !isProduction || !entry.data.draft)
+  await getCollection(
+    "logs",
+    (entry) => !entry.id.includes("/") && (!isProduction || !entry.data.draft),
+  )
 ).sort((left, right) => {
   const createdAtDifference =
     right.data.createdAt.getTime() - left.data.createdAt.getTime();

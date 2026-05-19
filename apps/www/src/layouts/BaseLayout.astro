@@ -3,10 +3,16 @@ import Header from "@/components/Header.astro";
 import Analytics from "@vercel/analytics/astro";
 import "@juan/ui/styles.css";
 
-const { pageTitle, isHomePage } = Astro.props;
+interface Props {
+  pageTitle: string;
+  isHomePage?: boolean;
+  htmlLang?: string;
+}
+
+const { pageTitle, isHomePage, htmlLang = "en" } = Astro.props;
 ---
 
-<html lang="en">
+<html lang={htmlLang}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -23,13 +29,14 @@ const { pageTitle, isHomePage } = Astro.props;
         mediaQuery.addEventListener("change", applySystemTheme);
       })();
     </script>
-    <Analytics />
     <title>{pageTitle}</title>
+    <slot name="head" />
   </head>
   <body class="bg-background min-h-screen">
     <div class="mx-auto max-w-[65ch] px-6 py-12">
       <Header isHomePage={isHomePage} />
       <slot />
     </div>
+    <Analytics />
   </body>
 </html>

@@ -1,4 +1,5 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { z } from 'astro/zod'
 import { glob } from "astro/loaders";
 
 const logs = defineCollection({
@@ -10,6 +11,12 @@ const logs = defineCollection({
     title: z.string(),
     description: z.string(),
     createdAt: z.coerce.date(),
+    translations: z
+      .object({
+        en: z.string().optional(),
+        es: z.string().optional(),
+      })
+      .default({}),
     draft: z.boolean().default(false),
   }),
 });

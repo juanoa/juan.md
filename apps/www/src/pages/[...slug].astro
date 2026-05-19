@@ -1,10 +1,11 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getCollection, render } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import MdxPage from "@/components/logs/MdxPage.astro";
 
 interface Props {
   entry: CollectionEntry<"logs">;
+  translations: CollectionEntry<"logs">[];
 }
 
 export async function getStaticPaths() {
@@ -14,16 +15,47 @@ export async function getStaticPaths() {
     (entry) => !isProduction || !entry.data.draft,
   );
 
-  return entries.map((entry) => ({
-    params: { slug: entry.id },
-    props: { entry },
-  }));
+  return Promise.all(
+    entries.map(async (entry) => {
+      const translations = await Promise.all(
+        Object.values(entry.data.translations).map(async (translationId) => {
+          const translation = await getEntry("logs", translationId);
+
+          if (!translation) {
+            throw new Error(
+              `Log translation "${translationId}" referenced by "${entry.id}" was not found.`,
+            );
+          }
+
+          if (isProduction && translation.data.draft) {
+            return undefined;
+          }
+
+          return translation;
+        }),
+      );
+
+      return {
+        params: { slug: entry.id },
+        props: {
+          entry,
+          translations: translations.filter(
+            (translation): translation is CollectionEntry<"logs"> =>
+              Boolean(translation),
+          ),
+        },
+      };
+    }),
+  );
 }
 
-const { entry } = Astro.props;
+const { entry, translations } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<MdxPage title={entry.data.title}>
+<MdxPage
+  title={entry.data.title}
+  entryId={entry.id}
+  translations={translations}>
   <Content />
 </MdxPage>
