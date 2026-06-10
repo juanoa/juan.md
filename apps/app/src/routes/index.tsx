@@ -10,7 +10,7 @@ function DashboardRoute() {
   return (
     <Dashboard title="Dashboard">
       <p className="text-muted-foreground text-sm">
-        Welcome back! Pick a section from the sidebar.
+        Welcome back. Pick a section from the sidebar.
       </p>
     </Dashboard>
   );
