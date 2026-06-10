@@ -1,7 +1,11 @@
+import { TooltipProvider } from "@juan/ui/components/ui/tooltip";
+
+import { Dashboard } from "./components/dashboard";
+
 export default function App() {
   return (
-    <div className="bg-background text-foreground flex min-h-screen items-center justify-center font-mono">
-      <h1 className="text-sm font-medium">Hello World!</h1>
-    </div>
+    <TooltipProvider>
+      <Dashboard />
+    </TooltipProvider>
   );
 }
