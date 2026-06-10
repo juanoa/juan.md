@@ -1,0 +1,3 @@
+@import "@juan/ui/styles.css";
+
+@source "./**/*.{ts,tsx}";
