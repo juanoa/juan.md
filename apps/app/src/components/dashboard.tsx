@@ -1,11 +1,16 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { SidebarInset, SidebarProvider } from "@juan/ui/components/ui/sidebar";
 
 import { AppSidebar } from "./app-sidebar";
 import { SiteHeader } from "./site-header";
 
-export function Dashboard() {
+interface DashboardProps {
+  title: string;
+  children: ReactNode;
+}
+
+export function Dashboard({ title, children }: DashboardProps) {
   return (
     <SidebarProvider
       style={
@@ -17,7 +22,8 @@ export function Dashboard() {
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader />
+        <SiteHeader title={title} />
+        <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

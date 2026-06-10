@@ -1,4 +1,11 @@
-import * as React from "react"
+import {
+  BarbellIcon,
+  CommandIcon,
+  GearIcon,
+  SquaresFourIcon,
+} from "@phosphor-icons/react";
+import { Link } from "@tanstack/react-router";
+import * as React from "react";
 
 import {
   Sidebar,
@@ -8,17 +15,11 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@juan/ui/components/ui/sidebar"
+} from "@juan/ui/components/ui/sidebar";
 
-import { NavMain } from "./nav-main"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
-import {
-  SquaresFourIcon,
-  GearIcon,
-  CommandIcon,
-  BarbellIcon,
-} from "@phosphor-icons/react"
+import { NavMain } from "./nav-main";
+import { NavSecondary } from "./nav-secondary";
+import { NavUser } from "./nav-user";
 
 const data = {
   user: {
@@ -29,12 +30,12 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      to: "/",
       icon: <SquaresFourIcon />,
     },
     {
       title: "Gym",
-      url: "#",
+      to: "/gym",
       icon: <BarbellIcon />,
     },
   ],
@@ -45,7 +46,7 @@ const data = {
       icon: <GearIcon />,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -57,10 +58,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="#">
+              <Link to="/">
                 <CommandIcon className="size-5!" />
                 <span className="text-base font-semibold">J.O.A.</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -73,5 +74,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
