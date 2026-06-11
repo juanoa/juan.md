@@ -40,7 +40,7 @@ export function ExerciseLoadChart({
   currentDate,
 }: ExerciseLoadChartProps) {
   return (
-    <ChartContainer config={config} className="aspect-auto h-32 w-full">
+    <ChartContainer config={config} className="aspect-auto h-32 lg:h-40 w-full">
       <LineChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
         <XAxis
