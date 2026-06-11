@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from "@phosphor-icons/react";
+import { ArrowLeftIcon, PlayIcon } from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@juan/ui/components/ui/button";
@@ -69,6 +69,7 @@ function GymSessionDetailRoute() {
               })
             }
           >
+            <PlayIcon />
             Start session
           </Button>
         ) : (

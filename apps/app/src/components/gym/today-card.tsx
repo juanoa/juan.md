@@ -15,6 +15,7 @@ import {
 import { todayISO } from "../../lib/gym/date";
 import { useGymContext } from "./GymContext";
 import { SessionSummary } from "./session-summary";
+import { Badge } from "@juan/ui/components/ui/badge";
 
 export function TodayCard() {
   const { getSessionByDate } = useGymContext();
@@ -41,11 +42,12 @@ export function TodayCard() {
         </div>
         <div className="flex flex-1 flex-col gap-(--card-spacing) pt-6">
           <CardHeader>
-            <CardTitle className="text-base">
-              Gym{" "}
+            <CardTitle className="text-base flex items-center gap-2">
+              <span>Gym</span>
               <span className="text-muted-foreground capitalize">
                 {today.subcategory}
               </span>
+              {today.status === "completed" && <Badge className="ml-2" variant="success">Completed</Badge>}
             </CardTitle>
             <CardAction>
               <Button asChild size="sm">
