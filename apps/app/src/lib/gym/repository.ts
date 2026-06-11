@@ -20,7 +20,7 @@ interface GymSessionExerciseRow {
   target_sets: number;
   target_reps: number;
   position: number;
-  exercise: { name: string } | null;
+  exercise: { id: string; name: string } | null;
   gym_performed_sets: GymPerformedSetRow[];
 }
 
@@ -64,6 +64,7 @@ function mapSession(row: GymSessionRow): Session {
     status: row.status,
     exercises: planned.map((entry) => ({
       id: entry.id,
+      exerciseId: entry.exercise?.id ?? "",
       name: entry.exercise?.name ?? "",
       targetSets: entry.target_sets,
       targetReps: entry.target_reps,
@@ -76,7 +77,7 @@ export async function fetchSessions(): Promise<Session[]> {
   const { data, error } = await supabase
     .from("gym_sessions")
     .select(
-      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, position, exercise:gym_exercises(name), gym_performed_sets(set_index, reps, weight))",
+      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
     )
     .order("date", { ascending: true });
 

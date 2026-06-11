@@ -1,9 +1,10 @@
-import { ArrowLeftIcon, PlayIcon } from "@phosphor-icons/react";
+import { ArrowLeftIcon, PencilSimpleIcon, PlayIcon } from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@juan/ui/components/ui/button";
 
 import { Dashboard } from "../components/dashboard";
+import { CompletedSessionView } from "../components/gym/completed-session-view";
 import { SessionSummary } from "../components/gym/session-summary";
 import { useGymContext } from "../components/gym/GymContext";
 import { todayISO } from "../lib/gym/date";
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/gym/$sessionId/")({
 
 function GymSessionDetailRoute() {
   const { sessionId } = Route.useParams();
-  const { getSession, moveSession, status } = useGymContext();
+  const { getSession, moveSession, status, sessions } = useGymContext();
   const navigate = useNavigate();
   const session = getSession(sessionId);
 
@@ -39,6 +40,29 @@ function GymSessionDetailRoute() {
             </Link>
           </Button>
         </div>
+      </Dashboard>
+    );
+  }
+
+  if (session.status === "completed") {
+    return (
+      <Dashboard title={`Gym - ${session.subcategory}`}>
+        <div className="flex items-start justify-between gap-3">
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/gym">
+              <ArrowLeftIcon /> Back
+            </Link>
+          </Button>
+          <Button asChild size="sm" variant="outline">
+            <Link
+              to="/gym/$sessionId/run"
+              params={{ sessionId: session.id }}
+            >
+              <PencilSimpleIcon /> Edit
+            </Link>
+          </Button>
+        </div>
+        <CompletedSessionView session={session} sessions={sessions} />
       </Dashboard>
     );
   }
