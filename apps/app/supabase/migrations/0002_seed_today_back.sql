@@ -23,7 +23,7 @@ begin
   insert into public.gym_exercises (name, subcategory_slug) values ('Dominadas', 'back') returning id into v_dominadas;
   insert into public.gym_exercises (name, subcategory_slug) values ('Remo bilateral', 'back') returning id into v_remo_bilateral;
   insert into public.gym_exercises (name, subcategory_slug) values ('Remo unilateral', 'back') returning id into v_remo_unilateral;
-  insert into public.gym_exercises (name, subcategory_slug) values ('Curl de biceps', 'back') returning id into v_curl_biceps;
+  insert into public.gym_exercises (name, subcategory_slug) values ('Curl de biceps', 'arms') returning id into v_curl_biceps;
   insert into public.gym_exercises (name, subcategory_slug) values ('Encogimiento de hombros', 'back') returning id into v_encogimiento;
   insert into public.gym_exercises (name, subcategory_slug) values ('Face pull', 'back') returning id into v_face_pull;
 
