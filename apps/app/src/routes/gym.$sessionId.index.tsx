@@ -14,9 +14,17 @@ export const Route = createFileRoute("/gym/$sessionId/")({
 
 function GymSessionDetailRoute() {
   const { sessionId } = Route.useParams();
-  const { getSession, moveSession } = useGymContext();
+  const { getSession, moveSession, status } = useGymContext();
   const navigate = useNavigate();
   const session = getSession(sessionId);
+
+  if (!session && status === "loading") {
+    return (
+      <Dashboard title="Gym">
+        <p className="text-muted-foreground text-sm">Loading...</p>
+      </Dashboard>
+    );
+  }
 
   if (!session) {
     return (

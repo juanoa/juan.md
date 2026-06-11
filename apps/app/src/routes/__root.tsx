@@ -1,6 +1,16 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import {
+  Navigate,
+  Outlet,
+  createRootRoute,
+  useLocation,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import type { ReactNode } from "react";
 
+import {
+  AuthContextProvider,
+  useAuthContext,
+} from "../components/auth/AuthContext";
 import { GymContextProvider } from "../components/gym/GymContext";
 
 export const Route = createRootRoute({
@@ -9,9 +19,37 @@ export const Route = createRootRoute({
 
 function RootLayout() {
   return (
-    <GymContextProvider>
-      <Outlet />
+    <AuthContextProvider>
+      <RequireAuth>
+        <Outlet />
+      </RequireAuth>
       <TanStackRouterDevtools position="bottom-right" />
-    </GymContextProvider>
+    </AuthContextProvider>
   );
+}
+
+function RequireAuth({ children }: { children: ReactNode }) {
+  const { status } = useAuthContext();
+  const location = useLocation();
+  const isPublic =
+    location.pathname === "/login" || location.pathname.startsWith("/auth/");
+
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-muted-foreground text-sm">Loading...</p>
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    if (isPublic) return <>{children}</>;
+    return <Navigate to="/login" replace />;
+  }
+
+  if (isPublic) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <GymContextProvider>{children}</GymContextProvider>;
 }
