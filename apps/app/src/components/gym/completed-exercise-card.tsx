@@ -33,7 +33,7 @@ export function CompletedExerciseCard({
         </CardTitle>
       </CardHeader>
       {sets.length > 0 && (
-        <CardContent className="flex flex-col gap-4">
+        <CardContent className="flex flex-col gap-6">
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
             {sets.map((set, index) => (
               <span key={index} className="whitespace-nowrap">
