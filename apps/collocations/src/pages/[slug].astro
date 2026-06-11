@@ -8,8 +8,8 @@ import Layout from "@/layouts/Layout.astro";
 import { getCollocations, getFunctionWords } from "@/lib/data";
 import type { Collocation } from "@/types/Collocation";
 
-export async function getStaticPaths() {
-  const collocations = await getCollocations();
+export function getStaticPaths() {
+  const collocations = getCollocations();
 
   return collocations.map((collocation) => ({
     params: { slug: collocation.slug },
@@ -18,9 +18,9 @@ export async function getStaticPaths() {
 }
 
 const { collocation } = Astro.props as { collocation: Collocation };
-const allCollocations = await getCollocations();
+const allCollocations = getCollocations();
 const collocationSlugs = allCollocations.map(({ slug }) => slug);
-const functionWordSet = new Set(await getFunctionWords());
+const functionWordSet = new Set(getFunctionWords());
 
 const normalizeWords = (label: string) =>
   label.toLowerCase().split(/\s+/).filter(Boolean);
