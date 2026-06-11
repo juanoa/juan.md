@@ -9,6 +9,7 @@ export type GymSubcategory =
 
 export interface PlannedExercise {
   id: string;
+  exerciseId: string;
   name: string;
   targetSets: number;
   targetReps: number;
