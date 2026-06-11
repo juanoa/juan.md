@@ -62,7 +62,8 @@ function GymSessionRunRoute() {
           </Link>
         </Button>
         <Button size="sm" onClick={handleFinish}>
-          <CheckCircleIcon /> Finish session
+          <CheckCircleIcon />
+          {session.status === "completed" ? "Save" : "Finish session"}
         </Button>
       </div>
       <div className="flex flex-col gap-3">

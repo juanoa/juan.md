@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, PlayIcon } from "@phosphor-icons/react";
+import { ArrowLeftIcon, PencilSimpleIcon, PlayIcon } from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@juan/ui/components/ui/button";
@@ -51,6 +51,14 @@ function GymSessionDetailRoute() {
           <Button asChild variant="ghost" size="sm">
             <Link to="/gym">
               <ArrowLeftIcon /> Back
+            </Link>
+          </Button>
+          <Button asChild size="sm" variant="outline">
+            <Link
+              to="/gym/$sessionId/run"
+              params={{ sessionId: session.id }}
+            >
+              <PencilSimpleIcon /> Edit
             </Link>
           </Button>
         </div>
