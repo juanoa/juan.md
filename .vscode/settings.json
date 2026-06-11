@@ -1,5 +1,11 @@
 {
-  "deno.enablePaths": [
-    "apps/collocations/supabase/functions"
-  ]
+  "deno.enablePaths": ["apps/collocations/supabase/functions"],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.requireConfig": true,
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[astro]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
 }

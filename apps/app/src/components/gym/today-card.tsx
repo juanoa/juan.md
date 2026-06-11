@@ -1,4 +1,4 @@
-import { BarbellIcon, PlayIcon } from "@phosphor-icons/react";
+import { BarbellIcon, PencilIcon, PlayIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 
 import { Button } from "@juan/ui/components/ui/button";
@@ -42,20 +42,33 @@ export function TodayCard() {
         </div>
         <div className="flex flex-1 flex-col gap-(--card-spacing) pt-6">
           <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-base">
               <span>Gym</span>
               <span className="text-muted-foreground capitalize">
                 {today.subcategory}
               </span>
-              {today.status === "completed" && <Badge className="ml-2" variant="success">Completed</Badge>}
+              {today.status === "completed" && (
+                <Badge className="ml-2" variant="success">
+                  Completed
+                </Badge>
+              )}
             </CardTitle>
             <CardAction>
               <Button asChild size="sm">
-                <Link
-                  to="/gym/$sessionId/run"
-                  params={{ sessionId: today.id }}
-                >
-                  <PlayIcon /> Start session
+                <Link to="/gym/$sessionId/run" params={{ sessionId: today.id }}>
+                  {today.status === "planned" ? (
+                    <>
+                      <PlayIcon /> Start session
+                    </>
+                  ) : today.status === "in_progress" ? (
+                    <>
+                      <PlayIcon /> Continue
+                    </>
+                  ) : (
+                    <>
+                      <PencilIcon /> Edit
+                    </>
+                  )}
                 </Link>
               </Button>
             </CardAction>
@@ -67,8 +80,7 @@ export function TodayCard() {
             <Link
               to="/gym/$sessionId"
               params={{ sessionId: today.id }}
-              className="text-muted-foreground hover:text-foreground text-xs"
-            >
+              className="text-muted-foreground hover:text-foreground text-xs">
               View details
             </Link>
           </CardFooter>

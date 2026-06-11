@@ -1,4 +1,8 @@
-import { ArrowLeftIcon, PencilSimpleIcon, PlayIcon } from "@phosphor-icons/react";
+import {
+  ArrowLeftIcon,
+  PencilSimpleIcon,
+  PlayIcon,
+} from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@juan/ui/components/ui/button";
@@ -54,10 +58,7 @@ function GymSessionDetailRoute() {
             </Link>
           </Button>
           <Button asChild size="sm" variant="outline">
-            <Link
-              to="/gym/$sessionId/run"
-              params={{ sessionId: session.id }}
-            >
+            <Link to="/gym/$sessionId/run" params={{ sessionId: session.id }}>
               <PencilSimpleIcon /> Edit
             </Link>
           </Button>
@@ -91,10 +92,9 @@ function GymSessionDetailRoute() {
                 to: "/gym/$sessionId/run",
                 params: { sessionId: session.id },
               })
-            }
-          >
+            }>
             <PlayIcon />
-            Start session
+            {session.status === "in_progress" ? "Continue" : "Start session"}
           </Button>
         ) : (
           <Button size="sm" variant="outline" onClick={handleDoToday}>
