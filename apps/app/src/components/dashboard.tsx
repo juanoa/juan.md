@@ -28,3 +28,31 @@ export function Dashboard({ title, children }: DashboardProps) {
     </SidebarProvider>
   );
 }
+
+interface DashboardGridProps {
+  children: ReactNode;
+}
+
+export function DashboardGrid({ children }: DashboardGridProps) {
+  return (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{children}</div>
+  );
+}
+
+interface DashboardCellProps {
+  title: string;
+  link: ReactNode;
+  children: ReactNode;
+}
+
+export function DashboardCell({ title, link, children }: DashboardCellProps) {
+  return (
+    <section className="flex h-full flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-medium">{title}</h2>
+        {link}
+      </div>
+      <div className="flex flex-1 flex-col">{children}</div>
+    </section>
+  );
+}
