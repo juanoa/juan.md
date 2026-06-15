@@ -1,9 +1,11 @@
 import { supabase } from "../supabase/client";
 import type {
+  Exercise,
   GymSubcategory,
   PerformedExercise,
   PerformedSet,
   Session,
+  SessionDraft,
   SessionStatus,
 } from "./types";
 
@@ -126,4 +128,77 @@ export async function finishSession(id: string): Promise<void> {
     .update({ status: "completed" })
     .eq("id", id);
   if (error) throw error;
+}
+
+interface GymExerciseRow {
+  id: string;
+  name: string;
+  subcategory_slug: GymSubcategory;
+}
+
+export async function fetchExercises(): Promise<Exercise[]> {
+  const { data, error } = await supabase
+    .from("gym_exercises")
+    .select("id, name, subcategory_slug")
+    .order("name", { ascending: true });
+  if (error) throw error;
+  return (data as GymExerciseRow[]).map((row) => ({
+    id: row.id,
+    name: row.name,
+    subcategory: row.subcategory_slug,
+  }));
+}
+
+export async function createExercise(
+  name: string,
+  subcategory: GymSubcategory,
+): Promise<Exercise> {
+  const { data, error } = await supabase
+    .from("gym_exercises")
+    .insert({ name, subcategory_slug: subcategory })
+    .select("id, name, subcategory_slug")
+    .single();
+  if (error) throw error;
+  const row = data as GymExerciseRow;
+  return { id: row.id, name: row.name, subcategory: row.subcategory_slug };
+}
+
+export async function createSession(draft: SessionDraft): Promise<Session> {
+  const { data: sessionRow, error: insertError } = await supabase
+    .from("gym_sessions")
+    .insert({
+      date: draft.date,
+      subcategory_slug: draft.subcategory,
+      status: "planned",
+    })
+    .select("id")
+    .single();
+  if (insertError) throw insertError;
+
+  const sessionId = (sessionRow as { id: string }).id;
+
+  if (draft.exercises.length > 0) {
+    const { error: exercisesError } = await supabase
+      .from("gym_session_exercises")
+      .insert(
+        draft.exercises.map((entry, index) => ({
+          session_id: sessionId,
+          exercise_id: entry.exerciseId,
+          target_sets: entry.targetSets,
+          target_reps: entry.targetReps,
+          position: index,
+        })),
+      );
+    if (exercisesError) throw exercisesError;
+  }
+
+  const { data, error } = await supabase
+    .from("gym_sessions")
+    .select(
+      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
+    )
+    .eq("id", sessionId)
+    .single();
+  if (error) throw error;
+  return mapSession(data as unknown as GymSessionRow);
 }

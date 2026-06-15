@@ -1,3 +1,4 @@
+import { PlusIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 
 import { todayISO } from "../../lib/gym/date";
@@ -7,7 +8,8 @@ import { TodayCard } from "./today-card";
 
 export function TodayInGymCell() {
   const { getSessionByDate } = useGymContext();
-  const today = getSessionByDate(todayISO());
+  const todayIso = todayISO();
+  const today = getSessionByDate(todayIso);
 
   return (
     <DashboardCell
@@ -22,9 +24,12 @@ export function TodayInGymCell() {
       {today ? (
         <TodayCard />
       ) : (
-        <div className="border-border text-muted-foreground flex flex-1 items-center justify-center rounded-lg border-2 border-dashed px-8 py-16 text-sm">
-          Nothing planned for today
-        </div>
+        <Link
+          to="/gym/new"
+          search={{ date: todayIso }}
+          className="border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-dashed px-8 py-16 text-sm transition-colors">
+          <PlusIcon /> Plan today's session
+        </Link>
       )}
     </DashboardCell>
   );

@@ -1,4 +1,9 @@
-import { BarbellIcon, PencilIcon, PlayIcon } from "@phosphor-icons/react";
+import {
+  BarbellIcon,
+  PencilIcon,
+  PlayIcon,
+  PlusIcon,
+} from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 
 import { Button } from "@juan/ui/components/ui/button";
@@ -19,7 +24,8 @@ import { Badge } from "@juan/ui/components/ui/badge";
 
 export function TodayCard() {
   const { getSessionByDate } = useGymContext();
-  const today = getSessionByDate(todayISO());
+  const todayIso = todayISO();
+  const today = getSessionByDate(todayIso);
 
   if (!today) {
     return (
@@ -27,8 +33,15 @@ export function TodayCard() {
         <CardHeader>
           <CardTitle>No session today</CardTitle>
           <CardDescription>
-            Drag a session onto today, or rest up.
+            Drag a session onto today, or plan a new one.
           </CardDescription>
+          <CardAction>
+            <Button asChild size="sm">
+              <Link to="/gym/new" search={{ date: todayIso }}>
+                <PlusIcon /> New session
+              </Link>
+            </Button>
+          </CardAction>
         </CardHeader>
       </Card>
     );

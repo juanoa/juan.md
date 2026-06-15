@@ -9,12 +9,19 @@ import {
 import type { ReactNode } from "react";
 
 import * as repository from "../../lib/gym/repository";
-import type { PerformedSet, Session } from "../../lib/gym/types";
+import type {
+  Exercise,
+  GymSubcategory,
+  PerformedSet,
+  Session,
+  SessionDraft,
+} from "../../lib/gym/types";
 
 export type GymStatus = "loading" | "ready" | "error";
 
 export interface GymContextValue {
   sessions: Session[];
+  exercises: Exercise[];
   status: GymStatus;
   error: string | null;
   getSession: (id: string) => Session | undefined;
@@ -27,6 +34,8 @@ export interface GymContextValue {
     set: PerformedSet,
   ) => void;
   finishSession: (id: string) => void;
+  createExercise: (name: string, subcategory: GymSubcategory) => Promise<Exercise>;
+  createSession: (draft: SessionDraft) => Promise<Session>;
 }
 
 const GymContext = createContext<GymContextValue | undefined>(undefined);
@@ -37,13 +46,15 @@ interface GymContextProviderProps {
 
 export function GymContextProvider({ children }: GymContextProviderProps) {
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [status, setStatus] = useState<GymStatus>("loading");
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(() => {
-    repository.fetchSessions().then(
-      (data) => {
-        setSessions(data);
+    Promise.all([repository.fetchSessions(), repository.fetchExercises()]).then(
+      ([sessionsData, exercisesData]) => {
+        setSessions(sessionsData);
+        setExercises(exercisesData);
         setStatus("ready");
         setError(null);
       },
@@ -151,9 +162,29 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
     [refresh],
   );
 
+  const createExercise = useCallback(
+    async (name: string, subcategory: GymSubcategory) => {
+      const exercise = await repository.createExercise(name, subcategory);
+      setExercises((prev) =>
+        [...prev, exercise].sort((a, b) => a.name.localeCompare(b.name)),
+      );
+      return exercise;
+    },
+    [],
+  );
+
+  const createSession = useCallback(async (draft: SessionDraft) => {
+    const session = await repository.createSession(draft);
+    setSessions((prev) =>
+      [...prev, session].sort((a, b) => a.date.localeCompare(b.date)),
+    );
+    return session;
+  }, []);
+
   const value = useMemo<GymContextValue>(
     () => ({
       sessions,
+      exercises,
       status,
       error,
       getSession,
@@ -161,9 +192,12 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       moveSession,
       recordSet,
       finishSession,
+      createExercise,
+      createSession,
     }),
     [
       sessions,
+      exercises,
       status,
       error,
       getSession,
@@ -171,6 +205,8 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       moveSession,
       recordSet,
       finishSession,
+      createExercise,
+      createSession,
     ],
   );
 

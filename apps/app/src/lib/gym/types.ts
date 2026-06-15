@@ -7,6 +7,34 @@ export type GymSubcategory =
   | "core"
   | "full-body";
 
+export const GYM_SUBCATEGORIES: { slug: GymSubcategory; name: string }[] = [
+  { slug: "back", name: "Back" },
+  { slug: "chest", name: "Chest" },
+  { slug: "legs", name: "Legs" },
+  { slug: "shoulders", name: "Shoulders" },
+  { slug: "arms", name: "Arms" },
+  { slug: "core", name: "Core" },
+  { slug: "full-body", name: "Full body" },
+];
+
+export interface Exercise {
+  id: string;
+  name: string;
+  subcategory: GymSubcategory;
+}
+
+export interface SessionDraftExercise {
+  exerciseId: string;
+  targetSets: number;
+  targetReps: number;
+}
+
+export interface SessionDraft {
+  date: string;
+  subcategory: GymSubcategory;
+  exercises: SessionDraftExercise[];
+}
+
 export interface PlannedExercise {
   id: string;
   exerciseId: string;

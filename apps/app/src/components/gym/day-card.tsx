@@ -1,5 +1,6 @@
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import { PlusIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
 
@@ -43,7 +44,18 @@ export function DayCard({ date, isoDate, isToday, session }: DayCardProps) {
           {date.getDate()}
         </span>
       </div>
-      {session ? <DraggableSessionPill session={session} /> : null}
+      {session ? (
+        <DraggableSessionPill session={session} />
+      ) : (
+        <Link
+          to="/gym/new"
+          search={{ date: isoDate }}
+          aria-label={`Plan a session on ${isoDate}`}
+          className="text-muted-foreground hover:text-foreground hover:bg-muted/60 ring-foreground/10 flex flex-1 items-center justify-center gap-1 ring-1 ring-dashed transition-colors"
+        >
+          <PlusIcon className="size-3" />
+        </Link>
+      )}
     </div>
   );
 }
