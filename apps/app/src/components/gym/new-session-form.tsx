@@ -1,7 +1,13 @@
-import { PlusIcon } from "@phosphor-icons/react";
+import { ArrowCounterClockwiseIcon, PlusIcon } from "@phosphor-icons/react";
 import { useMemo, useState } from "react";
 
 import { Button } from "@juan/ui/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@juan/ui/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -18,12 +24,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@juan/ui/components/ui/select";
+import { cn } from "@juan/ui/lib/utils";
 
-import { todayISO } from "../../lib/gym/date";
+import { formatShortISODate, todayISO } from "../../lib/gym/date";
 import {
   GYM_SUBCATEGORIES,
   type Exercise,
   type GymSubcategory,
+  type PerformedSet,
   type Session,
 } from "../../lib/gym/types";
 import { useGymContext } from "./GymContext";
@@ -57,6 +65,75 @@ function parseTargetWeight(value: string): number | undefined {
   const trimmed = value.trim();
   if (trimmed === "") return undefined;
   return Number(trimmed);
+}
+
+function formatTargetWeight(value: number | null | undefined): string {
+  if (value === null || value === undefined) return "";
+  return String(value);
+}
+
+function getSubcategoryName(subcategory: GymSubcategory): string {
+  return (
+    GYM_SUBCATEGORIES.find((entry) => entry.slug === subcategory)?.name ??
+    subcategory
+  );
+}
+
+function getRecordedSets(sets: PerformedSet[]): PerformedSet[] {
+  return sets.filter((set) => set.reps > 0 || set.weight > 0);
+}
+
+function buildPlanningRows(session: Session): DraftRow[] {
+  return session.exercises
+    .filter((exercise) => exercise.exerciseId !== "")
+    .map((exercise) => ({
+      rowId: makeRowId(),
+      exerciseId: exercise.exerciseId,
+      targetSets: exercise.targetSets,
+      targetReps: exercise.targetReps,
+      targetWeight: formatTargetWeight(exercise.targetWeight),
+    }));
+}
+
+function buildPerformedRows(session: Session): DraftRow[] {
+  return session.exercises.flatMap((exercise) => {
+    if (exercise.exerciseId === "") return [];
+
+    const performed = session.performed.find(
+      (entry) => entry.plannedExerciseId === exercise.id,
+    );
+    if (!performed) return [];
+
+    const recordedSets = getRecordedSets(performed.sets);
+    const lastSet = recordedSets[recordedSets.length - 1];
+    if (!lastSet) return [];
+
+    return [
+      {
+        rowId: makeRowId(),
+        exerciseId: exercise.exerciseId,
+        targetSets: recordedSets.length,
+        targetReps: lastSet.reps > 0 ? lastSet.reps : exercise.targetReps,
+        targetWeight: formatTargetWeight(lastSet.weight),
+      },
+    ];
+  });
+}
+
+function hasPlanningRows(session: Session): boolean {
+  return session.exercises.some((exercise) => exercise.exerciseId !== "");
+}
+
+function hasPerformedRows(session: Session): boolean {
+  return session.exercises.some((exercise) => {
+    if (exercise.exerciseId === "") return false;
+    const performed = session.performed.find(
+      (entry) => entry.plannedExerciseId === exercise.id,
+    );
+    return (
+      performed !== undefined && getRecordedSets(performed.sets).length > 0
+    );
+  });
 }
 
 function RequiredMark() {
@@ -101,6 +178,10 @@ export function NewSessionForm({
   const [exerciseDialogRowId, setExerciseDialogRowId] = useState<string | null>(
     null,
   );
+  const [reuseDialogOpen, setReuseDialogOpen] = useState(false);
+  const [selectedReuseSessionId, setSelectedReuseSessionId] = useState<
+    string | null
+  >(null);
 
   const exerciseGroups = useMemo<ExerciseGroup[]>(() => {
     const bySubcategory = new Map<GymSubcategory, Exercise[]>();
@@ -121,6 +202,23 @@ export function NewSessionForm({
       }))
       .filter((group) => group.items.length > 0);
   }, [exercises, subcategory]);
+
+  const pastSessions = useMemo(
+    () =>
+      sessions
+        .filter(
+          (session) =>
+            session.date < date &&
+            (!initialSession || session.id !== initialSession.id),
+        )
+        .sort((a, b) => b.date.localeCompare(a.date)),
+    [sessions, date, initialSession],
+  );
+
+  const selectedReuseSession = useMemo(
+    () => pastSessions.find((session) => session.id === selectedReuseSessionId),
+    [pastSessions, selectedReuseSessionId],
+  );
 
   const updateRow = (rowId: string, patch: Partial<DraftRow>) => {
     setRows((prev) =>
@@ -143,6 +241,24 @@ export function NewSessionForm({
 
   const removeRow = (rowId: string) => {
     setRows((prev) => prev.filter((row) => row.rowId !== rowId));
+  };
+
+  const openReuseDialog = () => {
+    setSelectedReuseSessionId(null);
+    setReuseDialogOpen(true);
+  };
+
+  const closeReuseDialog = () => {
+    setSelectedReuseSessionId(null);
+    setReuseDialogOpen(false);
+  };
+
+  const applyReuseSession = (source: Session, rowsFromSource: DraftRow[]) => {
+    if (rowsFromSource.length === 0) return;
+    setSubcategory(source.subcategory);
+    setRows(rowsFromSource);
+    setError(null);
+    closeReuseDialog();
   };
 
   const handleExerciseCreated = (rowId: string, exercise: Exercise) => {
@@ -240,9 +356,18 @@ export function NewSessionForm({
         {rows.length === 0 ? (
           <div className="border-border text-muted-foreground flex flex-col items-center justify-center gap-5 rounded-none border-2 border-dashed px-4 py-8 text-xs">
             <span>Add at least one exercise to plan this session.</span>
-            <Button type="button" size="sm" onClick={addRow}>
-              <PlusIcon /> Add exercise
-            </Button>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Button type="button" size="sm" onClick={addRow}>
+                <PlusIcon /> Add exercise
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={openReuseDialog}>
+                <ArrowCounterClockwiseIcon /> Reuse session
+              </Button>
+            </div>
           </div>
         ) : (
           <ul className="flex flex-col gap-2">
@@ -260,9 +385,22 @@ export function NewSessionForm({
               />
             ))}
             <li>
-              <Button type="button" variant="ghost" size="sm" onClick={addRow}>
-                <PlusIcon /> Add exercise
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={addRow}>
+                  <PlusIcon /> Add exercise
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={openReuseDialog}>
+                  <ArrowCounterClockwiseIcon /> Reuse session
+                </Button>
+              </div>
             </li>
           </ul>
         )}
@@ -302,7 +440,140 @@ export function NewSessionForm({
           }
         }}
       />
+      <ReuseSessionDialog
+        open={reuseDialogOpen}
+        sessions={pastSessions}
+        selectedSession={selectedReuseSession}
+        selectedSessionId={selectedReuseSessionId}
+        onOpenChange={(open) => {
+          if (open) {
+            setReuseDialogOpen(true);
+            return;
+          }
+          closeReuseDialog();
+        }}
+        onSelectSession={setSelectedReuseSessionId}
+        onCopyPlanning={(source) =>
+          applyReuseSession(source, buildPlanningRows(source))
+        }
+        onCopySession={(source) =>
+          applyReuseSession(source, buildPerformedRows(source))
+        }
+      />
     </div>
+  );
+}
+
+interface ReuseSessionDialogProps {
+  open: boolean;
+  sessions: Session[];
+  selectedSession: Session | undefined;
+  selectedSessionId: string | null;
+  onOpenChange: (open: boolean) => void;
+  onSelectSession: (sessionId: string) => void;
+  onCopyPlanning: (session: Session) => void;
+  onCopySession: (session: Session) => void;
+}
+
+function summarizeExercises(session: Session): string {
+  if (session.exercises.length === 0) return "No planned exercises";
+
+  const names = session.exercises
+    .slice(0, 3)
+    .map((exercise) => exercise.name)
+    .join(", ");
+  const remaining = session.exercises.length - 3;
+  return remaining > 0 ? `${names} +${remaining}` : names;
+}
+
+function ReuseSessionDialog({
+  open,
+  sessions,
+  selectedSession,
+  selectedSessionId,
+  onOpenChange,
+  onSelectSession,
+  onCopyPlanning,
+  onCopySession,
+}: ReuseSessionDialogProps) {
+  const canCopyPlanning =
+    selectedSession !== undefined && hasPlanningRows(selectedSession);
+  const canCopySession =
+    selectedSession !== undefined && hasPerformedRows(selectedSession);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Reuse past session</DialogTitle>
+        </DialogHeader>
+
+        {sessions.length === 0 ? (
+          <p className="text-muted-foreground text-sm">
+            No previous sessions before this date.
+          </p>
+        ) : (
+          <div className="max-h-[60vh] overflow-y-auto p-px">
+            <div className="flex flex-col gap-2">
+              {sessions.map((session) => {
+                const selected = session.id === selectedSessionId;
+
+                return (
+                  <Card
+                    key={session.id}
+                    size="sm"
+                    role="button"
+                    tabIndex={0}
+                    aria-pressed={selected}
+                    className={cn(
+                      "hover:bg-muted/60 cursor-pointer transition-colors",
+                      selected && "bg-muted",
+                    )}
+                    onClick={() => onSelectSession(session.id)}
+                    onKeyDown={(event) => {
+                      if (event.key !== "Enter" && event.key !== " ") return;
+                      event.preventDefault();
+                      onSelectSession(session.id);
+                    }}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between gap-2">
+                        <span>{formatShortISODate(session.date)}</span>
+                        <span className="text-muted-foreground font-normal">
+                          {getSubcategoryName(session.subcategory)}
+                        </span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p>{summarizeExercises(session)}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {selectedSession && (
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={!canCopyPlanning}
+              onClick={() => onCopyPlanning(selectedSession)}>
+              Copy plan
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              disabled={!canCopySession}
+              onClick={() => onCopySession(selectedSession)}>
+              Copy session
+            </Button>
+          </DialogFooter>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
 
