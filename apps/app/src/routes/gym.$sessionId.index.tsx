@@ -61,22 +61,26 @@ function GymSessionDetailRoute() {
     );
   }
 
-  if (session.status === "completed") {
-    const handleDelete = () => {
-      void deleteSession(session.id).then(() => {
+  const handleDelete = () => {
+    void deleteSession(session.id)
+      .then(() => {
         navigate({ to: "/gym" });
+      })
+      .catch(() => {
+        // Keep the user on the session if the delete request fails.
       });
-    };
+  };
 
+  if (session.status === "completed") {
     return (
       <Dashboard title={`Gym - ${session.subcategory}`}>
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <Button asChild variant="ghost" size="sm">
             <Link to="/gym">
               <ArrowLeftIcon /> Back
             </Link>
           </Button>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <DeleteSessionDialog onDelete={handleDelete} />
             <Button asChild size="sm" variant="outline">
               <Link to="/gym/$sessionId/run" params={{ sessionId: session.id }}>
@@ -98,21 +102,15 @@ function GymSessionDetailRoute() {
     navigate({ to: "/gym/$sessionId/run", params: { sessionId: session.id } });
   };
 
-  const handleDelete = () => {
-    void deleteSession(session.id).then(() => {
-      navigate({ to: "/gym" });
-    });
-  };
-
   return (
     <Dashboard title={`Gym - ${session.subcategory}`}>
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <Button asChild variant="ghost" size="sm">
           <Link to="/gym">
             <ArrowLeftIcon /> Back
           </Link>
         </Button>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <DeleteSessionDialog onDelete={handleDelete} />
           {isToday ? (
             <Button
@@ -155,10 +153,7 @@ function DeleteSessionDialog({ onDelete }: { onDelete: () => void }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel size="sm">Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            variant="destructive"
-            size="sm"
-            onClick={onDelete}>
+          <AlertDialogAction variant="destructive" size="sm" onClick={onDelete}>
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>

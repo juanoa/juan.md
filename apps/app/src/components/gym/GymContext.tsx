@@ -35,7 +35,10 @@ export interface GymContextValue {
   ) => void;
   finishSession: (id: string) => void;
   deleteSession: (id: string) => Promise<void>;
-  createExercise: (name: string, subcategory: GymSubcategory) => Promise<Exercise>;
+  createExercise: (
+    name: string,
+    subcategory: GymSubcategory,
+  ) => Promise<Exercise>;
   createSession: (draft: SessionDraft) => Promise<Session>;
 }
 
@@ -133,10 +136,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
             ...session,
             status:
               session.status === "planned" ? "in_progress" : session.status,
-            performed: [
-              ...others,
-              { plannedExerciseId, sets: existingSets },
-            ],
+            performed: [...others, { plannedExerciseId, sets: existingSets }],
           };
         }),
       );
@@ -163,18 +163,10 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
     [refresh],
   );
 
-  const deleteSession = useCallback(
-    async (id: string) => {
-      setSessions((prev) => prev.filter((session) => session.id !== id));
-      try {
-        await repository.deleteSession(id);
-      } catch (e) {
-        void refresh();
-        throw e;
-      }
-    },
-    [refresh],
-  );
+  const deleteSession = useCallback(async (id: string) => {
+    await repository.deleteSession(id);
+    setSessions((prev) => prev.filter((session) => session.id !== id));
+  }, []);
 
   const createExercise = useCallback(
     async (name: string, subcategory: GymSubcategory) => {
