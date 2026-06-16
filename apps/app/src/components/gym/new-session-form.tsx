@@ -247,7 +247,6 @@ export function NewSessionForm({
                     <Button
                       type="button"
                       variant="outline"
-                      size="sm"
                       onClick={() => setExerciseDialogRowId(row.rowId)}>
                       <PlusIcon /> New
                     </Button>
@@ -288,11 +287,7 @@ export function NewSessionForm({
               </li>
             ))}
             <li>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={addRow}>
+              <Button type="button" variant="ghost" size="sm" onClick={addRow}>
                 <PlusIcon /> Add exercise
               </Button>
             </li>
