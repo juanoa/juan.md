@@ -4,7 +4,6 @@ import {
   CalendarBlankIcon,
   CheckCircleIcon,
   PlayCircleIcon,
-  PlayIcon,
   PlusIcon,
 } from "@phosphor-icons/react";
 import { Link, useNavigate } from "@tanstack/react-router";
@@ -138,16 +137,6 @@ function DraggableSessionPill({ session }: DraggableSessionPillProps) {
           <SessionStatusIcon status={session.status} />
         </span>
       </button>
-      {session.status !== "completed" && (
-        <div className="flex items-center gap-2">
-          <Link
-            to="/gym/$sessionId/run"
-            params={{ sessionId: session.id }}
-            className="text-muted-foreground hover:text-foreground flex items-center gap-0.5 text-[10px]">
-            <PlayIcon className="size-2.5" /> Run
-          </Link>
-        </div>
-      )}
     </div>
   );
 }
