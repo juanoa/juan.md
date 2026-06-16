@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from "@phosphor-icons/react";
+import { ArrowLeftIcon, PencilSimpleIcon } from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@juan/ui/components/ui/button";
@@ -37,6 +37,31 @@ function GymEditSessionRoute() {
               <ArrowLeftIcon /> Back to Gym
             </Link>
           </Button>
+        </div>
+      </Dashboard>
+    );
+  }
+
+  if (session.status === "completed") {
+    return (
+      <Dashboard title="Gym - Plan locked">
+        <div className="flex flex-col gap-4">
+          <Button asChild variant="ghost" size="sm" className="w-fit">
+            <Link to="/gym/$sessionId" params={{ sessionId: session.id }}>
+              <ArrowLeftIcon /> Back
+            </Link>
+          </Button>
+          <div className="flex flex-col gap-3">
+            <p className="text-muted-foreground text-sm">
+              Completed sessions keep their plan locked. You can still edit the
+              recorded sets.
+            </p>
+            <Button asChild size="sm" variant="outline" className="w-fit">
+              <Link to="/gym/$sessionId/run" params={{ sessionId: session.id }}>
+                <PencilSimpleIcon /> Edit sets
+              </Link>
+            </Button>
+          </div>
         </div>
       </Dashboard>
     );
