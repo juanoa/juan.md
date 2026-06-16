@@ -7,9 +7,9 @@ import { useGymContext } from "./GymContext";
 import { TodayCard } from "./today-card";
 
 export function TodayInGymCell() {
-  const { getSessionByDate } = useGymContext();
+  const { getSessionsByDate } = useGymContext();
   const todayIso = todayISO();
-  const today = getSessionByDate(todayIso);
+  const todaySessions = getSessionsByDate(todayIso);
 
   return (
     <DashboardCell
@@ -21,7 +21,7 @@ export function TodayInGymCell() {
           More
         </Link>
       }>
-      {today ? (
+      {todaySessions.length > 0 ? (
         <TodayCard />
       ) : (
         <Link

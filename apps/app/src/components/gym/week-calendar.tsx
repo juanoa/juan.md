@@ -46,8 +46,12 @@ export function WeekCalendar() {
   );
 
   const sessionsByDate = useMemo(() => {
-    const map = new Map<string, (typeof sessions)[number]>();
-    for (const session of sessions) map.set(session.date, session);
+    const map = new Map<string, (typeof sessions)[number][]>();
+    for (const session of sessions) {
+      const daySessions = map.get(session.date) ?? [];
+      daySessions.push(session);
+      map.set(session.date, daySessions);
+    }
     return map;
   }, [sessions]);
 
@@ -79,8 +83,7 @@ export function WeekCalendar() {
             variant="ghost"
             size="icon-sm"
             onClick={() => setWeekOffset((value) => value - 1)}
-            aria-label="Previous week"
-          >
+            aria-label="Previous week">
             <CaretLeftIcon />
           </Button>
           <span className="text-muted-foreground min-w-16 text-center text-xs tabular-nums">
@@ -90,8 +93,7 @@ export function WeekCalendar() {
             variant="ghost"
             size="icon-sm"
             onClick={() => setWeekOffset((value) => value + 1)}
-            aria-label="Next week"
-          >
+            aria-label="Next week">
             <CaretRightIcon />
           </Button>
         </div>
@@ -99,8 +101,7 @@ export function WeekCalendar() {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
+        onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
           {days.map(({ date, iso }) => (
             <DayCard
@@ -108,7 +109,7 @@ export function WeekCalendar() {
               date={date}
               isoDate={iso}
               isToday={iso === todayIso}
-              session={sessionsByDate.get(iso)}
+              sessions={sessionsByDate.get(iso) ?? []}
             />
           ))}
         </div>
