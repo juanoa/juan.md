@@ -1,4 +1,5 @@
 import {
+  HeadContent,
   Navigate,
   Outlet,
   createRootRoute,
@@ -15,16 +16,36 @@ import { GymContextProvider } from "../components/gym/GymContext";
 
 export const Route = createRootRoute({
   component: RootLayout,
+  head: () => ({
+    meta: [
+      {
+        title: "App",
+      },
+    ],
+    links: [
+      {
+        rel: "icon",
+        href: "/favicon.ico",
+      },
+      {
+        rel: "apple-touch-icon",
+        href: "/apple-touch-icon.png",
+      },
+    ],
+  }),
 });
 
 function RootLayout() {
   return (
-    <AuthContextProvider>
-      <RequireAuth>
-        <Outlet />
-      </RequireAuth>
-      <TanStackRouterDevtools position="bottom-right" />
-    </AuthContextProvider>
+    <>
+      <HeadContent />
+      <AuthContextProvider>
+        <RequireAuth>
+          <Outlet />
+        </RequireAuth>
+        <TanStackRouterDevtools position="bottom-right" />
+      </AuthContextProvider>
+    </>
   );
 }
 

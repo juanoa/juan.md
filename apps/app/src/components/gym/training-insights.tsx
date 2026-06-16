@@ -93,7 +93,7 @@ export function TrainingInsights() {
               Complete a session to start building performance history.
             </p>
           ) : (
-            <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_1.2fr]">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.2fr]">
               <div className="flex flex-col gap-3">
                 <h3 className="text-xs font-medium">Session markers</h3>
                 <div className="flex flex-col gap-2 text-sm">
@@ -112,7 +112,7 @@ export function TrainingInsights() {
                     />
                   )}
                   {topFocus && (
-                    <div className="ring-foreground/10 flex items-center justify-between gap-3 p-2 ring-1">
+                    <div className="flex items-center justify-between gap-3 p-2">
                       <span className="text-muted-foreground text-xs">
                         Main focus
                       </span>
@@ -127,11 +127,11 @@ export function TrainingInsights() {
               <div className="flex flex-col gap-3">
                 <h3 className="text-xs font-medium">Top exercises by load</h3>
                 {stats.topExercises.length > 0 ? (
-                  <ol className="flex flex-col gap-2">
+                  <ol className="divide-y">
                     {stats.topExercises.map((exercise, index) => (
                       <li
                         key={exercise.exerciseId}
-                        className="ring-foreground/10 grid grid-cols-[auto_1fr_auto] items-center gap-3 p-2 text-sm ring-1">
+                        className="grid grid-cols-[auto_1fr_auto] items-center gap-6 px-2 py-3 text-sm">
                         <span className="text-muted-foreground text-xs tabular-nums">
                           {index + 1}
                         </span>
@@ -139,7 +139,7 @@ export function TrainingInsights() {
                           <span className="truncate font-medium">
                             {exercise.name}
                           </span>
-                          <span className="text-muted-foreground text-xs">
+                          <span className="text-muted-foreground text-xs capitalize">
                             {exercise.sessions} sessions · max{" "}
                             {formatKg(exercise.maxWeight)} · est. 1RM{" "}
                             {formatKg(exercise.bestEstimatedOneRepMax)}
@@ -187,9 +187,9 @@ function InsightLink({
     <Link
       to="/gym/$sessionId"
       params={{ sessionId: toSession }}
-      className="ring-foreground/10 hover:bg-muted/60 flex items-center justify-between gap-3 p-2 ring-1 transition-colors">
+      className="hover:bg-muted/60 flex items-center justify-between gap-3 p-2 transition-colors">
       <span className="text-muted-foreground text-xs">{label}</span>
-      <span className="flex items-center gap-1 text-right text-xs">
+      <span className="flex items-center gap-4 text-right text-xs capitalize">
         {value}
         <ArrowRightIcon className="size-3" />
       </span>

@@ -7,8 +7,17 @@ import { Dashboard } from "../components/dashboard";
 import { useGymContext } from "../components/gym/GymContext";
 import { NewSessionForm } from "../components/gym/new-session-form";
 
+const PAGE_NAME = "Gym - Edit session";
+
 export const Route = createFileRoute("/gym/$sessionId/edit")({
   component: GymEditSessionRoute,
+  head: () => ({
+    meta: [
+      {
+        title: PAGE_NAME,
+      },
+    ],
+  }),
 });
 
 function GymEditSessionRoute() {
@@ -19,7 +28,7 @@ function GymEditSessionRoute() {
 
   if (!session && status === "loading") {
     return (
-      <Dashboard title="Gym - Edit session">
+      <Dashboard title={PAGE_NAME}>
         <p className="text-muted-foreground text-sm">Loading...</p>
       </Dashboard>
     );
@@ -27,7 +36,7 @@ function GymEditSessionRoute() {
 
   if (!session) {
     return (
-      <Dashboard title="Gym - Edit session">
+      <Dashboard title={PAGE_NAME}>
         <div className="flex flex-col gap-3">
           <p className="text-muted-foreground text-sm">
             We could not find that session.

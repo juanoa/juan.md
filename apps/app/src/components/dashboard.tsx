@@ -18,12 +18,11 @@ export function Dashboard({ title, children }: DashboardProps) {
           "--sidebar-width": "calc(var(--spacing) * 72)",
           "--header-height": "calc(var(--spacing) * 12)",
         } as CSSProperties
-      }
-    >
+      }>
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader title={title} />
-        <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">{children}</div>
+        <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
