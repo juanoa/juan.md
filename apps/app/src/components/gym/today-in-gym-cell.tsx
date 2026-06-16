@@ -7,9 +7,9 @@ import { useGymContext } from "./GymContext";
 import { TodayCard } from "./today-card";
 
 export function TodayInGymCell() {
-  const { getSessionByDate } = useGymContext();
+  const { getSessionsByDate } = useGymContext();
   const todayIso = todayISO();
-  const today = getSessionByDate(todayIso);
+  const todaySessions = getSessionsByDate(todayIso);
 
   return (
     <DashboardCell
@@ -21,14 +21,14 @@ export function TodayInGymCell() {
           More
         </Link>
       }>
-      {today ? (
+      {todaySessions.length > 0 ? (
         <TodayCard />
       ) : (
         <Link
           to="/gym/new"
           search={{ date: todayIso }}
           className="border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-dashed px-8 py-16 text-sm transition-colors">
-          <PlusIcon /> Plan today's session
+          <PlusIcon /> Plan today&apos;s session
         </Link>
       )}
     </DashboardCell>
