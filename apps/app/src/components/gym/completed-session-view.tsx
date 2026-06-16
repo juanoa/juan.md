@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import type { GymSession, Session } from "../../lib/gym/types";
-import { getExerciseHistory } from "../../lib/gym/stats";
+import { getExerciseHistory, getSessionMetrics } from "../../lib/gym/stats";
 import { CompletedExerciseCard } from "./completed-exercise-card";
 
 interface CompletedSessionViewProps {
@@ -16,7 +16,9 @@ export function CompletedSessionView({
   const cards = useMemo(() => {
     return session.performed
       .map((entry) => {
-        const planned = session.exercises.find((e) => e.id === entry.plannedExerciseId);
+        const planned = session.exercises.find(
+          (e) => e.id === entry.plannedExerciseId,
+        );
         if (!planned) return null;
         const history = getExerciseHistory(
           sessions,
@@ -27,6 +29,7 @@ export function CompletedSessionView({
       })
       .filter((card): card is NonNullable<typeof card> => card !== null);
   }, [session, sessions]);
+  const metrics = useMemo(() => getSessionMetrics(session), [session]);
 
   if (cards.length === 0) {
     return (
@@ -38,6 +41,19 @@ export function CompletedSessionView({
 
   return (
     <div className="flex flex-col gap-4">
+      <div className="ring-foreground/10 grid grid-cols-2 gap-3 p-3 ring-1 lg:grid-cols-4">
+        <Metric label="Total load" value={`${metrics.totalLoad}kg`} />
+        <Metric label="Sets" value={String(metrics.completedSets)} />
+        <Metric label="Reps" value={String(metrics.totalReps)} />
+        <Metric
+          label="Heaviest"
+          value={
+            metrics.heaviestSet
+              ? `${metrics.heaviestSet.exerciseName} · ${metrics.heaviestSet.weight}kg`
+              : "None"
+          }
+        />
+      </div>
       {cards.map(({ planned, sets, history }) => (
         <CompletedExerciseCard
           key={planned.id}
@@ -47,6 +63,15 @@ export function CompletedSessionView({
           currentDate={session.date}
         />
       ))}
+    </div>
+  );
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex min-w-0 flex-col gap-1">
+      <span className="text-muted-foreground text-xs">{label}</span>
+      <span className="truncate text-sm font-medium tabular-nums">{value}</span>
     </div>
   );
 }

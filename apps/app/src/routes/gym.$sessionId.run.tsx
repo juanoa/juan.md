@@ -54,10 +54,7 @@ function GymSessionRunRoute() {
     <Dashboard title={`Gym - ${session.subcategory} · Run`}>
       <div className="flex items-start justify-between gap-3">
         <Button asChild variant="ghost" size="sm">
-          <Link
-            to="/gym/$sessionId"
-            params={{ sessionId: session.id }}
-          >
+          <Link to="/gym/$sessionId" params={{ sessionId: session.id }}>
             <ArrowLeftIcon /> Back
           </Link>
         </Button>
@@ -71,6 +68,7 @@ function GymSessionRunRoute() {
           <ExerciseCard
             key={exercise.id}
             sessionId={session.id}
+            sessionDate={session.date}
             exercise={exercise}
             performed={session.performed.find(
               (entry) => entry.plannedExerciseId === exercise.id,
