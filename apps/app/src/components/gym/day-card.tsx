@@ -1,8 +1,14 @@
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { PlayIcon, PlusIcon } from "@phosphor-icons/react";
-import { Link } from "@tanstack/react-router";
-import type { CSSProperties } from "react";
+import {
+  CalendarBlankIcon,
+  CheckCircleIcon,
+  PlayCircleIcon,
+  PlayIcon,
+  PlusIcon,
+} from "@phosphor-icons/react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useRef, type CSSProperties, type PointerEvent } from "react";
 
 import { cn } from "@juan/ui/lib/utils";
 
@@ -65,10 +71,43 @@ interface DraggableSessionPillProps {
 function DraggableSessionPill({ session }: DraggableSessionPillProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id: session.id });
+  const navigate = useNavigate();
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
+  const didMovePointerRef = useRef(false);
 
   const style: CSSProperties = {
     transform: CSS.Translate.toString(transform),
     opacity: isDragging ? 0.4 : 1,
+  };
+
+  const handlePointerDownCapture = (event: PointerEvent<HTMLButtonElement>) => {
+    pointerStartRef.current = { x: event.clientX, y: event.clientY };
+    didMovePointerRef.current = false;
+  };
+
+  const handlePointerMoveCapture = (event: PointerEvent<HTMLButtonElement>) => {
+    const start = pointerStartRef.current;
+    if (!start) return;
+
+    const distance = Math.hypot(
+      event.clientX - start.x,
+      event.clientY - start.y,
+    );
+    if (distance > 4) {
+      didMovePointerRef.current = true;
+    }
+  };
+
+  const handleViewSession = () => {
+    if (didMovePointerRef.current) {
+      didMovePointerRef.current = false;
+      return;
+    }
+
+    void navigate({
+      to: "/gym/$sessionId",
+      params: { sessionId: session.id },
+    });
   };
 
   return (
@@ -77,36 +116,58 @@ function DraggableSessionPill({ session }: DraggableSessionPillProps) {
         ref={setNodeRef}
         style={style}
         type="button"
+        onPointerDownCapture={handlePointerDownCapture}
+        onPointerMoveCapture={handlePointerMoveCapture}
         className={cn(
           "ring-foreground/15 hover:bg-muted/60 bg-background flex cursor-grab flex-col items-start gap-0.5 px-2 py-1.5 text-left text-xs ring-1 active:cursor-grabbing",
           isDragging && "cursor-grabbing",
         )}
         {...listeners}
-        {...attributes}>
+        {...attributes}
+        onClick={handleViewSession}>
         <span className="text-foreground font-medium capitalize">
           {session.subcategory}
         </span>
-        <span className="text-muted-foreground">
-          {session.exercises.length} exercises ·{" "}
-          {session.status.replace("_", " ")}
+        <span className="text-muted-foreground flex items-center gap-1.5">
+          <span>{session.exercises.length} exercises</span>
+          <SessionStatusIcon status={session.status} />
         </span>
       </button>
-      <div className="flex items-center gap-2">
-        <Link
-          to="/gym/$sessionId"
-          params={{ sessionId: session.id }}
-          className="text-muted-foreground hover:text-foreground text-[10px]">
-          Open
-        </Link>
-        {session.status !== "completed" && (
+      {session.status !== "completed" && (
+        <div className="flex items-center gap-2">
           <Link
             to="/gym/$sessionId/run"
             params={{ sessionId: session.id }}
             className="text-muted-foreground hover:text-foreground flex items-center gap-0.5 text-[10px]">
             <PlayIcon className="size-2.5" /> Run
           </Link>
-        )}
-      </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+function SessionStatusIcon({ status }: { status: Session["status"] }) {
+  const Icon =
+    status === "completed"
+      ? CheckCircleIcon
+      : status === "in_progress"
+        ? PlayCircleIcon
+        : CalendarBlankIcon;
+  const label = status.replace("_", " ");
+
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center",
+        status === "completed" ? "text-success" : "text-muted-foreground",
+      )}>
+      <Icon
+        className="size-3.5"
+        weight={status === "completed" ? "fill" : "regular"}
+        aria-hidden="true"
+      />
+      <span className="sr-only">{label}</span>
+    </span>
   );
 }
