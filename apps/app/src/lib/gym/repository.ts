@@ -132,6 +132,11 @@ export async function finishSession(id: string): Promise<void> {
   if (error) throw error;
 }
 
+export async function deleteSession(id: string): Promise<void> {
+  const { error } = await supabase.from("gym_sessions").delete().eq("id", id);
+  if (error) throw error;
+}
+
 interface GymExerciseRow {
   id: string;
   name: string;

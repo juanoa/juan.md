@@ -34,6 +34,7 @@ export interface GymContextValue {
     set: PerformedSet,
   ) => void;
   finishSession: (id: string) => void;
+  deleteSession: (id: string) => Promise<void>;
   createExercise: (name: string, subcategory: GymSubcategory) => Promise<Exercise>;
   createSession: (draft: SessionDraft) => Promise<Session>;
 }
@@ -162,6 +163,19 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
     [refresh],
   );
 
+  const deleteSession = useCallback(
+    async (id: string) => {
+      setSessions((prev) => prev.filter((session) => session.id !== id));
+      try {
+        await repository.deleteSession(id);
+      } catch (e) {
+        void refresh();
+        throw e;
+      }
+    },
+    [refresh],
+  );
+
   const createExercise = useCallback(
     async (name: string, subcategory: GymSubcategory) => {
       const exercise = await repository.createExercise(name, subcategory);
@@ -192,6 +206,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       moveSession,
       recordSet,
       finishSession,
+      deleteSession,
       createExercise,
       createSession,
     }),
@@ -205,6 +220,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       moveSession,
       recordSet,
       finishSession,
+      deleteSession,
       createExercise,
       createSession,
     ],
