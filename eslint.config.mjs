@@ -19,6 +19,7 @@ export default [
       "**/dist/**",
       "**/node_modules/**",
       "**/public/**",
+      "apps/app/src/routeTree.gen.ts",
     ],
   },
   {
