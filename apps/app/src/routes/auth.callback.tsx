@@ -13,7 +13,10 @@ function AuthCallbackRoute() {
 
   useEffect(() => {
     if (status === "loading") return;
-    navigate({ to: status === "authenticated" ? "/" : "/login", replace: true });
+    navigate({
+      to: status === "authenticated" ? "/" : "/login",
+      replace: true,
+    });
   }, [status, navigate]);
 
   return (

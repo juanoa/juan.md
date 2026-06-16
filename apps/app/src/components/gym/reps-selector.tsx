@@ -11,7 +11,9 @@ interface RepsSelectorProps {
 }
 
 function isPreset(value: number | undefined): value is number {
-  return value !== undefined && value >= 1 && value <= 12 && Number.isInteger(value);
+  return (
+    value !== undefined && value >= 1 && value <= 12 && Number.isInteger(value)
+  );
 }
 
 export function RepsSelector({ value, onChange }: RepsSelectorProps) {
@@ -51,11 +53,10 @@ export function RepsSelector({ value, onChange }: RepsSelectorProps) {
             onClick={() => selectPreset(reps)}
             data-state={selected ? "on" : "off"}
             className={cn(
-              "ring-foreground/15 inline-flex h-8 w-full items-center justify-center bg-background text-xs tabular-nums ring-1 transition-colors sm:h-7 sm:w-7",
+              "ring-foreground/15 bg-background inline-flex h-8 w-full items-center justify-center text-xs tabular-nums ring-1 transition-colors sm:h-7 sm:w-7",
               "hover:bg-muted",
               selected && "bg-foreground text-background ring-foreground",
-            )}
-          >
+            )}>
             {reps}
           </button>
         );
@@ -81,8 +82,7 @@ export function RepsSelector({ value, onChange }: RepsSelectorProps) {
         <button
           type="button"
           onClick={enterCustom}
-          className="ring-foreground/15 hover:bg-muted col-span-2 inline-flex h-8 w-full items-center justify-center bg-background px-2 text-xs ring-1 transition-colors sm:h-7 sm:w-16"
-        >
+          className="ring-foreground/15 hover:bg-muted bg-background col-span-2 inline-flex h-8 w-full items-center justify-center px-2 text-xs ring-1 transition-colors sm:h-7 sm:w-16">
           Other
         </button>
       )}

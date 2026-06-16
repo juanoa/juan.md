@@ -2,6 +2,7 @@ import {
   BarbellIcon,
   CommandIcon,
   GearIcon,
+  ListChecksIcon,
   SquaresFourIcon,
 } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
@@ -34,6 +35,11 @@ const data = {
       to: "/gym",
       icon: <BarbellIcon />,
     },
+    {
+      title: "To-dos",
+      to: "/to-dos",
+      icon: <ListChecksIcon />,
+    },
   ],
   navSecondary: [
     {
@@ -65,8 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
-            >
+              className="data-[slot=sidebar-menu-button]:p-1.5!">
               <Link to="/">
                 <CommandIcon className="size-5!" />
                 <span className="text-base font-semibold">J.O.A.</span>
