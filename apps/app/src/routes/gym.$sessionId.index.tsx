@@ -83,8 +83,15 @@ function GymSessionDetailRoute() {
           <div className="flex flex-wrap items-center justify-end gap-2">
             <DeleteSessionDialog onDelete={handleDelete} />
             <Button asChild size="sm" variant="outline">
+              <Link
+                to="/gym/$sessionId/edit"
+                params={{ sessionId: session.id }}>
+                <PencilSimpleIcon /> Edit plan
+              </Link>
+            </Button>
+            <Button asChild size="sm" variant="outline">
               <Link to="/gym/$sessionId/run" params={{ sessionId: session.id }}>
-                <PencilSimpleIcon /> Edit
+                <PencilSimpleIcon /> Edit sets
               </Link>
             </Button>
           </div>
@@ -112,6 +119,11 @@ function GymSessionDetailRoute() {
         </Button>
         <div className="flex flex-wrap items-center justify-end gap-2">
           <DeleteSessionDialog onDelete={handleDelete} />
+          <Button asChild size="sm" variant="outline">
+            <Link to="/gym/$sessionId/edit" params={{ sessionId: session.id }}>
+              <PencilSimpleIcon /> Edit plan
+            </Link>
+          </Button>
           {isToday ? (
             <Button
               size="sm"

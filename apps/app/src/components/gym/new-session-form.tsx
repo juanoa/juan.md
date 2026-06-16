@@ -24,6 +24,7 @@ import {
   GYM_SUBCATEGORIES,
   type Exercise,
   type GymSubcategory,
+  type Session,
 } from "../../lib/gym/types";
 import { useGymContext } from "./GymContext";
 import {
@@ -35,7 +36,9 @@ import {
 interface NewSessionFormProps {
   initialDate?: string;
   initialSubcategory?: GymSubcategory;
-  onCreated: (sessionId: string) => void;
+  initialSession?: Session;
+  onCreated?: (sessionId: string) => void;
+  onSaved?: (sessionId: string) => void;
   onCancel: () => void;
 }
 
@@ -67,17 +70,32 @@ function RequiredMark() {
 export function NewSessionForm({
   initialDate,
   initialSubcategory,
+  initialSession,
   onCreated,
+  onSaved,
   onCancel,
 }: NewSessionFormProps) {
-  const { sessions, exercises, createExercise, createSession } =
+  const { sessions, exercises, createExercise, createSession, updateSession } =
     useGymContext();
+  const isEditing = initialSession !== undefined;
 
-  const [date, setDate] = useState<string>(initialDate ?? todayISO());
-  const [subcategory, setSubcategory] = useState<GymSubcategory>(
-    initialSubcategory ?? "back",
+  const [date, setDate] = useState<string>(
+    initialSession?.date ?? initialDate ?? todayISO(),
   );
-  const [rows, setRows] = useState<DraftRow[]>([]);
+  const [subcategory, setSubcategory] = useState<GymSubcategory>(
+    initialSession?.subcategory ?? initialSubcategory ?? "back",
+  );
+  const [rows, setRows] = useState<DraftRow[]>(
+    () =>
+      initialSession?.exercises.map((exercise) => ({
+        rowId: exercise.id,
+        exerciseId: exercise.exerciseId,
+        targetSets: exercise.targetSets,
+        targetReps: exercise.targetReps,
+        targetWeight:
+          exercise.targetWeight !== null ? String(exercise.targetWeight) : "",
+      })) ?? [],
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [exerciseDialogRowId, setExerciseDialogRowId] = useState<string | null>(
@@ -105,8 +123,11 @@ export function NewSessionForm({
   }, [exercises, subcategory]);
 
   const dateConflict = useMemo(
-    () => sessions.some((session) => session.date === date),
-    [sessions, date],
+    () =>
+      sessions.some(
+        (session) => session.date === date && session.id !== initialSession?.id,
+      ),
+    [sessions, date, initialSession?.id],
   );
 
   const updateRow = (rowId: string, patch: Partial<DraftRow>) => {
@@ -153,22 +174,33 @@ export function NewSessionForm({
     if (!canSubmit) return;
     setSubmitting(true);
     setError(null);
+    const draft = {
+      date,
+      subcategory,
+      exercises: rows.map(
+        ({ exerciseId, targetSets, targetReps, targetWeight }) => ({
+          exerciseId,
+          targetSets,
+          targetReps,
+          targetWeight: parseTargetWeight(targetWeight),
+        }),
+      ),
+    };
     try {
-      const session = await createSession({
-        date,
-        subcategory,
-        exercises: rows.map(
-          ({ exerciseId, targetSets, targetReps, targetWeight }) => ({
-            exerciseId,
-            targetSets,
-            targetReps,
-            targetWeight: parseTargetWeight(targetWeight),
-          }),
-        ),
-      });
-      onCreated(session.id);
+      const session = isEditing
+        ? await updateSession(initialSession.id, draft)
+        : await createSession(draft);
+      if (isEditing) {
+        onSaved?.(session.id);
+      } else {
+        onCreated?.(session.id);
+      }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to create session");
+      setError(
+        e instanceof Error
+          ? e.message
+          : `Failed to ${isEditing ? "save" : "create"} session`,
+      );
       setSubmitting(false);
     }
   };
@@ -258,7 +290,13 @@ export function NewSessionForm({
           size="sm"
           disabled={!canSubmit}
           onClick={handleSubmit}>
-          {submitting ? "Creating..." : "Create session"}
+          {submitting
+            ? isEditing
+              ? "Saving..."
+              : "Creating..."
+            : isEditing
+              ? "Save session"
+              : "Create session"}
         </Button>
       </div>
 
