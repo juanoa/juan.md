@@ -10,3 +10,4 @@ dist
 node_modules
 pnpm-lock.yaml
 public
+apps/app/src/routeTree.gen.ts

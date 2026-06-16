@@ -25,8 +25,7 @@ export function NavMain({ items }: { items: NavMainItem[] }) {
                 <Link
                   to={item.to}
                   activeProps={{ "data-active": "true" }}
-                  activeOptions={{ exact: item.to === "/" }}
-                >
+                  activeOptions={{ exact: item.to === "/" }}>
                   {item.icon}
                   <span>{item.title}</span>
                 </Link>

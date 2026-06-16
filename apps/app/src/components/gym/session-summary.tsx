@@ -8,7 +8,7 @@ export function SessionSummary({ exercises }: SessionSummaryProps) {
   return (
     <ul className="flex flex-col gap-1.5">
       {exercises.map((exercise) => (
-        <li key={exercise.id} className="text-sm flex items-center gap-2">
+        <li key={exercise.id} className="flex items-center gap-2 text-sm">
           <span className="font-medium">
             {exercise.targetSets}x{exercise.targetReps}
           </span>

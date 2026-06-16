@@ -37,9 +37,7 @@ function LoginRoute() {
         <Button onClick={handleSignIn} disabled={loading}>
           {loading ? "Redirecting..." : "Continue with Google"}
         </Button>
-        {error ? (
-          <p className="text-destructive text-xs">{error}</p>
-        ) : null}
+        {error ? <p className="text-destructive text-xs">{error}</p> : null}
       </div>
     </div>
   );
