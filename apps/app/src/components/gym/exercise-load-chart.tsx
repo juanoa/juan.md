@@ -7,7 +7,7 @@ import {
   type ChartConfig,
 } from "@juan/ui/components/ui/chart";
 
-import { parseISODate } from "../../lib/gym/date";
+import { formatCompactISODate } from "../../lib/gym/date";
 import type { ExerciseHistoryPoint } from "../../lib/gym/stats";
 
 interface ExerciseLoadChartProps {
@@ -22,13 +22,6 @@ const config = {
   },
 } satisfies ChartConfig;
 
-function formatTick(date: string): string {
-  const d = parseISODate(date);
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${day}/${month}`;
-}
-
 interface DotProps {
   cx?: number;
   cy?: number;
@@ -40,7 +33,7 @@ export function ExerciseLoadChart({
   currentDate,
 }: ExerciseLoadChartProps) {
   return (
-    <ChartContainer config={config} className="aspect-auto h-32 lg:h-40 w-full">
+    <ChartContainer config={config} className="aspect-auto h-32 w-full lg:h-40">
       <LineChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
         <XAxis
@@ -49,7 +42,7 @@ export function ExerciseLoadChart({
           axisLine={false}
           tickMargin={6}
           minTickGap={24}
-          tickFormatter={formatTick}
+          tickFormatter={formatCompactISODate}
         />
         <YAxis
           tickLine={false}
@@ -63,7 +56,7 @@ export function ExerciseLoadChart({
           content={
             <ChartTooltipContent
               labelFormatter={(value) =>
-                typeof value === "string" ? formatTick(value) : value
+                typeof value === "string" ? formatCompactISODate(value) : value
               }
               formatter={(value) => `${value} kg`}
               hideIndicator
@@ -87,9 +80,7 @@ export function ExerciseLoadChart({
                 cx={cx}
                 cy={cy}
                 r={isCurrent ? 5 : 3}
-                fill={
-                  isCurrent ? "var(--primary)" : "var(--muted-foreground)"
-                }
+                fill={isCurrent ? "var(--primary)" : "var(--muted-foreground)"}
                 stroke={
                   isCurrent ? "var(--primary)" : "var(--muted-foreground)"
                 }

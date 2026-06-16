@@ -10,6 +10,46 @@ export function parseISODate(value: string): Date {
   return new Date(year, month - 1, day);
 }
 
+const weekdayFormatter = new Intl.DateTimeFormat(undefined, {
+  weekday: "short",
+});
+
+const dayNumberFormatter = new Intl.DateTimeFormat(undefined, {
+  day: "numeric",
+});
+
+const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
+  day: "numeric",
+  month: "short",
+});
+
+const compactDateFormatter = new Intl.DateTimeFormat(undefined, {
+  day: "numeric",
+  month: "numeric",
+});
+
+const accessibleDateFormatter = new Intl.DateTimeFormat(undefined, {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+export function formatShortDate(date: Date): string {
+  return shortDateFormatter.format(date);
+}
+
+export function formatCompactISODate(value: string): string {
+  return compactDateFormatter.format(parseISODate(value));
+}
+
+export function formatShortISODate(value: string): string {
+  return formatShortDate(parseISODate(value));
+}
+
+export function formatAccessibleISODate(value: string): string {
+  return accessibleDateFormatter.format(parseISODate(value));
+}
+
 export function startOfWeek(date: Date): Date {
   const result = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   const day = result.getDay();
@@ -31,14 +71,17 @@ export function weekOfYear(date: Date): number {
   const dayNum = target.getUTCDay() || 7;
   target.setUTCDate(target.getUTCDate() + 4 - dayNum);
   const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
-  return Math.ceil(((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  return Math.ceil(
+    ((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7,
+  );
 }
 
-export const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
 export function dayLabel(date: Date): string {
-  const day = date.getDay();
-  return DAY_LABELS[day === 0 ? 6 : day - 1];
+  return weekdayFormatter.format(date);
+}
+
+export function dayNumberLabel(date: Date): string {
+  return dayNumberFormatter.format(date);
 }
 
 export function todayISO(): string {

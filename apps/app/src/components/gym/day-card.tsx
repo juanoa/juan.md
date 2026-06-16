@@ -12,7 +12,11 @@ import { useRef, type CSSProperties, type PointerEvent } from "react";
 
 import { cn } from "@juan/ui/lib/utils";
 
-import { dayLabel } from "../../lib/gym/date";
+import {
+  dayLabel,
+  dayNumberLabel,
+  formatAccessibleISODate,
+} from "../../lib/gym/date";
 import type { Session } from "../../lib/gym/types";
 
 interface DayCardProps {
@@ -30,6 +34,7 @@ export function DayCard({ date, isoDate, isToday, sessions }: DayCardProps) {
   const { setNodeRef: setDropRef, isOver } = useDroppable({
     id: dayDroppableId(isoDate),
   });
+  const accessibleDate = formatAccessibleISODate(isoDate);
 
   return (
     <div
@@ -45,7 +50,7 @@ export function DayCard({ date, isoDate, isToday, sessions }: DayCardProps) {
             "text-muted-foreground tabular-nums",
             isToday && "text-primary font-medium",
           )}>
-          {date.getDate()}
+          {dayNumberLabel(date)}
         </span>
       </div>
       <div className="flex flex-1 flex-col gap-1.5">
@@ -55,7 +60,7 @@ export function DayCard({ date, isoDate, isToday, sessions }: DayCardProps) {
         <Link
           to="/gym/new"
           search={{ date: isoDate }}
-          aria-label={`Plan a session on ${isoDate}`}
+          aria-label={`Plan a session on ${accessibleDate}`}
           className="text-muted-foreground hover:text-foreground hover:bg-muted/60 ring-foreground/10 ring-dashed flex min-h-10 flex-1 items-center justify-center gap-1 ring-1 transition-colors">
           <PlusIcon className="size-3" />
         </Link>

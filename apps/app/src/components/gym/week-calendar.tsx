@@ -14,6 +14,7 @@ import { Button } from "@juan/ui/components/ui/button";
 import {
   addDays,
   formatISODate,
+  formatShortDate,
   startOfWeek,
   todayISO,
   weekOfYear,
@@ -72,7 +73,7 @@ export function WeekCalendar() {
         ? "Last week"
         : weekOffset === 1
           ? "Next week"
-          : `Week of ${formatISODate(weekStart)}`;
+          : `Week of ${formatShortDate(weekStart)}`;
 
   return (
     <section className="flex flex-col gap-3">

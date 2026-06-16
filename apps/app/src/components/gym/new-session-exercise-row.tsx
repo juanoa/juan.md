@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "@juan/ui/components/ui/table";
 
+import { formatShortISODate } from "../../lib/gym/date";
 import { totalLoad } from "../../lib/gym/stats";
 import type {
   Exercise,
@@ -137,7 +138,9 @@ function ExerciseHistoryTable({
         <TableBody>
           {history.map((entry) => (
             <TableRow key={entry.id}>
-              <TableCell className="tabular-nums">{entry.date}</TableCell>
+              <TableCell className="tabular-nums">
+                {formatShortISODate(entry.date)}
+              </TableCell>
               <TableCell className="whitespace-normal">
                 {formatSetSummary(entry.sets)}
               </TableCell>
