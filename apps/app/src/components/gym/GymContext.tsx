@@ -25,7 +25,7 @@ export interface GymContextValue {
   status: GymStatus;
   error: string | null;
   getSession: (id: string) => Session | undefined;
-  getSessionByDate: (date: string) => Session | undefined;
+  getSessionsByDate: (date: string) => Session[];
   moveSession: (id: string, newDate: string) => void;
   recordSet: (
     sessionId: string,
@@ -47,6 +47,14 @@ const GymContext = createContext<GymContextValue | undefined>(undefined);
 
 interface GymContextProviderProps {
   children: ReactNode;
+}
+
+function sortSessions(sessions: Session[]): Session[] {
+  return [...sessions].sort((a, b) => {
+    const dateOrder = a.date.localeCompare(b.date);
+    if (dateOrder !== 0) return dateOrder;
+    return a.id.localeCompare(b.id);
+  });
 }
 
 export function GymContextProvider({ children }: GymContextProviderProps) {
@@ -79,8 +87,8 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
     [sessions],
   );
 
-  const getSessionByDate = useCallback(
-    (date: string) => sessions.find((session) => session.date === date),
+  const getSessionsByDate = useCallback(
+    (date: string) => sessions.filter((session) => session.date === date),
     [sessions],
   );
 
@@ -90,18 +98,12 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       setSessions((prev) => {
         const moving = prev.find((session) => session.id === id);
         if (!moving) return prev;
-        const oldDate = moving.date;
-        if (oldDate === newDate) return prev;
-        const occupant = prev.find(
-          (session) => session.date === newDate && session.id !== id,
+        if (moving.date === newDate) return prev;
+        return sortSessions(
+          prev.map((session) =>
+            session.id === id ? { ...session, date: newDate } : session,
+          ),
         );
-        return prev.map((session) => {
-          if (session.id === id) return { ...session, date: newDate };
-          if (occupant && session.id === occupant.id) {
-            return { ...session, date: oldDate };
-          }
-          return session;
-        });
       });
       void repository.moveSession(id, newDate).catch(() => {
         if (rolledBack) return;
@@ -182,9 +184,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
 
   const createSession = useCallback(async (draft: SessionDraft) => {
     const session = await repository.createSession(draft);
-    setSessions((prev) =>
-      [...prev, session].sort((a, b) => a.date.localeCompare(b.date)),
-    );
+    setSessions((prev) => sortSessions([...prev, session]));
     return session;
   }, []);
 
@@ -205,7 +205,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       status,
       error,
       getSession,
-      getSessionByDate,
+      getSessionsByDate,
       moveSession,
       recordSet,
       finishSession,
@@ -220,7 +220,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       status,
       error,
       getSession,
-      getSessionByDate,
+      getSessionsByDate,
       moveSession,
       recordSet,
       finishSession,

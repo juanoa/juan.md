@@ -122,14 +122,6 @@ export function NewSessionForm({
       .filter((group) => group.items.length > 0);
   }, [exercises, subcategory]);
 
-  const dateConflict = useMemo(
-    () =>
-      sessions.some(
-        (session) => session.date === date && session.id !== initialSession?.id,
-      ),
-    [sessions, date, initialSession?.id],
-  );
-
   const updateRow = (rowId: string, patch: Partial<DraftRow>) => {
     setRows((prev) =>
       prev.map((row) => (row.rowId === rowId ? { ...row, ...patch } : row)),
@@ -160,7 +152,6 @@ export function NewSessionForm({
 
   const canSubmit =
     !submitting &&
-    !dateConflict &&
     rows.length > 0 &&
     rows.every(
       (row) =>
@@ -218,11 +209,9 @@ export function NewSessionForm({
             value={date}
             onChange={(event) => setDate(event.target.value)}
           />
-          {dateConflict && (
-            <p className="text-destructive text-xs">
-              There is already a session on this date.
-            </p>
-          )}
+          <p className="text-muted-foreground text-xs">
+            You can plan more than one session on the same day.
+          </p>
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="session-subcategory">

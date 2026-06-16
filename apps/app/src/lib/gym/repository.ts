@@ -91,10 +91,10 @@ export async function fetchSessions(): Promise<Session[]> {
 }
 
 export async function moveSession(id: string, newDate: string): Promise<void> {
-  const { error } = await supabase.rpc("move_session", {
-    p_id: id,
-    p_new_date: newDate,
-  });
+  const { error } = await supabase
+    .from("gym_sessions")
+    .update({ date: newDate })
+    .eq("id", id);
   if (error) throw error;
 }
 
