@@ -1,4 +1,4 @@
-import { PlusIcon, TrashIcon } from "@phosphor-icons/react";
+import { PlusIcon } from "@phosphor-icons/react";
 import { useMemo, useState } from "react";
 
 import { Button } from "@juan/ui/components/ui/button";
@@ -14,9 +14,7 @@ import { Label } from "@juan/ui/components/ui/label";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@juan/ui/components/ui/select";
@@ -26,20 +24,19 @@ import {
   GYM_SUBCATEGORIES,
   type Exercise,
   type GymSubcategory,
-  type SessionDraftExercise,
 } from "../../lib/gym/types";
 import { useGymContext } from "./GymContext";
+import {
+  NewSessionExerciseRow,
+  type DraftRow,
+  type ExerciseGroup,
+} from "./new-session-exercise-row";
 
 interface NewSessionFormProps {
   initialDate?: string;
   initialSubcategory?: GymSubcategory;
   onCreated: (sessionId: string) => void;
   onCancel: () => void;
-}
-
-interface DraftRow extends Omit<SessionDraftExercise, "targetWeight"> {
-  rowId: string;
-  targetWeight: string;
 }
 
 function makeRowId(): string {
@@ -87,7 +84,7 @@ export function NewSessionForm({
     null,
   );
 
-  const exerciseGroups = useMemo(() => {
+  const exerciseGroups = useMemo<ExerciseGroup[]>(() => {
     const bySubcategory = new Map<GymSubcategory, Exercise[]>();
     for (const exercise of exercises) {
       const list = bySubcategory.get(exercise.subcategory) ?? [];
@@ -229,117 +226,17 @@ export function NewSessionForm({
         ) : (
           <ul className="flex flex-col gap-2">
             {rows.map((row, index) => (
-              <li
+              <NewSessionExerciseRow
                 key={row.rowId}
-                className="ring-foreground/10 bg-card flex flex-col gap-3 p-3 ring-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground text-xs tabular-nums">
-                    #{index + 1}
-                  </span>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() => removeRow(row.rowId)}
-                    aria-label="Remove exercise">
-                    <TrashIcon />
-                  </Button>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <Label>
-                    Exercise <RequiredMark />
-                  </Label>
-                  <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
-                    <Select
-                      value={row.exerciseId}
-                      onValueChange={(value) =>
-                        updateRow(row.rowId, { exerciseId: value })
-                      }>
-                      <SelectTrigger className="w-full sm:flex-1">
-                        <SelectValue placeholder="Pick an exercise" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {exerciseGroups.length === 0 ? (
-                          <div className="text-muted-foreground px-2 py-2 text-xs">
-                            No exercises yet.
-                          </div>
-                        ) : (
-                          exerciseGroups.map((group) => (
-                            <SelectGroup key={group.slug}>
-                              <SelectLabel>{group.name}</SelectLabel>
-                              {group.items.map((exercise) => (
-                                <SelectItem
-                                  key={exercise.id}
-                                  value={exercise.id}>
-                                  {exercise.name}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          ))
-                        )}
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setExerciseDialogRowId(row.rowId)}>
-                      <PlusIcon /> New
-                    </Button>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <div className="flex flex-col gap-1.5">
-                    <Label htmlFor={`sets-${row.rowId}`}>
-                      Sets <RequiredMark />
-                    </Label>
-                    <Input
-                      id={`sets-${row.rowId}`}
-                      type="number"
-                      inputMode="numeric"
-                      min={1}
-                      value={row.targetSets}
-                      onChange={(event) =>
-                        updateRow(row.rowId, {
-                          targetSets: Math.max(1, Number(event.target.value)),
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <Label htmlFor={`reps-${row.rowId}`}>
-                      Reps <RequiredMark />
-                    </Label>
-                    <Input
-                      id={`reps-${row.rowId}`}
-                      type="number"
-                      inputMode="numeric"
-                      min={1}
-                      value={row.targetReps}
-                      onChange={(event) =>
-                        updateRow(row.rowId, {
-                          targetReps: Math.max(1, Number(event.target.value)),
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <Label htmlFor={`weight-${row.rowId}`}>Kg</Label>
-                    <Input
-                      id={`weight-${row.rowId}`}
-                      type="number"
-                      inputMode="decimal"
-                      min={0}
-                      step="0.5"
-                      value={row.targetWeight}
-                      onChange={(event) =>
-                        updateRow(row.rowId, {
-                          targetWeight: event.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-              </li>
+                row={row}
+                index={index}
+                sessionDate={date}
+                sessions={sessions}
+                exerciseGroups={exerciseGroups}
+                onUpdate={(patch) => updateRow(row.rowId, patch)}
+                onRemove={() => removeRow(row.rowId)}
+                onCreateExercise={() => setExerciseDialogRowId(row.rowId)}
+              />
             ))}
             <li>
               <Button type="button" variant="ghost" size="sm" onClick={addRow}>
