@@ -59,6 +59,7 @@ export function ExerciseCard({
                 key={setIndex}
                 setIndex={setIndex}
                 performed={performed?.sets[setIndex]}
+                targetWeight={exercise.targetWeight}
                 onCommit={handleCommit(setIndex)}
               />
               <hr className="lg:hidden" />
@@ -69,8 +70,7 @@ export function ExerciseCard({
             variant="ghost"
             size="xs"
             className="w-fit"
-            onClick={() => setExtraSets((value) => value + 1)}
-          >
+            onClick={() => setExtraSets((value) => value + 1)}>
             <PlusIcon /> Add set
           </Button>
         </div>

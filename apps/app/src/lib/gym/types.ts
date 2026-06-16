@@ -27,6 +27,7 @@ export interface SessionDraftExercise {
   exerciseId: string;
   targetSets: number;
   targetReps: number;
+  targetWeight?: number;
 }
 
 export interface SessionDraft {
@@ -41,6 +42,7 @@ export interface PlannedExercise {
   name: string;
   targetSets: number;
   targetReps: number;
+  targetWeight: number | null;
 }
 
 export interface PerformedSet {

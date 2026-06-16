@@ -9,10 +9,16 @@ import { RepsSelector } from "./reps-selector";
 interface SetRowProps {
   setIndex: number;
   performed: PerformedSet | undefined;
+  targetWeight: number | null;
   onCommit: (set: PerformedSet) => void;
 }
 
-export function SetRow({ setIndex, performed, onCommit }: SetRowProps) {
+export function SetRow({
+  setIndex,
+  performed,
+  targetWeight,
+  onCommit,
+}: SetRowProps) {
   const [reps, setReps] = useState<number | undefined>(performed?.reps);
   const [weight, setWeight] = useState<string>(
     performed?.weight !== undefined ? String(performed.weight) : "",
@@ -61,6 +67,7 @@ export function SetRow({ setIndex, performed, onCommit }: SetRowProps) {
           min={0}
           step="0.5"
           value={weight}
+          placeholder={targetWeight !== null ? String(targetWeight) : undefined}
           onChange={(event) => setWeight(event.target.value)}
           onBlur={handleWeightBlur}
           className="h-7 w-20"

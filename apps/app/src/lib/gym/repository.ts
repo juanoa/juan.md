@@ -21,6 +21,7 @@ interface GymSessionExerciseRow {
   id: string;
   target_sets: number;
   target_reps: number;
+  target_weight: number | null;
   position: number;
   exercise: { id: string; name: string } | null;
   gym_performed_sets: GymPerformedSetRow[];
@@ -70,6 +71,7 @@ function mapSession(row: GymSessionRow): Session {
       name: entry.exercise?.name ?? "",
       targetSets: entry.target_sets,
       targetReps: entry.target_reps,
+      targetWeight: entry.target_weight,
     })),
     performed,
   };
@@ -79,7 +81,7 @@ export async function fetchSessions(): Promise<Session[]> {
   const { data, error } = await supabase
     .from("gym_sessions")
     .select(
-      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
+      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, target_weight, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
     )
     .order("date", { ascending: true });
 
@@ -186,6 +188,7 @@ export async function createSession(draft: SessionDraft): Promise<Session> {
           exercise_id: entry.exerciseId,
           target_sets: entry.targetSets,
           target_reps: entry.targetReps,
+          target_weight: entry.targetWeight ?? null,
           position: index,
         })),
       );
@@ -195,7 +198,7 @@ export async function createSession(draft: SessionDraft): Promise<Session> {
   const { data, error } = await supabase
     .from("gym_sessions")
     .select(
-      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
+      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, target_weight, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
     )
     .eq("id", sessionId)
     .single();

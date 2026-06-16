@@ -37,12 +37,34 @@ interface NewSessionFormProps {
   onCancel: () => void;
 }
 
-interface DraftRow extends SessionDraftExercise {
+interface DraftRow extends Omit<SessionDraftExercise, "targetWeight"> {
   rowId: string;
+  targetWeight: string;
 }
 
 function makeRowId(): string {
   return Math.random().toString(36).slice(2, 10);
+}
+
+function isValidTargetWeight(value: string): boolean {
+  const trimmed = value.trim();
+  if (trimmed === "") return true;
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) && parsed >= 0;
+}
+
+function parseTargetWeight(value: string): number | undefined {
+  const trimmed = value.trim();
+  if (trimmed === "") return undefined;
+  return Number(trimmed);
+}
+
+function RequiredMark() {
+  return (
+    <span className="text-destructive" aria-hidden="true">
+      *
+    </span>
+  );
 }
 
 export function NewSessionForm({
@@ -104,6 +126,7 @@ export function NewSessionForm({
         exerciseId: "",
         targetSets: 4,
         targetReps: 8,
+        targetWeight: "",
       },
     ]);
   };
@@ -123,7 +146,10 @@ export function NewSessionForm({
     rows.length > 0 &&
     rows.every(
       (row) =>
-        row.exerciseId !== "" && row.targetSets > 0 && row.targetReps > 0,
+        row.exerciseId !== "" &&
+        row.targetSets > 0 &&
+        row.targetReps > 0 &&
+        isValidTargetWeight(row.targetWeight),
     );
 
   const handleSubmit = async () => {
@@ -134,11 +160,14 @@ export function NewSessionForm({
       const session = await createSession({
         date,
         subcategory,
-        exercises: rows.map(({ exerciseId, targetSets, targetReps }) => ({
-          exerciseId,
-          targetSets,
-          targetReps,
-        })),
+        exercises: rows.map(
+          ({ exerciseId, targetSets, targetReps, targetWeight }) => ({
+            exerciseId,
+            targetSets,
+            targetReps,
+            targetWeight: parseTargetWeight(targetWeight),
+          }),
+        ),
       });
       onCreated(session.id);
     } catch (e) {
@@ -151,7 +180,9 @@ export function NewSessionForm({
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="session-date">Date</Label>
+          <Label htmlFor="session-date">
+            Date <RequiredMark />
+          </Label>
           <Input
             id="session-date"
             type="date"
@@ -165,7 +196,9 @@ export function NewSessionForm({
           )}
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="session-subcategory">Focus</Label>
+          <Label htmlFor="session-subcategory">
+            Focus <RequiredMark />
+          </Label>
           <Select
             value={subcategory}
             onValueChange={(value) => setSubcategory(value as GymSubcategory)}>
@@ -213,7 +246,9 @@ export function NewSessionForm({
                   </Button>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <Label>Exercise</Label>
+                  <Label>
+                    Exercise <RequiredMark />
+                  </Label>
                   <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
                     <Select
                       value={row.exerciseId}
@@ -252,9 +287,11 @@ export function NewSessionForm({
                     </Button>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <div className="flex flex-col gap-1.5">
-                    <Label htmlFor={`sets-${row.rowId}`}>Sets</Label>
+                    <Label htmlFor={`sets-${row.rowId}`}>
+                      Sets <RequiredMark />
+                    </Label>
                     <Input
                       id={`sets-${row.rowId}`}
                       type="number"
@@ -269,7 +306,9 @@ export function NewSessionForm({
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <Label htmlFor={`reps-${row.rowId}`}>Reps</Label>
+                    <Label htmlFor={`reps-${row.rowId}`}>
+                      Reps <RequiredMark />
+                    </Label>
                     <Input
                       id={`reps-${row.rowId}`}
                       type="number"
@@ -279,6 +318,22 @@ export function NewSessionForm({
                       onChange={(event) =>
                         updateRow(row.rowId, {
                           targetReps: Math.max(1, Number(event.target.value)),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor={`weight-${row.rowId}`}>Kg</Label>
+                    <Input
+                      id={`weight-${row.rowId}`}
+                      type="number"
+                      inputMode="decimal"
+                      min={0}
+                      step="0.5"
+                      value={row.targetWeight}
+                      onChange={(event) =>
+                        updateRow(row.rowId, {
+                          targetWeight: event.target.value,
                         })
                       }
                     />
@@ -381,7 +436,9 @@ function NewExerciseDialog({
         </DialogHeader>
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="new-exercise-name">Name</Label>
+            <Label htmlFor="new-exercise-name">
+              Name <RequiredMark />
+            </Label>
             <Input
               id="new-exercise-name"
               value={name}
@@ -397,7 +454,9 @@ function NewExerciseDialog({
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="new-exercise-subcategory">Focus</Label>
+            <Label htmlFor="new-exercise-subcategory">
+              Focus <RequiredMark />
+            </Label>
             <Select
               value={subcategory}
               onValueChange={(value) =>
