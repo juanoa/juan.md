@@ -40,6 +40,7 @@ export interface GymContextValue {
     subcategory: GymSubcategory,
   ) => Promise<Exercise>;
   createSession: (draft: SessionDraft) => Promise<Session>;
+  updateSession: (id: string, draft: SessionDraft) => Promise<Session>;
 }
 
 const GymContext = createContext<GymContextValue | undefined>(undefined);
@@ -187,6 +188,16 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
     return session;
   }, []);
 
+  const updateSession = useCallback(async (id: string, draft: SessionDraft) => {
+    const session = await repository.updateSession(id, draft);
+    setSessions((prev) =>
+      prev
+        .map((entry) => (entry.id === id ? session : entry))
+        .sort((a, b) => a.date.localeCompare(b.date)),
+    );
+    return session;
+  }, []);
+
   const value = useMemo<GymContextValue>(
     () => ({
       sessions,
@@ -201,6 +212,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       deleteSession,
       createExercise,
       createSession,
+      updateSession,
     }),
     [
       sessions,
@@ -215,6 +227,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       deleteSession,
       createExercise,
       createSession,
+      updateSession,
     ],
   );
 

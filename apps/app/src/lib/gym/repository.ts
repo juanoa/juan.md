@@ -19,6 +19,7 @@ interface GymSessionRow {
 
 interface GymSessionExerciseRow {
   id: string;
+  exercise_id?: string;
   target_sets: number;
   target_reps: number;
   target_weight: number | null;
@@ -206,6 +207,91 @@ export async function createSession(draft: SessionDraft): Promise<Session> {
       "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, target_weight, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
     )
     .eq("id", sessionId)
+    .single();
+  if (error) throw error;
+  return mapSession(data as unknown as GymSessionRow);
+}
+
+interface ExistingSessionExerciseRow {
+  id: string;
+  exercise_id: string;
+}
+
+export async function updateSession(
+  id: string,
+  draft: SessionDraft,
+): Promise<Session> {
+  const { error: sessionError } = await supabase
+    .from("gym_sessions")
+    .update({
+      date: draft.date,
+      subcategory_slug: draft.subcategory,
+    })
+    .eq("id", id);
+  if (sessionError) throw sessionError;
+
+  const { data: existingData, error: existingError } = await supabase
+    .from("gym_session_exercises")
+    .select("id, exercise_id")
+    .eq("session_id", id)
+    .order("position", { ascending: true });
+  if (existingError) throw existingError;
+
+  const existing = (existingData as ExistingSessionExerciseRow[]) ?? [];
+  const staleIds = existing
+    .slice(draft.exercises.length)
+    .map((entry) => entry.id);
+
+  if (staleIds.length > 0) {
+    const { error } = await supabase
+      .from("gym_session_exercises")
+      .delete()
+      .in("id", staleIds);
+    if (error) throw error;
+  }
+
+  for (const [position, entry] of draft.exercises.entries()) {
+    const current = existing[position];
+    if (!current) {
+      const { error } = await supabase.from("gym_session_exercises").insert({
+        session_id: id,
+        exercise_id: entry.exerciseId,
+        target_sets: entry.targetSets,
+        target_reps: entry.targetReps,
+        target_weight: entry.targetWeight ?? null,
+        position,
+      });
+      if (error) throw error;
+      continue;
+    }
+
+    if (current.exercise_id !== entry.exerciseId) {
+      const { error } = await supabase
+        .from("gym_performed_sets")
+        .delete()
+        .eq("session_exercise_id", current.id);
+      if (error) throw error;
+    }
+
+    const { error } = await supabase
+      .from("gym_session_exercises")
+      .update({
+        exercise_id: entry.exerciseId,
+        target_sets: entry.targetSets,
+        target_reps: entry.targetReps,
+        target_weight: entry.targetWeight ?? null,
+        position,
+      })
+      .eq("id", current.id);
+    if (error) throw error;
+  }
+
+  const { data, error } = await supabase
+    .from("gym_sessions")
+    .select(
+      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, target_weight, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
+    )
+    .eq("id", id)
     .single();
   if (error) throw error;
   return mapSession(data as unknown as GymSessionRow);
