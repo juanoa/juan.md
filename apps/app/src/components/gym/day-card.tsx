@@ -47,7 +47,7 @@ export function DayCard({ date, isoDate, isToday, sessions }: DayCardProps) {
         <span
           className={cn(
             "text-muted-foreground tabular-nums",
-            isToday && "text-primary font-medium",
+            isToday && "text-destructive font-medium",
           )}>
           {dayNumberLabel(date)}
         </span>
