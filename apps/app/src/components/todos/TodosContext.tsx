@@ -9,7 +9,6 @@ import {
 import type { ReactNode } from "react";
 
 import * as repository from "../../lib/todos/repository";
-import { addDaysISO } from "../../lib/todos/date";
 import { parseRecurringTodoTitle } from "../../lib/todos/recurrence";
 import type {
   CreateTodoTaskInput,
@@ -42,7 +41,6 @@ export interface TodosContextValue extends TodoData {
   deleteTask: (id: string) => Promise<void>;
   undoDelete: () => Promise<void>;
   moveTask: (id: string, target: TodoScope) => Promise<TodoTask>;
-  moveTaskToTomorrow: (id: string) => Promise<TodoTask | null>;
   placeTask: (
     id: string,
     target: TodoScope,
@@ -257,15 +255,6 @@ export function TodosContextProvider({ children }: { children: ReactNode }) {
     return task;
   }, []);
 
-  const moveTaskToTomorrow = useCallback(
-    async (id: string) => {
-      const task = tasks.find((entry) => entry.id === id);
-      if (!task?.dueDate) return null;
-      return moveTask(id, { kind: "date", date: addDaysISO(task.dueDate, 1) });
-    },
-    [moveTask, tasks],
-  );
-
   const placeTask = useCallback(
     async (id: string, target: TodoScope, overTaskId?: string) => {
       const active = tasks.find((task) => task.id === id);
@@ -422,7 +411,6 @@ export function TodosContextProvider({ children }: { children: ReactNode }) {
       deleteTask,
       undoDelete,
       moveTask,
-      moveTaskToTomorrow,
       placeTask,
       createList,
       updateList,
@@ -449,7 +437,6 @@ export function TodosContextProvider({ children }: { children: ReactNode }) {
       deleteTask,
       undoDelete,
       moveTask,
-      moveTaskToTomorrow,
       placeTask,
       createList,
       updateList,

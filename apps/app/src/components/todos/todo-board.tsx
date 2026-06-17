@@ -4,7 +4,6 @@ import {
   closestCenter,
   useSensor,
   useSensors,
-  useDroppable,
 } from "@dnd-kit/core";
 import type { DragEndEvent } from "@dnd-kit/core";
 import {
@@ -40,7 +39,7 @@ import {
   todayISO,
 } from "../../lib/todos/date";
 import type { TodoScope, TodoTask } from "../../lib/todos/types";
-import { TodoColumn, todoDroppableTickerId } from "./todo-column";
+import { TodoColumn } from "./todo-column";
 import { TodoNotesSheet } from "./todo-notes-sheet";
 import { TodoPreferencesSheet } from "./todo-preferences-sheet";
 import { TodoRecurringSheet } from "./todo-recurring-sheet";
@@ -353,42 +352,42 @@ export function TodoBoard() {
               isToday={iso === today}
               tasks={filterTasks(getTasksForDate(iso))}
               onOpenNotes={(task) => setNotesTaskId(task.id)}
+              dragEnabled
             />
           ))}
         </div>
+      </DndContext>
 
-        {selectedDay && (
-          <div className="flex flex-col gap-3 md:hidden">
-            <TodoColumn
-              date={selectedDay.date}
-              isoDate={selectedDay.iso}
-              isToday={selectedDay.iso === today}
-              tasks={filterTasks(getTasksForDate(selectedDay.iso))}
-              onOpenNotes={(task) => setNotesTaskId(task.id)}
-            />
-            <div className="border-border bg-background/95 sticky bottom-0 z-20 grid grid-cols-7 gap-1 border p-1 supports-backdrop-filter:backdrop-blur">
-              {mobileTickerDays.map(({ date, iso }) => (
-                <MobileTickerDay
-                  key={iso}
-                  date={date}
-                  isoDate={iso}
-                  selected={iso === selectedDate}
-                  isToday={iso === today}
-                  onClick={() => setSelectedDate(iso)}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {!focusMode && (
-          <TodoSomedayLists
-            lists={lists}
-            tasksByList={tasksByList}
+      {selectedDay && (
+        <div className="flex flex-col gap-3 md:hidden">
+          <TodoColumn
+            date={selectedDay.date}
+            isoDate={selectedDay.iso}
+            isToday={selectedDay.iso === today}
+            tasks={filterTasks(getTasksForDate(selectedDay.iso))}
             onOpenNotes={(task) => setNotesTaskId(task.id)}
           />
-        )}
-      </DndContext>
+          <div className="border-border bg-background/95 sticky bottom-0 z-20 grid grid-cols-7 gap-1 border p-1 supports-backdrop-filter:backdrop-blur">
+            {mobileTickerDays.map(({ date, iso }) => (
+              <MobileTickerDay
+                key={iso}
+                date={date}
+                selected={iso === selectedDate}
+                isToday={iso === today}
+                onClick={() => setSelectedDate(iso)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!focusMode && (
+        <TodoSomedayLists
+          lists={lists}
+          tasksByList={tasksByList}
+          onOpenNotes={(task) => setNotesTaskId(task.id)}
+        />
+      )}
 
       <TodoNotesSheet
         task={selectedTask}
@@ -413,19 +412,12 @@ function scopeFromDroppableId(id: string): TodoScope | null {
   if (id.startsWith("date:")) {
     return { kind: "date", date: id.slice("date:".length) };
   }
-  if (id.startsWith("ticker:")) {
-    return { kind: "date", date: id.slice("ticker:".length) };
-  }
-  if (id.startsWith("list:")) {
-    return { kind: "list", listId: id.slice("list:".length) };
-  }
   return null;
 }
 
 function scopeFromTask(task: TodoTask | undefined): TodoScope | null {
   if (!task) return null;
   if (task.dueDate) return { kind: "date", date: task.dueDate };
-  if (task.listId) return { kind: "list", listId: task.listId };
   return null;
 }
 
@@ -457,31 +449,23 @@ function ToolbarButton({
 
 function MobileTickerDay({
   date,
-  isoDate,
   selected,
   isToday,
   onClick,
 }: {
   date: Date;
-  isoDate: string;
   selected: boolean;
   isToday: boolean;
   onClick: () => void;
 }) {
-  const { setNodeRef, isOver } = useDroppable({
-    id: todoDroppableTickerId(isoDate),
-  });
-
   return (
     <button
-      ref={setNodeRef}
       type="button"
       onClick={onClick}
       className={cn(
         "flex min-h-12 flex-col items-center justify-center border border-transparent text-xs transition-colors",
         selected && "border-primary bg-primary/10 text-primary",
         isToday && !selected && "text-primary",
-        isOver && "border-primary bg-primary/15",
       )}>
       <span>{dayLabel(date)}</span>
       <span className="font-medium tabular-nums">{dayNumberLabel(date)}</span>

@@ -10,7 +10,7 @@ import {
   TrashIcon,
 } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
-import type { CSSProperties, KeyboardEvent, PointerEvent } from "react";
+import type { CSSProperties, KeyboardEvent } from "react";
 
 import { Button } from "@juan/ui/components/ui/button";
 import { Checkbox } from "@juan/ui/components/ui/checkbox";
@@ -34,6 +34,7 @@ import { useTodosContext } from "./TodosContext";
 interface TodoTaskItemProps {
   task: TodoTask;
   onOpenNotes: (task: TodoTask) => void;
+  dragEnabled?: boolean;
 }
 
 export function todoDraggableId(id: string): string {
@@ -44,7 +45,11 @@ export function todoDroppableTaskId(id: string): string {
   return `task:${id}`;
 }
 
-export function TodoTaskItem({ task, onOpenNotes }: TodoTaskItemProps) {
+export function TodoTaskItem({
+  task,
+  onOpenNotes,
+  dragEnabled = false,
+}: TodoTaskItemProps) {
   const {
     lists,
     preferences,
@@ -53,21 +58,20 @@ export function TodoTaskItem({ task, onOpenNotes }: TodoTaskItemProps) {
     deleteTask,
     deleteRecurringTodo,
     moveTask,
-    moveTaskToTomorrow,
   } = useTodosContext();
   const completed = task.completedAt !== null;
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(task.title);
-  const [swipeX, setSwipeX] = useState(0);
-  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { setNodeRef: setDropRef, isOver } = useDroppable({
     id: todoDroppableTaskId(task.id),
+    disabled: !dragEnabled,
   });
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: todoDraggableId(task.id),
+      disabled: !dragEnabled,
     });
 
   useEffect(() => {
@@ -87,12 +91,8 @@ export function TodoTaskItem({ task, onOpenNotes }: TodoTaskItemProps) {
         : "";
 
   const style: CSSProperties = {
-    transform: transform
-      ? CSS.Translate.toString(transform)
-      : swipeX !== 0
-        ? `translate3d(${swipeX}px, 0, 0)`
-        : undefined,
-    opacity: isDragging ? 0.45 : 1,
+    transform: transform ? CSS.Translate.toString(transform) : undefined,
+    opacity: dragEnabled && isDragging ? 0.45 : 1,
   };
 
   const saveDraft = async () => {
@@ -119,35 +119,6 @@ export function TodoTaskItem({ task, onOpenNotes }: TodoTaskItemProps) {
     }
   };
 
-  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    if (isEditing) return;
-    const target = event.target as HTMLElement;
-    if (target.closest("input, textarea, select, [data-no-swipe]")) return;
-    pointerStartRef.current = { x: event.clientX, y: event.clientY };
-  };
-
-  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    const start = pointerStartRef.current;
-    if (!start || isEditing) return;
-    const dx = event.clientX - start.x;
-    const dy = event.clientY - start.y;
-    if (Math.abs(dy) > 42 || Math.abs(dx) < 12) return;
-    setSwipeX(Math.max(-118, Math.min(118, dx)));
-  };
-
-  const handlePointerUp = async () => {
-    const finalX = swipeX;
-    pointerStartRef.current = null;
-    setSwipeX(0);
-    if (finalX <= -92) {
-      await deleteTask(task.id);
-      return;
-    }
-    if (finalX >= 92 && task.dueDate) {
-      await moveTaskToTomorrow(task.id);
-    }
-  };
-
   const nearbyDates = task.dueDate
     ? [
         { label: "Today", date: todayISO() },
@@ -158,33 +129,22 @@ export function TodoTaskItem({ task, onOpenNotes }: TodoTaskItemProps) {
   return (
     <div
       ref={setDropRef}
-      className={cn("relative isolate", isOver && "bg-primary/5")}>
-      <div className="bg-success/10 text-success absolute inset-y-0 left-0 flex w-28 items-center px-3 text-xs font-medium">
-        Tomorrow
-      </div>
-      <div className="bg-destructive/10 text-destructive absolute inset-y-0 right-0 flex w-28 items-center justify-end px-3 text-xs font-medium">
-        Delete
-      </div>
+      className={cn(
+        "relative isolate",
+        dragEnabled && isOver && "bg-primary/5",
+      )}>
       <div
         ref={setNodeRef}
         style={style}
         className={cn(
-          "group/todo border-border bg-background relative z-10 flex min-h-9 touch-pan-y items-start gap-2 border-b px-2 py-1.5 text-xs transition-[background,opacity,transform]",
-          isDragging && "cursor-grabbing",
-        )}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={() => {
-          pointerStartRef.current = null;
-          setSwipeX(0);
-        }}>
+          "group/todo border-border bg-background relative z-10 flex min-h-9 items-start gap-2 border-b px-2 py-1.5 text-xs transition-[background,opacity]",
+          dragEnabled && isDragging && "cursor-grabbing will-change-transform",
+        )}>
         <Checkbox
           checked={completed}
           onCheckedChange={(checked) => toggleTask(task.id, checked === true)}
           aria-label={completed ? "Mark incomplete" : "Mark complete"}
           className="mt-0.5"
-          data-no-swipe
         />
 
         <div className="min-w-0 flex-1">
@@ -235,8 +195,7 @@ export function TodoTaskItem({ task, onOpenNotes }: TodoTaskItemProps) {
             variant="ghost"
             size="icon-xs"
             onClick={() => onOpenNotes(task)}
-            aria-label="Open notes"
-            data-no-swipe>
+            aria-label="Open notes">
             <NotePencilIcon />
           </Button>
           <DropdownMenu>
@@ -245,8 +204,7 @@ export function TodoTaskItem({ task, onOpenNotes }: TodoTaskItemProps) {
                 type="button"
                 variant="ghost"
                 size="icon-xs"
-                aria-label="Task menu"
-                data-no-swipe>
+                aria-label="Task menu">
                 <DotsThreeVerticalIcon />
               </Button>
             </DropdownMenuTrigger>
@@ -301,17 +259,18 @@ export function TodoTaskItem({ task, onOpenNotes }: TodoTaskItemProps) {
               )}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-xs"
-            className="cursor-grab active:cursor-grabbing"
-            aria-label="Drag to move"
-            data-no-swipe
-            {...listeners}
-            {...attributes}>
-            <DotsSixVerticalIcon />
-          </Button>
+          {dragEnabled && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              className="cursor-grab active:cursor-grabbing"
+              aria-label="Drag to move"
+              {...listeners}
+              {...attributes}>
+              <DotsSixVerticalIcon />
+            </Button>
+          )}
         </div>
       </div>
     </div>

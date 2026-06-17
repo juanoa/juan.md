@@ -1,6 +1,4 @@
 import { useDroppable } from "@dnd-kit/core";
-import { useRef, useState } from "react";
-import type { PointerEvent } from "react";
 
 import { cn } from "@juan/ui/lib/utils";
 
@@ -20,14 +18,11 @@ interface TodoColumnProps {
   isToday: boolean;
   tasks: TodoTask[];
   onOpenNotes: (task: TodoTask) => void;
+  dragEnabled?: boolean;
 }
 
 export function todoDroppableDateId(date: string): string {
   return `date:${date}`;
-}
-
-export function todoDroppableTickerId(date: string): string {
-  return `ticker:${date}`;
 }
 
 export function TodoColumn({
@@ -36,33 +31,13 @@ export function TodoColumn({
   isToday,
   tasks,
   onOpenNotes,
+  dragEnabled = false,
 }: TodoColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: todoDroppableDateId(isoDate),
+    disabled: !dragEnabled,
   });
-  const [showTopInput, setShowTopInput] = useState(false);
-  const [pullDistance, setPullDistance] = useState(0);
-  const pointerStartRef = useRef<number | null>(null);
   const accessible = accessibleDateLabel(isoDate);
-
-  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType === "mouse") return;
-    const target = event.target as HTMLElement;
-    if (target.closest("input, textarea, select, button")) return;
-    pointerStartRef.current = event.clientY;
-  };
-
-  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (pointerStartRef.current === null) return;
-    const delta = event.clientY - pointerStartRef.current;
-    if (delta > 0) setPullDistance(Math.min(delta, 88));
-  };
-
-  const handlePointerUp = () => {
-    if (pullDistance > 64) setShowTopInput(true);
-    pointerStartRef.current = null;
-    setPullDistance(0);
-  };
 
   return (
     <section
@@ -71,7 +46,7 @@ export function TodoColumn({
       className={cn(
         "border-border bg-card flex min-h-[28rem] flex-col border transition-colors",
         isToday && "border-primary/50",
-        isOver && "bg-primary/5 ring-primary/30 ring-1",
+        dragEnabled && isOver && "bg-primary/5 ring-primary/30 ring-1",
       )}>
       <header className="border-border flex items-baseline justify-between border-b px-3 py-2">
         <div>
@@ -87,32 +62,15 @@ export function TodoColumn({
         </span>
       </header>
 
-      <div
-        className="flex flex-1 flex-col"
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}>
-        {pullDistance > 12 && (
-          <div
-            className="text-muted-foreground grid place-items-center overflow-hidden text-xs transition-[height]"
-            style={{ height: pullDistance }}>
-            +
-          </div>
-        )}
-        {showTopInput && (
-          <div className="border-border border-b p-2">
-            <TodoAddInput
-              scope={{ kind: "date", date: isoDate }}
-              atTop
-              autoFocus
-              onCreated={() => setShowTopInput(false)}
-            />
-          </div>
-        )}
+      <div className="flex flex-1 flex-col">
         <div className="flex flex-1 flex-col">
           {tasks.map((task) => (
-            <TodoTaskItem key={task.id} task={task} onOpenNotes={onOpenNotes} />
+            <TodoTaskItem
+              key={task.id}
+              task={task}
+              onOpenNotes={onOpenNotes}
+              dragEnabled={dragEnabled}
+            />
           ))}
         </div>
       </div>

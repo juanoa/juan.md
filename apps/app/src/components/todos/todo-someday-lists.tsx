@@ -1,4 +1,3 @@
-import { useDroppable } from "@dnd-kit/core";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -18,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@juan/ui/components/ui/dropdown-menu";
 import { Input } from "@juan/ui/components/ui/input";
-import { cn } from "@juan/ui/lib/utils";
 
 import type { TodoList, TodoTask } from "../../lib/todos/types";
 import { TodoAddInput } from "./todo-add-input";
@@ -29,10 +27,6 @@ interface TodoSomedayListsProps {
   lists: TodoList[];
   tasksByList: Map<string, TodoTask[]>;
   onOpenNotes: (task: TodoTask) => void;
-}
-
-export function todoDroppableListId(id: string): string {
-  return `list:${id}`;
 }
 
 export function TodoSomedayLists({
@@ -105,9 +99,6 @@ function SomedayListColumn({
   onOpenNotes: (task: TodoTask) => void;
 }) {
   const { updateList, moveList, deleteList } = useTodosContext();
-  const { setNodeRef, isOver } = useDroppable({
-    id: todoDroppableListId(list.id),
-  });
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(list.name);
 
@@ -134,12 +125,7 @@ function SomedayListColumn({
   };
 
   return (
-    <section
-      ref={setNodeRef}
-      className={cn(
-        "border-border bg-card flex min-h-72 flex-col border transition-colors",
-        isOver && "bg-primary/5 ring-primary/30 ring-1",
-      )}>
+    <section className="border-border bg-card flex min-h-72 flex-col border transition-colors">
       <header className="border-border flex min-h-10 items-center gap-2 border-b px-3 py-2">
         {isEditing ? (
           <Input
