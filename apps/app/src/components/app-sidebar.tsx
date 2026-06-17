@@ -22,6 +22,7 @@ import { useAuthContext } from "./auth/AuthContext";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
+import { NavSports } from "./nav-sports";
 
 const data = {
   navMain: [
@@ -31,14 +32,16 @@ const data = {
       icon: <SquaresFourIcon />,
     },
     {
-      title: "Gym",
-      to: "/gym",
-      icon: <BarbellIcon />,
-    },
-    {
       title: "To-dos",
       to: "/to-dos",
       icon: <ListChecksIcon />,
+    },
+  ],
+  sports: [
+    {
+      title: "Gym",
+      to: "/gym",
+      icon: <BarbellIcon />,
     },
   ],
   navSecondary: [
@@ -82,6 +85,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
+        <NavSports items={data.sports} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
