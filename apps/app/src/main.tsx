@@ -21,7 +21,7 @@ declare module "@tanstack/react-router" {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <TooltipProvider>
+    <TooltipProvider delayDuration={500}>
       <RouterProvider router={router} />
     </TooltipProvider>
   </StrictMode>,
