@@ -6,7 +6,7 @@ import {
   accessibleDateLabel,
   dayLabel,
   dayNumberLabel,
-  longDayLabel,
+  monthNameLabel,
 } from "../../lib/todos/date";
 import type { TodoTask } from "../../lib/todos/types";
 import { TodoAddInput } from "./todo-add-input";
@@ -48,10 +48,12 @@ export function TodoColumn({
         isToday && "border-primary/50",
         dragEnabled && isOver && "bg-primary/5 ring-primary/30 ring-1",
       )}>
-      <header className="border-border flex items-baseline justify-between border-b px-3 py-2">
+      <header className="border-border flex items-start justify-between border-b px-3 py-2">
         <div>
           <h2 className="text-sm font-medium">{dayLabel(date)}</h2>
-          <p className="text-muted-foreground text-xs">{longDayLabel(date)}</p>
+          <p className="text-muted-foreground text-xs">
+            {monthNameLabel(date)}
+          </p>
         </div>
         <span
           className={cn(

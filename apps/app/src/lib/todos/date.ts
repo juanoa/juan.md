@@ -52,6 +52,10 @@ const monthFormatter = new Intl.DateTimeFormat(undefined, {
   year: "numeric",
 });
 
+const monthNameFormatter = new Intl.DateTimeFormat(undefined, {
+  month: "long",
+});
+
 const accessibleFormatter = new Intl.DateTimeFormat(undefined, {
   day: "numeric",
   month: "long",
@@ -76,6 +80,10 @@ export function shortDateLabel(date: Date): string {
 
 export function monthLabel(date: Date): string {
   return monthFormatter.format(date);
+}
+
+export function monthNameLabel(date: Date): string {
+  return monthNameFormatter.format(date);
 }
 
 export function accessibleDateLabel(value: string): string {
