@@ -56,7 +56,7 @@ export function TodoColumn({
         <span
           className={cn(
             "text-muted-foreground text-2xl leading-none tabular-nums",
-            isToday && "text-primary",
+            isToday && "text-destructive",
           )}>
           {dayNumberLabel(date)}
         </span>
