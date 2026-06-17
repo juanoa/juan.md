@@ -34,7 +34,7 @@ export function TodayTodosCell() {
               return (
                 <li
                   key={task.id}
-                  className="border-border flex items-start gap-2 border-b px-3 py-2 text-xs">
+                  className="border-border flex items-start gap-2 border-b px-3 py-2 text-xs last:border-b-0 md:last:border-b">
                   <Checkbox
                     checked={false}
                     onCheckedChange={(checked) => {
