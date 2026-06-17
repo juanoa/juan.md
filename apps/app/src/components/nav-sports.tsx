@@ -1,5 +1,7 @@
 "use client";
 
+import { Link } from "@tanstack/react-router";
+
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -24,10 +26,13 @@ export function NavSports({
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton asChild>
-              <a href={item.to}>
+              <Link
+                to={item.to}
+                activeProps={{ "data-active": "true" }}
+                activeOptions={{ exact: item.to === "/" }}>
                 {item.icon}
                 <span>{item.title}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
