@@ -1,15 +1,17 @@
-import { ListChecksIcon, PlusIcon } from "@phosphor-icons/react";
+import { PlusIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
+
+import { Checkbox } from "@juan/ui/components/ui/checkbox";
 
 import { todayISO } from "../../lib/todos/date";
 import { DashboardCell } from "../dashboard";
+import { MarkdownText } from "./markdown";
 import { useTodosContext } from "./TodosContext";
 
 export function TodayTodosCell() {
-  const { getTasksForDate } = useTodosContext();
+  const { getTasksForDate, status, toggleTask } = useTodosContext();
   const todayTasks = getTasksForDate(todayISO());
   const openTasks = todayTasks.filter((task) => task.completedAt === null);
-  const completedTasks = todayTasks.length - openTasks.length;
 
   return (
     <DashboardCell
@@ -21,28 +23,42 @@ export function TodayTodosCell() {
           Open
         </Link>
       }>
-      <Link
-        to="/to-dos"
-        className="border-border bg-card hover:bg-muted/40 flex flex-1 flex-col justify-between border p-4 transition-colors">
-        <div className="flex items-center justify-between">
-          <ListChecksIcon className="text-muted-foreground size-5" />
-          <span className="text-muted-foreground text-xs">
-            {completedTasks} done
-          </span>
-        </div>
-        <div className="mt-8">
-          <p className="text-3xl font-medium tabular-nums">
-            {openTasks.length}
-          </p>
-          <p className="text-muted-foreground text-sm">open today</p>
-        </div>
-        {todayTasks.length === 0 && (
-          <span className="text-muted-foreground mt-6 inline-flex items-center gap-1 text-xs">
+      <div className="border-border bg-card flex flex-1 flex-col border">
+        {openTasks.length > 0 ? (
+          <ul className="flex flex-1 flex-col">
+            {openTasks.map((task) => {
+              const displayTitle = task.title.startsWith("- ")
+                ? task.title.slice(2)
+                : task.title;
+
+              return (
+                <li
+                  key={task.id}
+                  className="border-border flex items-start gap-2 border-b px-3 py-2 text-xs">
+                  <Checkbox
+                    checked={false}
+                    onCheckedChange={(checked) => {
+                      if (checked === true) toggleTask(task.id, true);
+                    }}
+                    aria-label="Mark to-do complete"
+                    className="mt-0.5"
+                  />
+                  <div className="min-w-0 flex-1 leading-5 break-words">
+                    <MarkdownText value={displayTitle} />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <Link
+            to="/to-dos"
+            className="text-muted-foreground hover:text-foreground flex flex-1 items-center justify-center gap-2 px-8 py-16 text-sm transition-colors">
             <PlusIcon className="size-3" />
-            Add first to-do
-          </span>
+            {status === "loading" ? "Loading to-dos" : "No open to-dos today"}
+          </Link>
         )}
-      </Link>
+      </div>
     </DashboardCell>
   );
 }

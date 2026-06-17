@@ -12,8 +12,8 @@ function DashboardRoute() {
   return (
     <Dashboard title="Dashboard">
       <DashboardGrid>
-        <TodayInGymCell />
         <TodayTodosCell />
+        <TodayInGymCell />
       </DashboardGrid>
     </Dashboard>
   );
