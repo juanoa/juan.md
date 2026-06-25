@@ -35,6 +35,7 @@ import {
   type Session,
 } from "../../lib/gym/types";
 import { useGymContext } from "./GymContext";
+import { ExerciseDialog } from "./exercise-dialog";
 import {
   NewSessionExerciseRow,
   type DraftRow,
@@ -427,14 +428,18 @@ export function NewSessionForm({
         </Button>
       </div>
 
-      <NewExerciseDialog
+      <ExerciseDialog
         open={exerciseDialogRowId !== null}
+        title="New exercise"
+        submitLabel="Create"
+        submittingLabel="Creating..."
         defaultSubcategory={subcategory}
+        exercises={exercises}
         onOpenChange={(open) => {
           if (!open) setExerciseDialogRowId(null);
         }}
-        onCreate={async (name, exerciseSubcategory) => {
-          const exercise = await createExercise(name, exerciseSubcategory);
+        onSubmit={async (input) => {
+          const exercise = await createExercise(input.name, input.subcategory);
           if (exerciseDialogRowId) {
             handleExerciseCreated(exerciseDialogRowId, exercise);
           }
@@ -572,121 +577,6 @@ function ReuseSessionDialog({
             </Button>
           </DialogFooter>
         )}
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-interface NewExerciseDialogProps {
-  open: boolean;
-  defaultSubcategory: GymSubcategory;
-  onOpenChange: (open: boolean) => void;
-  onCreate: (name: string, subcategory: GymSubcategory) => Promise<void>;
-}
-
-function NewExerciseDialog({
-  open,
-  defaultSubcategory,
-  onOpenChange,
-  onCreate,
-}: NewExerciseDialogProps) {
-  const [name, setName] = useState("");
-  const [subcategory, setSubcategory] =
-    useState<GymSubcategory>(defaultSubcategory);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const reset = () => {
-    setName("");
-    setSubcategory(defaultSubcategory);
-    setSubmitting(false);
-    setError(null);
-  };
-
-  const handleOpenChange = (next: boolean) => {
-    if (!next) reset();
-    onOpenChange(next);
-  };
-
-  const handleSubmit = async () => {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    setSubmitting(true);
-    setError(null);
-    try {
-      await onCreate(trimmed, subcategory);
-      reset();
-      onOpenChange(false);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to create exercise");
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>New exercise</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="new-exercise-name">
-              Name <RequiredMark />
-            </Label>
-            <Input
-              id="new-exercise-name"
-              value={name}
-              autoFocus
-              onChange={(event) => setName(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  void handleSubmit();
-                }
-              }}
-              placeholder="Bench press"
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="new-exercise-subcategory">
-              Focus <RequiredMark />
-            </Label>
-            <Select
-              value={subcategory}
-              onValueChange={(value) =>
-                setSubcategory(value as GymSubcategory)
-              }>
-              <SelectTrigger id="new-exercise-subcategory" className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {GYM_SUBCATEGORIES.map((option) => (
-                  <SelectItem key={option.slug} value={option.slug}>
-                    {option.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          {error && <p className="text-destructive text-xs">{error}</p>}
-        </div>
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => handleOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            disabled={submitting || name.trim() === ""}
-            onClick={handleSubmit}>
-            {submitting ? "Creating..." : "Create"}
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -1,5 +1,12 @@
 import { addDays, formatISODate, parseISODate, startOfWeek } from "./date";
-import type { GymSubcategory, PerformedSet, Session } from "./types";
+import type {
+  Exercise,
+  GymSubcategory,
+  PerformedSet,
+  PlannedExercise,
+  Session,
+  SessionStatus,
+} from "./types";
 
 export function totalLoad(sets: PerformedSet[]): number {
   return sets.reduce((acc, set) => acc + set.reps * set.weight, 0);
@@ -312,4 +319,97 @@ export function getExerciseHistory(
     points.push({ date: session.date, load: totalLoad(sets) });
   }
   return points.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+export interface ExerciseSessionSummary {
+  id: string;
+  sessionId: string;
+  date: string;
+  status: SessionStatus;
+  subcategory: GymSubcategory;
+  planned: PlannedExercise[];
+  sets: PerformedSet[];
+  totalLoad: number;
+  totalReps: number;
+  maxWeight: number;
+  bestEstimatedOneRepMax: number;
+}
+
+export interface ExerciseCatalogSummary {
+  exercise: Exercise;
+  sessions: number;
+  performedSessions: number;
+  totalLoad: number;
+  totalReps: number;
+  maxWeight: number;
+  bestEstimatedOneRepMax: number;
+  lastUsedDate: string | null;
+}
+
+export function getExerciseSessionSummaries(
+  sessions: Session[],
+  exerciseId: string,
+): ExerciseSessionSummary[] {
+  if (exerciseId === "") return [];
+
+  return sessions
+    .flatMap((session) => {
+      const planned = session.exercises.filter(
+        (exercise) => exercise.exerciseId === exerciseId,
+      );
+      if (planned.length === 0) return [];
+
+      const sets = planned.flatMap((exercise) => {
+        const performed = session.performed.find(
+          (entry) => entry.plannedExerciseId === exercise.id,
+        );
+        return performed ? recordedSets(performed.sets) : [];
+      });
+
+      return [
+        {
+          id: `${session.id}-${exerciseId}`,
+          sessionId: session.id,
+          date: session.date,
+          status: session.status,
+          subcategory: session.subcategory,
+          planned,
+          sets,
+          totalLoad: totalLoad(sets),
+          totalReps: totalReps(sets),
+          maxWeight:
+            sets.length > 0 ? Math.max(...sets.map((set) => set.weight)) : 0,
+          bestEstimatedOneRepMax:
+            sets.length > 0 ? Math.max(...sets.map(estimatedOneRepMax)) : 0,
+        },
+      ];
+    })
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+export function getExerciseCatalogSummaries(
+  exercises: Exercise[],
+  sessions: Session[],
+): ExerciseCatalogSummary[] {
+  return exercises.map((exercise) => {
+    const history = getExerciseSessionSummaries(sessions, exercise.id);
+    const performed = history.filter((entry) => entry.sets.length > 0);
+
+    return {
+      exercise,
+      sessions: history.length,
+      performedSessions: performed.length,
+      totalLoad: performed.reduce((acc, entry) => acc + entry.totalLoad, 0),
+      totalReps: performed.reduce((acc, entry) => acc + entry.totalReps, 0),
+      maxWeight:
+        performed.length > 0
+          ? Math.max(...performed.map((entry) => entry.maxWeight))
+          : 0,
+      bestEstimatedOneRepMax:
+        performed.length > 0
+          ? Math.max(...performed.map((entry) => entry.bestEstimatedOneRepMax))
+          : 0,
+      lastUsedDate: history[0]?.date ?? null,
+    };
+  });
 }

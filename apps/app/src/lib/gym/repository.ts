@@ -1,6 +1,8 @@
 import { supabase } from "../supabase/client";
 import type {
   Exercise,
+  ExerciseDeleteResult,
+  ExerciseInput,
   GymSubcategory,
   PerformedExercise,
   PerformedSet,
@@ -142,19 +144,26 @@ interface GymExerciseRow {
   id: string;
   name: string;
   subcategory_slug: GymSubcategory;
+  archived_at: string | null;
+}
+
+function mapExercise(row: GymExerciseRow): Exercise {
+  return {
+    id: row.id,
+    name: row.name,
+    subcategory: row.subcategory_slug,
+    archivedAt: row.archived_at,
+  };
 }
 
 export async function fetchExercises(): Promise<Exercise[]> {
   const { data, error } = await supabase
     .from("gym_exercises")
-    .select("id, name, subcategory_slug")
+    .select("id, name, subcategory_slug, archived_at")
+    .is("archived_at", null)
     .order("name", { ascending: true });
   if (error) throw error;
-  return (data as GymExerciseRow[]).map((row) => ({
-    id: row.id,
-    name: row.name,
-    subcategory: row.subcategory_slug,
-  }));
+  return (data as GymExerciseRow[]).map(mapExercise);
 }
 
 export async function createExercise(
@@ -164,11 +173,47 @@ export async function createExercise(
   const { data, error } = await supabase
     .from("gym_exercises")
     .insert({ name, subcategory_slug: subcategory })
-    .select("id, name, subcategory_slug")
+    .select("id, name, subcategory_slug, archived_at")
     .single();
   if (error) throw error;
-  const row = data as GymExerciseRow;
-  return { id: row.id, name: row.name, subcategory: row.subcategory_slug };
+  return mapExercise(data as GymExerciseRow);
+}
+
+export async function updateExercise(
+  id: string,
+  input: ExerciseInput,
+): Promise<Exercise> {
+  const { data, error } = await supabase
+    .from("gym_exercises")
+    .update({ name: input.name, subcategory_slug: input.subcategory })
+    .eq("id", id)
+    .select("id, name, subcategory_slug, archived_at")
+    .single();
+  if (error) throw error;
+  return mapExercise(data as GymExerciseRow);
+}
+
+export async function deleteExercise(
+  id: string,
+): Promise<ExerciseDeleteResult> {
+  const { count, error: countError } = await supabase
+    .from("gym_session_exercises")
+    .select("id", { count: "exact", head: true })
+    .eq("exercise_id", id);
+  if (countError) throw countError;
+
+  if ((count ?? 0) > 0) {
+    const { error } = await supabase
+      .from("gym_exercises")
+      .update({ archived_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) throw error;
+    return { action: "archived" };
+  }
+
+  const { error } = await supabase.from("gym_exercises").delete().eq("id", id);
+  if (error) throw error;
+  return { action: "deleted" };
 }
 
 export async function createSession(draft: SessionDraft): Promise<Session> {

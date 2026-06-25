@@ -11,6 +11,8 @@ import type { ReactNode } from "react";
 import * as repository from "../../lib/gym/repository";
 import type {
   Exercise,
+  ExerciseDeleteResult,
+  ExerciseInput,
   GymSubcategory,
   PerformedSet,
   Session,
@@ -39,6 +41,8 @@ export interface GymContextValue {
     name: string,
     subcategory: GymSubcategory,
   ) => Promise<Exercise>;
+  updateExercise: (id: string, input: ExerciseInput) => Promise<Exercise>;
+  deleteExercise: (id: string) => Promise<ExerciseDeleteResult>;
   createSession: (draft: SessionDraft) => Promise<Session>;
   updateSession: (id: string, draft: SessionDraft) => Promise<Session>;
 }
@@ -55,6 +59,10 @@ function sortSessions(sessions: Session[]): Session[] {
     if (dateOrder !== 0) return dateOrder;
     return a.id.localeCompare(b.id);
   });
+}
+
+function sortExercises(exercises: Exercise[]): Exercise[] {
+  return [...exercises].sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export function GymContextProvider({ children }: GymContextProviderProps) {
@@ -174,13 +182,30 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
   const createExercise = useCallback(
     async (name: string, subcategory: GymSubcategory) => {
       const exercise = await repository.createExercise(name, subcategory);
+      setExercises((prev) => sortExercises([...prev, exercise]));
+      return exercise;
+    },
+    [],
+  );
+
+  const updateExercise = useCallback(
+    async (id: string, input: ExerciseInput) => {
+      const exercise = await repository.updateExercise(id, input);
       setExercises((prev) =>
-        [...prev, exercise].sort((a, b) => a.name.localeCompare(b.name)),
+        sortExercises(
+          prev.map((entry) => (entry.id === id ? exercise : entry)),
+        ),
       );
       return exercise;
     },
     [],
   );
+
+  const deleteExercise = useCallback(async (id: string) => {
+    const result = await repository.deleteExercise(id);
+    setExercises((prev) => prev.filter((exercise) => exercise.id !== id));
+    return result;
+  }, []);
 
   const createSession = useCallback(async (draft: SessionDraft) => {
     const session = await repository.createSession(draft);
@@ -211,6 +236,8 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       finishSession,
       deleteSession,
       createExercise,
+      updateExercise,
+      deleteExercise,
       createSession,
       updateSession,
     }),
@@ -226,6 +253,8 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       finishSession,
       deleteSession,
       createExercise,
+      updateExercise,
+      deleteExercise,
       createSession,
       updateSession,
     ],

@@ -21,7 +21,17 @@ export interface Exercise {
   id: string;
   name: string;
   subcategory: GymSubcategory;
+  archivedAt: string | null;
 }
+
+export interface ExerciseInput {
+  name: string;
+  subcategory: GymSubcategory;
+}
+
+export type ExerciseDeleteResult = {
+  action: "deleted" | "archived";
+};
 
 export interface SessionDraftExercise {
   exerciseId: string;
