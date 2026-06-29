@@ -16,11 +16,8 @@ import {
 
 import { getGymOverviewStats } from "../../lib/gym/stats";
 import { todayISO } from "../../lib/gym/date";
+import { formatKg, formatLoad, formatVolume } from "./exercise-format";
 import { useGymContext } from "./GymContext";
-
-function formatKg(value: number): string {
-  return `${Math.round(value).toLocaleString()}kg`;
-}
 
 function formatPercent(value: number): string {
   if (!Number.isFinite(value)) return "0%";
@@ -58,9 +55,9 @@ export function TrainingInsights() {
       <Card>
         <CardHeader>
           <CardTitle className="flex flex-wrap items-center gap-2 text-base">
-            <span>{formatKg(stats.totalLoad)}</span>
+            <span>{formatVolume(stats.totalLoad)}</span>
             <span className="text-muted-foreground font-normal">
-              total recorded load
+              total recorded volume
             </span>
             {stats.weekLoadDelta !== 0 && (
               <Badge
@@ -73,10 +70,13 @@ export function TrainingInsights() {
         </CardHeader>
         <CardContent className="flex flex-col gap-5">
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <Metric label="This week" value={formatKg(stats.thisWeekLoad)} />
+            <Metric
+              label="This week"
+              value={formatVolume(stats.thisWeekLoad)}
+            />
             <Metric
               label="Average session"
-              value={formatKg(stats.averageLoad)}
+              value={formatVolume(stats.averageLoad)}
             />
             <Metric
               label="Recorded sets"
@@ -101,14 +101,14 @@ export function TrainingInsights() {
                     <InsightLink
                       toSession={stats.lastCompleted.id}
                       label="Last completed"
-                      value={`${stats.lastCompleted.date} · ${stats.lastCompleted.subcategory} · ${formatKg(stats.lastCompleted.load)}`}
+                      value={`${stats.lastCompleted.date} · ${stats.lastCompleted.subcategory} · ${formatVolume(stats.lastCompleted.load)}`}
                     />
                   )}
                   {stats.bestSession && (
                     <InsightLink
                       toSession={stats.bestSession.id}
                       label="Best volume"
-                      value={`${stats.bestSession.date} · ${stats.bestSession.subcategory} · ${formatKg(stats.bestSession.load)}`}
+                      value={`${stats.bestSession.date} · ${stats.bestSession.subcategory} · ${formatVolume(stats.bestSession.load)}`}
                     />
                   )}
                   {topFocus && (
@@ -117,7 +117,7 @@ export function TrainingInsights() {
                         Main focus
                       </span>
                       <span className="text-right text-xs capitalize">
-                        {topFocus.subcategory} · {formatKg(topFocus.load)}
+                        {topFocus.subcategory} · {formatVolume(topFocus.load)}
                       </span>
                     </div>
                   )}
@@ -125,7 +125,7 @@ export function TrainingInsights() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <h3 className="text-xs font-medium">Top exercises by load</h3>
+                <h3 className="text-xs font-medium">Top exercises by volume</h3>
                 {stats.topExercises.length > 0 ? (
                   <ol className="divide-y">
                     {stats.topExercises.map((exercise, index) => (
@@ -140,20 +140,20 @@ export function TrainingInsights() {
                             {exercise.name}
                           </span>
                           <span className="text-muted-foreground text-xs capitalize">
-                            {exercise.sessions} sessions · max{" "}
-                            {formatKg(exercise.maxWeight)} · est. 1RM{" "}
-                            {formatKg(exercise.bestEstimatedOneRepMax)}
+                            {exercise.weightType === "weighted"
+                              ? `${exercise.sessions} sessions · max ${formatKg(exercise.maxWeight)} · est. 1RM ${formatKg(exercise.bestEstimatedOneRepMax)}`
+                              : `${exercise.sessions} sessions · no weight`}
                           </span>
                         </div>
                         <span className="text-xs font-medium tabular-nums">
-                          {formatKg(exercise.load)}
+                          {formatLoad(exercise.load, exercise.weightType)}
                         </span>
                       </li>
                     ))}
                   </ol>
                 ) : (
                   <p className="text-muted-foreground text-sm">
-                    Record sets to rank exercises by training load.
+                    Record sets to rank exercises by training volume.
                   </p>
                 )}
               </div>

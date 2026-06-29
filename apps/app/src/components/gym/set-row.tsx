@@ -3,12 +3,13 @@ import { useState } from "react";
 import { Input } from "@juan/ui/components/ui/input";
 import { Label } from "@juan/ui/components/ui/label";
 
-import type { PerformedSet } from "../../lib/gym/types";
+import type { ExerciseWeightType, PerformedSet } from "../../lib/gym/types";
 import { RepsSelector } from "./reps-selector";
 
 interface SetRowProps {
   setIndex: number;
   performed: PerformedSet | undefined;
+  weightType: ExerciseWeightType;
   targetWeight: number | null;
   onCommit: (set: PerformedSet) => void;
 }
@@ -16,6 +17,7 @@ interface SetRowProps {
 export function SetRow({
   setIndex,
   performed,
+  weightType,
   targetWeight,
   onCommit,
 }: SetRowProps) {
@@ -23,10 +25,15 @@ export function SetRow({
   const [weight, setWeight] = useState<string>(
     performed?.weight !== undefined ? String(performed.weight) : "",
   );
+  const usesWeight = weightType === "weighted";
 
   const tryCommit = (nextReps: number | undefined, nextWeight: string) => {
     if (nextReps === undefined) return;
-    const parsedWeight = nextWeight === "" ? 0 : Number(nextWeight);
+    const parsedWeight = usesWeight
+      ? nextWeight === ""
+        ? 0
+        : Number(nextWeight)
+      : 0;
     if (!Number.isFinite(parsedWeight) || parsedWeight < 0) return;
     if (
       performed &&
@@ -56,23 +63,29 @@ export function SetRow({
         <Label className="text-muted-foreground">Reps</Label>
         <RepsSelector value={reps} onChange={handleRepsChange} />
       </div>
-      <div className="flex items-center gap-1.5">
-        <Label htmlFor={`weight-${setIndex}`} className="text-muted-foreground">
-          Kg
-        </Label>
-        <Input
-          id={`weight-${setIndex}`}
-          type="number"
-          inputMode="decimal"
-          min={0}
-          step="0.5"
-          value={weight}
-          placeholder={targetWeight !== null ? String(targetWeight) : undefined}
-          onChange={(event) => setWeight(event.target.value)}
-          onBlur={handleWeightBlur}
-          className="h-7 w-20"
-        />
-      </div>
+      {usesWeight && (
+        <div className="flex items-center gap-1.5">
+          <Label
+            htmlFor={`weight-${setIndex}`}
+            className="text-muted-foreground">
+            Kg
+          </Label>
+          <Input
+            id={`weight-${setIndex}`}
+            type="number"
+            inputMode="decimal"
+            min={0}
+            step="0.5"
+            value={weight}
+            placeholder={
+              targetWeight !== null ? String(targetWeight) : undefined
+            }
+            onChange={(event) => setWeight(event.target.value)}
+            onBlur={handleWeightBlur}
+            className="h-7 w-20"
+          />
+        </div>
+      )}
     </div>
   );
 }

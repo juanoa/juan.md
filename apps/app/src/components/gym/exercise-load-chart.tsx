@@ -13,14 +13,9 @@ import type { ExerciseHistoryPoint } from "../../lib/gym/stats";
 interface ExerciseLoadChartProps {
   data: ExerciseHistoryPoint[];
   currentDate: string;
+  valueLabel?: string;
+  formatValue?: (value: number) => string;
 }
-
-const config = {
-  load: {
-    label: "Carga total",
-    color: "var(--muted-foreground)",
-  },
-} satisfies ChartConfig;
 
 interface DotProps {
   cx?: number;
@@ -31,7 +26,16 @@ interface DotProps {
 export function ExerciseLoadChart({
   data,
   currentDate,
+  valueLabel = "Load",
+  formatValue = (value) => `${value} kg`,
 }: ExerciseLoadChartProps) {
+  const config = {
+    load: {
+      label: valueLabel,
+      color: "var(--muted-foreground)",
+    },
+  } satisfies ChartConfig;
+
   return (
     <ChartContainer config={config} className="aspect-auto h-32 w-full lg:h-40">
       <LineChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
@@ -58,7 +62,9 @@ export function ExerciseLoadChart({
               labelFormatter={(value) =>
                 typeof value === "string" ? formatCompactISODate(value) : value
               }
-              formatter={(value) => `${value} kg`}
+              formatter={(value) =>
+                typeof value === "number" ? formatValue(value) : value
+              }
               hideIndicator
             />
           }

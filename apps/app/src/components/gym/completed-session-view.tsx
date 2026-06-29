@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import type { GymSession, Session } from "../../lib/gym/types";
 import { getExerciseHistory, getSessionMetrics } from "../../lib/gym/stats";
 import { CompletedExerciseCard } from "./completed-exercise-card";
+import { formatVolume, formatWeight } from "./exercise-format";
 
 interface CompletedSessionViewProps {
   session: GymSession;
@@ -42,14 +43,14 @@ export function CompletedSessionView({
   return (
     <div className="flex flex-col gap-4">
       <div className="ring-foreground/10 grid grid-cols-2 gap-3 p-3 ring-1 lg:grid-cols-4">
-        <Metric label="Total load" value={`${metrics.totalLoad}kg`} />
+        <Metric label="Total volume" value={formatVolume(metrics.totalLoad)} />
         <Metric label="Sets" value={String(metrics.completedSets)} />
         <Metric label="Reps" value={String(metrics.totalReps)} />
         <Metric
           label="Heaviest"
           value={
             metrics.heaviestSet
-              ? `${metrics.heaviestSet.exerciseName} · ${metrics.heaviestSet.weight}kg`
+              ? `${metrics.heaviestSet.exerciseName} · ${formatWeight(metrics.heaviestSet.weight)}kg`
               : "None"
           }
         />
@@ -58,6 +59,7 @@ export function CompletedSessionView({
         <CompletedExerciseCard
           key={planned.id}
           name={planned.name}
+          weightType={planned.weightType}
           sets={sets}
           history={history}
           currentDate={session.date}

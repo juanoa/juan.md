@@ -13,7 +13,6 @@ import type {
   Exercise,
   ExerciseDeleteResult,
   ExerciseInput,
-  GymSubcategory,
   PerformedSet,
   Session,
   SessionDraft,
@@ -37,10 +36,7 @@ export interface GymContextValue {
   ) => void;
   finishSession: (id: string) => void;
   deleteSession: (id: string) => Promise<void>;
-  createExercise: (
-    name: string,
-    subcategory: GymSubcategory,
-  ) => Promise<Exercise>;
+  createExercise: (input: ExerciseInput) => Promise<Exercise>;
   updateExercise: (id: string, input: ExerciseInput) => Promise<Exercise>;
   deleteExercise: (id: string) => Promise<ExerciseDeleteResult>;
   createSession: (draft: SessionDraft) => Promise<Session>;
@@ -179,14 +175,11 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
     setSessions((prev) => prev.filter((session) => session.id !== id));
   }, []);
 
-  const createExercise = useCallback(
-    async (name: string, subcategory: GymSubcategory) => {
-      const exercise = await repository.createExercise(name, subcategory);
-      setExercises((prev) => sortExercises([...prev, exercise]));
-      return exercise;
-    },
-    [],
-  );
+  const createExercise = useCallback(async (input: ExerciseInput) => {
+    const exercise = await repository.createExercise(input);
+    setExercises((prev) => sortExercises([...prev, exercise]));
+    return exercise;
+  }, []);
 
   const updateExercise = useCallback(
     async (id: string, input: ExerciseInput) => {
@@ -195,6 +188,24 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
         sortExercises(
           prev.map((entry) => (entry.id === id ? exercise : entry)),
         ),
+      );
+      setSessions((prev) =>
+        prev.map((session) => ({
+          ...session,
+          exercises: session.exercises.map((entry) =>
+            entry.exerciseId === id
+              ? {
+                  ...entry,
+                  name: exercise.name,
+                  weightType: exercise.weightType,
+                  targetWeight:
+                    exercise.weightType === "weighted"
+                      ? entry.targetWeight
+                      : null,
+                }
+              : entry,
+          ),
+        })),
       );
       return exercise;
     },

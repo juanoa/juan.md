@@ -28,8 +28,10 @@ import {
 import type { SessionStatus } from "../../lib/gym/types";
 import {
   formatKg,
+  formatLoad,
   formatPlanSummary,
   formatSetSummary,
+  getVolumeLabel,
   getStatusLabel,
   getSubcategoryName,
 } from "./exercise-format";
@@ -80,12 +82,19 @@ export function ExerciseDetail({ exerciseId }: ExerciseDetailProps) {
   if (!exercise || !summary) {
     return <ExerciseNotFound />;
   }
+  const usesWeight = exercise.weightType === "weighted";
+  const volumeLabel = getVolumeLabel(exercise.weightType);
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
-          <Button type="button" variant="ghost" size="sm" asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            asChild
+            className="w-fit">
             <Link to="/gym/exercises">
               <ArrowLeftIcon /> Exercises
             </Link>
@@ -102,12 +111,19 @@ export function ExerciseDetail({ exerciseId }: ExerciseDetailProps) {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
         <Metric label="Sessions" value={String(summary.sessions)} />
         <Metric label="Recorded" value={String(summary.performedSessions)} />
-        <Metric label="Total load" value={formatKg(summary.totalLoad)} />
-        <Metric label="Max weight" value={formatKg(summary.maxWeight)} />
         <Metric
-          label="Est. 1RM"
-          value={formatKg(summary.bestEstimatedOneRepMax)}
+          label={`Total ${volumeLabel.toLowerCase()}`}
+          value={formatLoad(summary.totalLoad, exercise.weightType)}
         />
+        {usesWeight && (
+          <>
+            <Metric label="Max weight" value={formatKg(summary.maxWeight)} />
+            <Metric
+              label="Est. 1RM"
+              value={formatKg(summary.bestEstimatedOneRepMax)}
+            />
+          </>
+        )}
       </div>
 
       <Card>
@@ -116,7 +132,12 @@ export function ExerciseDetail({ exerciseId }: ExerciseDetailProps) {
         </CardHeader>
         <CardContent>
           {chartData.length > 0 ? (
-            <ExerciseLoadChart data={chartData} currentDate={currentDate} />
+            <ExerciseLoadChart
+              data={chartData}
+              currentDate={currentDate}
+              valueLabel={volumeLabel}
+              formatValue={(value) => formatLoad(value, exercise.weightType)}
+            />
           ) : (
             <p className="text-muted-foreground text-sm">
               No recorded sets yet.
@@ -135,13 +156,17 @@ export function ExerciseDetail({ exerciseId }: ExerciseDetailProps) {
                 <TableHead>Status</TableHead>
                 <TableHead className="min-w-32">Plan</TableHead>
                 <TableHead className="min-w-64">Results</TableHead>
-                <TableHead className="text-right">Load</TableHead>
+                <TableHead className="text-right">{volumeLabel}</TableHead>
                 <TableHead className="w-16 text-right">Open</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {history.map((entry) => (
-                <ExerciseSessionRow key={entry.id} entry={entry} />
+                <ExerciseSessionRow
+                  key={entry.id}
+                  entry={entry}
+                  volumeLabel={volumeLabel}
+                />
               ))}
               {history.length === 0 && (
                 <TableRow>
@@ -169,7 +194,13 @@ function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ExerciseSessionRow({ entry }: { entry: ExerciseSessionSummary }) {
+function ExerciseSessionRow({
+  entry,
+  volumeLabel,
+}: {
+  entry: ExerciseSessionSummary;
+  volumeLabel: string;
+}) {
   return (
     <TableRow>
       <TableCell className="tabular-nums">
@@ -180,10 +211,12 @@ function ExerciseSessionRow({ entry }: { entry: ExerciseSessionSummary }) {
       </TableCell>
       <TableCell>{formatPlanSummary(entry.planned)}</TableCell>
       <TableCell className="whitespace-normal">
-        {formatSetSummary(entry.sets)}
+        {formatSetSummary(entry.sets, entry.weightType)}
       </TableCell>
-      <TableCell className="text-right tabular-nums">
-        {formatKg(entry.totalLoad)}
+      <TableCell
+        className="text-right tabular-nums"
+        aria-label={`${volumeLabel}: ${formatLoad(entry.totalLoad, entry.weightType)}`}>
+        {formatLoad(entry.totalLoad, entry.weightType)}
       </TableCell>
       <TableCell>
         <div className="flex justify-end">

@@ -19,9 +19,11 @@ import {
 } from "@juan/ui/components/ui/select";
 
 import {
+  EXERCISE_WEIGHT_TYPES,
   GYM_SUBCATEGORIES,
   type Exercise,
   type ExerciseInput,
+  type ExerciseWeightType,
   type GymSubcategory,
 } from "../../lib/gym/types";
 
@@ -95,6 +97,9 @@ function ExerciseDialogForm({
   const [subcategory, setSubcategory] = useState<GymSubcategory>(
     initialExercise?.subcategory ?? defaultSubcategory,
   );
+  const [weightType, setWeightType] = useState<ExerciseWeightType>(
+    initialExercise?.weightType ?? "weighted",
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -123,7 +128,7 @@ function ExerciseDialogForm({
     setSubmitting(true);
     setError(null);
     try {
-      await onSubmit({ name: trimmedName, subcategory });
+      await onSubmit({ name: trimmedName, subcategory, weightType });
       onOpenChange(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to save exercise");
@@ -174,6 +179,28 @@ function ExerciseDialogForm({
             <SelectContent>
               {GYM_SUBCATEGORIES.map((option) => (
                 <SelectItem key={option.slug} value={option.slug}>
+                  {option.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="exercise-weight-type">
+            Load type <RequiredMark />
+          </Label>
+          <Select
+            value={weightType}
+            onValueChange={(value) => {
+              setWeightType(value as ExerciseWeightType);
+              setError(null);
+            }}>
+            <SelectTrigger id="exercise-weight-type" className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {EXERCISE_WEIGHT_TYPES.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
                   {option.name}
                 </SelectItem>
               ))}

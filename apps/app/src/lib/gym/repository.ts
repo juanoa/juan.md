@@ -3,6 +3,7 @@ import type {
   Exercise,
   ExerciseDeleteResult,
   ExerciseInput,
+  ExerciseWeightType,
   GymSubcategory,
   PerformedExercise,
   PerformedSet,
@@ -26,7 +27,11 @@ interface GymSessionExerciseRow {
   target_reps: number;
   target_weight: number | null;
   position: number;
-  exercise: { id: string; name: string } | null;
+  exercise: {
+    id: string;
+    name: string;
+    weight_type: ExerciseWeightType;
+  } | null;
   gym_performed_sets: GymPerformedSetRow[];
 }
 
@@ -35,6 +40,11 @@ interface GymPerformedSetRow {
   reps: number;
   weight: number;
 }
+
+const SESSION_SELECT =
+  "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, target_weight, position, exercise:gym_exercises(id, name, weight_type), gym_performed_sets(set_index, reps, weight))";
+
+const EXERCISE_SELECT = "id, name, subcategory_slug, weight_type, archived_at";
 
 function mapSession(row: GymSessionRow): Session {
   const planned = [...row.gym_session_exercises].sort(
@@ -72,6 +82,7 @@ function mapSession(row: GymSessionRow): Session {
       id: entry.id,
       exerciseId: entry.exercise?.id ?? "",
       name: entry.exercise?.name ?? "",
+      weightType: entry.exercise?.weight_type ?? "weighted",
       targetSets: entry.target_sets,
       targetReps: entry.target_reps,
       targetWeight: entry.target_weight,
@@ -83,9 +94,7 @@ function mapSession(row: GymSessionRow): Session {
 export async function fetchSessions(): Promise<Session[]> {
   const { data, error } = await supabase
     .from("gym_sessions")
-    .select(
-      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, target_weight, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
-    )
+    .select(SESSION_SELECT)
     .order("date", { ascending: true });
 
   if (error) throw error;
@@ -144,6 +153,7 @@ interface GymExerciseRow {
   id: string;
   name: string;
   subcategory_slug: GymSubcategory;
+  weight_type: ExerciseWeightType;
   archived_at: string | null;
 }
 
@@ -152,6 +162,7 @@ function mapExercise(row: GymExerciseRow): Exercise {
     id: row.id,
     name: row.name,
     subcategory: row.subcategory_slug,
+    weightType: row.weight_type,
     archivedAt: row.archived_at,
   };
 }
@@ -159,21 +170,22 @@ function mapExercise(row: GymExerciseRow): Exercise {
 export async function fetchExercises(): Promise<Exercise[]> {
   const { data, error } = await supabase
     .from("gym_exercises")
-    .select("id, name, subcategory_slug, archived_at")
+    .select(EXERCISE_SELECT)
     .is("archived_at", null)
     .order("name", { ascending: true });
   if (error) throw error;
   return (data as GymExerciseRow[]).map(mapExercise);
 }
 
-export async function createExercise(
-  name: string,
-  subcategory: GymSubcategory,
-): Promise<Exercise> {
+export async function createExercise(input: ExerciseInput): Promise<Exercise> {
   const { data, error } = await supabase
     .from("gym_exercises")
-    .insert({ name, subcategory_slug: subcategory })
-    .select("id, name, subcategory_slug, archived_at")
+    .insert({
+      name: input.name,
+      subcategory_slug: input.subcategory,
+      weight_type: input.weightType,
+    })
+    .select(EXERCISE_SELECT)
     .single();
   if (error) throw error;
   return mapExercise(data as GymExerciseRow);
@@ -185,9 +197,13 @@ export async function updateExercise(
 ): Promise<Exercise> {
   const { data, error } = await supabase
     .from("gym_exercises")
-    .update({ name: input.name, subcategory_slug: input.subcategory })
+    .update({
+      name: input.name,
+      subcategory_slug: input.subcategory,
+      weight_type: input.weightType,
+    })
     .eq("id", id)
-    .select("id, name, subcategory_slug, archived_at")
+    .select(EXERCISE_SELECT)
     .single();
   if (error) throw error;
   return mapExercise(data as GymExerciseRow);
@@ -248,9 +264,7 @@ export async function createSession(draft: SessionDraft): Promise<Session> {
 
   const { data, error } = await supabase
     .from("gym_sessions")
-    .select(
-      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, target_weight, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
-    )
+    .select(SESSION_SELECT)
     .eq("id", sessionId)
     .single();
   if (error) throw error;
@@ -333,9 +347,7 @@ export async function updateSession(
 
   const { data, error } = await supabase
     .from("gym_sessions")
-    .select(
-      "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, target_weight, position, exercise:gym_exercises(id, name), gym_performed_sets(set_index, reps, weight))",
-    )
+    .select(SESSION_SELECT)
     .eq("id", id)
     .single();
   if (error) throw error;

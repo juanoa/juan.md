@@ -26,14 +26,21 @@ import { formatShortISODate } from "../../lib/gym/date";
 import { totalLoad } from "../../lib/gym/stats";
 import type {
   Exercise,
+  ExerciseWeightType,
   GymSubcategory,
   PerformedSet,
   Session,
   SessionDraftExercise,
 } from "../../lib/gym/types";
+import {
+  formatLoad,
+  formatSetSummary,
+  getVolumeLabel,
+} from "./exercise-format";
 
 export interface DraftRow extends Omit<SessionDraftExercise, "targetWeight"> {
   rowId: string;
+  weightType: ExerciseWeightType;
   targetWeight: string;
 }
 
@@ -46,6 +53,7 @@ export interface ExerciseGroup {
 interface ExerciseHistorySummary {
   id: string;
   date: string;
+  weightType: ExerciseWeightType;
   sets: PerformedSet[];
   totalLoad: number;
 }
@@ -87,6 +95,7 @@ function getExerciseHistorySummaries(
             (entry) => entry.plannedExerciseId === exercise.id,
           );
           if (!performed || performed.sets.length === 0) return [];
+          const weightType = exercise.weightType;
 
           const sets = performed.sets.filter(
             (set) => set.reps > 0 || set.weight > 0,
@@ -97,8 +106,9 @@ function getExerciseHistorySummaries(
             {
               id: `${session.id}-${exercise.id}`,
               date: session.date,
+              weightType,
               sets,
-              totalLoad: totalLoad(sets),
+              totalLoad: totalLoad(sets, weightType),
             },
           ];
         });
@@ -107,20 +117,12 @@ function getExerciseHistorySummaries(
     .slice(0, 5);
 }
 
-function formatWeight(value: number): string {
-  return Number.isInteger(value) ? String(value) : value.toFixed(1);
-}
-
-function formatSetSummary(sets: PerformedSet[]): string {
-  return sets
-    .map((set) => `${set.reps} x ${formatWeight(set.weight)}kg`)
-    .join(", ");
-}
-
 function ExerciseHistoryTable({
   history,
+  weightType,
 }: {
   history: ExerciseHistorySummary[];
+  weightType: ExerciseWeightType;
 }) {
   return (
     <div className="mt-4 flex flex-col gap-2">
@@ -132,7 +134,9 @@ function ExerciseHistoryTable({
           <TableRow>
             <TableHead>Date</TableHead>
             <TableHead className="min-w-52">Summary</TableHead>
-            <TableHead className="text-right">Load</TableHead>
+            <TableHead className="text-right">
+              {getVolumeLabel(weightType)}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -142,10 +146,10 @@ function ExerciseHistoryTable({
                 {formatShortISODate(entry.date)}
               </TableCell>
               <TableCell className="whitespace-normal">
-                {formatSetSummary(entry.sets)}
+                {formatSetSummary(entry.sets, entry.weightType)}
               </TableCell>
               <TableCell className="text-right tabular-nums">
-                {formatWeight(entry.totalLoad)}kg
+                {formatLoad(entry.totalLoad, entry.weightType)}
               </TableCell>
             </TableRow>
           ))}
@@ -165,6 +169,16 @@ export function NewSessionExerciseRow({
   onRemove,
   onCreateExercise,
 }: NewSessionExerciseRowProps) {
+  const availableExercises = useMemo(
+    () => exerciseGroups.flatMap((group) => group.items),
+    [exerciseGroups],
+  );
+  const selectedExercise = useMemo(
+    () => availableExercises.find((exercise) => exercise.id === row.exerciseId),
+    [availableExercises, row.exerciseId],
+  );
+  const weightType = selectedExercise?.weightType ?? row.weightType;
+  const usesWeight = weightType === "weighted";
   const history = useMemo(
     () => getExerciseHistorySummaries(sessions, row.exerciseId, sessionDate),
     [sessions, row.exerciseId, sessionDate],
@@ -192,7 +206,18 @@ export function NewSessionExerciseRow({
         <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
           <Select
             value={row.exerciseId}
-            onValueChange={(value) => onUpdate({ exerciseId: value })}>
+            onValueChange={(value) => {
+              const exercise = availableExercises.find(
+                (entry) => entry.id === value,
+              );
+              const nextWeightType = exercise?.weightType ?? "weighted";
+              onUpdate({
+                exerciseId: value,
+                weightType: nextWeightType,
+                targetWeight:
+                  nextWeightType === "unweighted" ? "" : row.targetWeight,
+              });
+            }}>
             <SelectTrigger className="w-full sm:flex-1">
               <SelectValue placeholder="Pick an exercise" />
             </SelectTrigger>
@@ -220,7 +245,12 @@ export function NewSessionExerciseRow({
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div
+        className={
+          usesWeight
+            ? "grid grid-cols-1 gap-3 sm:grid-cols-3"
+            : "grid grid-cols-1 gap-3 sm:grid-cols-2"
+        }>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor={`sets-${row.rowId}`}>
             Sets <RequiredMark />
@@ -255,24 +285,28 @@ export function NewSessionExerciseRow({
             }
           />
         </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor={`weight-${row.rowId}`}>Kg</Label>
-          <Input
-            id={`weight-${row.rowId}`}
-            type="number"
-            inputMode="decimal"
-            min={0}
-            step="0.5"
-            value={row.targetWeight}
-            onChange={(event) =>
-              onUpdate({
-                targetWeight: event.target.value,
-              })
-            }
-          />
-        </div>
+        {usesWeight && (
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor={`weight-${row.rowId}`}>Kg</Label>
+            <Input
+              id={`weight-${row.rowId}`}
+              type="number"
+              inputMode="decimal"
+              min={0}
+              step="0.5"
+              value={row.targetWeight}
+              onChange={(event) =>
+                onUpdate({
+                  targetWeight: event.target.value,
+                })
+              }
+            />
+          </div>
+        )}
       </div>
-      {history.length > 0 && <ExerciseHistoryTable history={history} />}
+      {history.length > 0 && (
+        <ExerciseHistoryTable history={history} weightType={weightType} />
+      )}
     </li>
   );
 }

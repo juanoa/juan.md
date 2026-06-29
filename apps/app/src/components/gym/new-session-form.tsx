@@ -90,9 +90,13 @@ function buildPlanningRows(session: Session): DraftRow[] {
     .map((exercise) => ({
       rowId: makeRowId(),
       exerciseId: exercise.exerciseId,
+      weightType: exercise.weightType,
       targetSets: exercise.targetSets,
       targetReps: exercise.targetReps,
-      targetWeight: formatTargetWeight(exercise.targetWeight),
+      targetWeight:
+        exercise.weightType === "weighted"
+          ? formatTargetWeight(exercise.targetWeight)
+          : "",
     }));
 }
 
@@ -113,9 +117,13 @@ function buildPerformedRows(session: Session): DraftRow[] {
       {
         rowId: makeRowId(),
         exerciseId: exercise.exerciseId,
+        weightType: exercise.weightType,
         targetSets: recordedSets.length,
         targetReps: lastSet.reps > 0 ? lastSet.reps : exercise.targetReps,
-        targetWeight: formatTargetWeight(lastSet.weight),
+        targetWeight:
+          exercise.weightType === "weighted"
+            ? formatTargetWeight(lastSet.weight)
+            : "",
       },
     ];
   });
@@ -168,10 +176,13 @@ export function NewSessionForm({
       initialSession?.exercises.map((exercise) => ({
         rowId: exercise.id,
         exerciseId: exercise.exerciseId,
+        weightType: exercise.weightType,
         targetSets: exercise.targetSets,
         targetReps: exercise.targetReps,
         targetWeight:
-          exercise.targetWeight !== null ? String(exercise.targetWeight) : "",
+          exercise.weightType === "weighted" && exercise.targetWeight !== null
+            ? String(exercise.targetWeight)
+            : "",
       })) ?? [],
   );
   const [submitting, setSubmitting] = useState(false);
@@ -204,6 +215,11 @@ export function NewSessionForm({
       .filter((group) => group.items.length > 0);
   }, [exercises, subcategory]);
 
+  const exerciseById = useMemo(
+    () => new Map(exercises.map((exercise) => [exercise.id, exercise])),
+    [exercises],
+  );
+
   const pastSessions = useMemo(
     () =>
       sessions
@@ -233,6 +249,7 @@ export function NewSessionForm({
       {
         rowId: makeRowId(),
         exerciseId: "",
+        weightType: "weighted",
         targetSets: 4,
         targetReps: 8,
         targetWeight: "",
@@ -263,9 +280,16 @@ export function NewSessionForm({
   };
 
   const handleExerciseCreated = (rowId: string, exercise: Exercise) => {
-    updateRow(rowId, { exerciseId: exercise.id });
+    updateRow(rowId, {
+      exerciseId: exercise.id,
+      weightType: exercise.weightType,
+      ...(exercise.weightType === "unweighted" ? { targetWeight: "" } : {}),
+    });
     setExerciseDialogRowId(null);
   };
+
+  const getRowWeightType = (row: DraftRow) =>
+    exerciseById.get(row.exerciseId)?.weightType ?? row.weightType;
 
   const canSubmit =
     !submitting &&
@@ -275,7 +299,8 @@ export function NewSessionForm({
         row.exerciseId !== "" &&
         row.targetSets > 0 &&
         row.targetReps > 0 &&
-        isValidTargetWeight(row.targetWeight),
+        (getRowWeightType(row) === "unweighted" ||
+          isValidTargetWeight(row.targetWeight)),
     );
 
   const handleSubmit = async () => {
@@ -285,14 +310,19 @@ export function NewSessionForm({
     const draft = {
       date,
       subcategory,
-      exercises: rows.map(
-        ({ exerciseId, targetSets, targetReps, targetWeight }) => ({
+      exercises: rows.map((row) => {
+        const { exerciseId, targetSets, targetReps, targetWeight } = row;
+        const weightType = getRowWeightType(row);
+        return {
           exerciseId,
           targetSets,
           targetReps,
-          targetWeight: parseTargetWeight(targetWeight),
-        }),
-      ),
+          targetWeight:
+            weightType === "weighted"
+              ? parseTargetWeight(targetWeight)
+              : undefined,
+        };
+      }),
     };
     try {
       const session = isEditing
@@ -439,7 +469,7 @@ export function NewSessionForm({
           if (!open) setExerciseDialogRowId(null);
         }}
         onSubmit={async (input) => {
-          const exercise = await createExercise(input.name, input.subcategory);
+          const exercise = await createExercise(input);
           if (exerciseDialogRowId) {
             handleExerciseCreated(exerciseDialogRowId, exercise);
           }

@@ -47,7 +47,7 @@ import {
   type Exercise,
   type GymSubcategory,
 } from "../../lib/gym/types";
-import { formatKg, getSubcategoryName } from "./exercise-format";
+import { formatLoad, getSubcategoryName } from "./exercise-format";
 import { ExerciseDialog } from "./exercise-dialog";
 import { useGymContext } from "./GymContext";
 
@@ -172,7 +172,7 @@ export function ManageExercises() {
               <TableHead>Focus</TableHead>
               <TableHead className="text-right">Used</TableHead>
               <TableHead>Last</TableHead>
-              <TableHead className="text-right">Load</TableHead>
+              <TableHead className="text-right">Volume</TableHead>
               <TableHead className="w-28 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -207,7 +207,7 @@ export function ManageExercises() {
         exercises={exercises}
         onOpenChange={setCreateOpen}
         onSubmit={async (input) => {
-          await createExercise(input.name, input.subcategory);
+          await createExercise(input);
         }}
       />
 
@@ -272,7 +272,7 @@ function ExerciseRow({
         {summary.lastUsedDate ? formatShortISODate(summary.lastUsedDate) : "-"}
       </TableCell>
       <TableCell className="text-right tabular-nums">
-        {formatKg(summary.totalLoad)}
+        {formatLoad(summary.totalLoad, exercise.weightType)}
       </TableCell>
       <TableCell>
         <div className="flex justify-end gap-1">

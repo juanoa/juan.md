@@ -1,6 +1,7 @@
 import { addDays, formatISODate, parseISODate, startOfWeek } from "./date";
 import type {
   Exercise,
+  ExerciseWeightType,
   GymSubcategory,
   PerformedSet,
   PlannedExercise,
@@ -8,12 +9,20 @@ import type {
   SessionStatus,
 } from "./types";
 
-export function totalLoad(sets: PerformedSet[]): number {
-  return sets.reduce((acc, set) => acc + set.reps * set.weight, 0);
-}
-
 export function totalReps(sets: PerformedSet[]): number {
   return sets.reduce((acc, set) => acc + set.reps, 0);
+}
+
+export function isWeightedExercise(weightType: ExerciseWeightType): boolean {
+  return weightType === "weighted";
+}
+
+export function totalLoad(
+  sets: PerformedSet[],
+  weightType: ExerciseWeightType,
+): number {
+  if (!isWeightedExercise(weightType)) return totalReps(sets);
+  return sets.reduce((acc, set) => acc + set.reps * set.weight, 0);
 }
 
 export function recordedSets(sets: PerformedSet[]): PerformedSet[] {
@@ -45,20 +54,23 @@ export function getSessionMetrics(session: Session): SessionMetrics {
     const planned = session.exercises.find(
       (exercise) => exercise.id === performed.plannedExerciseId,
     );
+    const weightType = planned?.weightType ?? "weighted";
     const validSets = recordedSets(performed.sets);
     if (validSets.length === 0) continue;
 
     recordedExercisesCount += 1;
-    sessionLoad += totalLoad(validSets);
+    sessionLoad += totalLoad(validSets, weightType);
     reps += totalReps(validSets);
     sets += validSets.length;
 
-    for (const set of validSets) {
-      if (!heaviestSet || set.weight > heaviestSet.weight) {
-        heaviestSet = {
-          ...set,
-          exerciseName: planned?.name ?? "Unknown exercise",
-        };
+    if (isWeightedExercise(weightType)) {
+      for (const set of validSets) {
+        if (!heaviestSet || set.weight > heaviestSet.weight) {
+          heaviestSet = {
+            ...set,
+            exerciseName: planned?.name ?? "Unknown exercise",
+          };
+        }
       }
     }
   }
@@ -78,6 +90,7 @@ export interface ExercisePerformance {
   date: string;
   exerciseId: string;
   exerciseName: string;
+  weightType: ExerciseWeightType;
   sets: PerformedSet[];
   totalLoad: number;
   totalReps: number;
@@ -111,6 +124,8 @@ export function getExercisePerformances(
 
           const sets = recordedSets(performed.sets);
           if (sets.length === 0) return [];
+          const weightType = exercise.weightType;
+          const weighted = isWeightedExercise(weightType);
 
           return [
             {
@@ -118,11 +133,16 @@ export function getExercisePerformances(
               date: session.date,
               exerciseId,
               exerciseName: exercise.name,
+              weightType,
               sets,
-              totalLoad: totalLoad(sets),
+              totalLoad: totalLoad(sets, weightType),
               totalReps: totalReps(sets),
-              maxWeight: Math.max(...sets.map((set) => set.weight)),
-              bestEstimatedOneRepMax: Math.max(...sets.map(estimatedOneRepMax)),
+              maxWeight: weighted
+                ? Math.max(...sets.map((set) => set.weight))
+                : 0,
+              bestEstimatedOneRepMax: weighted
+                ? Math.max(...sets.map(estimatedOneRepMax))
+                : 0,
             },
           ];
         });
@@ -139,6 +159,7 @@ export interface FocusLoadSummary {
 export interface ExerciseLoadSummary {
   exerciseId: string;
   name: string;
+  weightType: ExerciseWeightType;
   sessions: number;
   load: number;
   maxWeight: number;
@@ -249,25 +270,30 @@ export function getGymOverviewStats(
 
       const validSets = recordedSets(performed.sets);
       if (validSets.length === 0) continue;
+      const weightType = planned.weightType;
+      const weighted = isWeightedExercise(weightType);
 
       const exercise = exerciseMap.get(planned.exerciseId) ?? {
         exerciseId: planned.exerciseId,
         name: planned.name,
+        weightType,
         sessions: 0,
         load: 0,
         maxWeight: 0,
         bestEstimatedOneRepMax: 0,
       };
       exercise.sessions += 1;
-      exercise.load += totalLoad(validSets);
-      exercise.maxWeight = Math.max(
-        exercise.maxWeight,
-        ...validSets.map((set) => set.weight),
-      );
-      exercise.bestEstimatedOneRepMax = Math.max(
-        exercise.bestEstimatedOneRepMax,
-        ...validSets.map(estimatedOneRepMax),
-      );
+      exercise.load += totalLoad(validSets, weightType);
+      if (weighted) {
+        exercise.maxWeight = Math.max(
+          exercise.maxWeight,
+          ...validSets.map((set) => set.weight),
+        );
+        exercise.bestEstimatedOneRepMax = Math.max(
+          exercise.bestEstimatedOneRepMax,
+          ...validSets.map(estimatedOneRepMax),
+        );
+      }
       exerciseMap.set(planned.exerciseId, exercise);
     }
   }
@@ -316,7 +342,10 @@ export function getExerciseHistory(
     if (!performed || performed.sets.length === 0) continue;
     const sets = recordedSets(performed.sets);
     if (sets.length === 0) continue;
-    points.push({ date: session.date, load: totalLoad(sets) });
+    points.push({
+      date: session.date,
+      load: totalLoad(sets, planned.weightType),
+    });
   }
   return points.sort((a, b) => a.date.localeCompare(b.date));
 }
@@ -327,6 +356,7 @@ export interface ExerciseSessionSummary {
   date: string;
   status: SessionStatus;
   subcategory: GymSubcategory;
+  weightType: ExerciseWeightType;
   planned: PlannedExercise[];
   sets: PerformedSet[];
   totalLoad: number;
@@ -358,6 +388,8 @@ export function getExerciseSessionSummaries(
         (exercise) => exercise.exerciseId === exerciseId,
       );
       if (planned.length === 0) return [];
+      const weightType = planned[0].weightType;
+      const weighted = isWeightedExercise(weightType);
 
       const sets = planned.flatMap((exercise) => {
         const performed = session.performed.find(
@@ -373,14 +405,19 @@ export function getExerciseSessionSummaries(
           date: session.date,
           status: session.status,
           subcategory: session.subcategory,
+          weightType,
           planned,
           sets,
-          totalLoad: totalLoad(sets),
+          totalLoad: totalLoad(sets, weightType),
           totalReps: totalReps(sets),
           maxWeight:
-            sets.length > 0 ? Math.max(...sets.map((set) => set.weight)) : 0,
+            weighted && sets.length > 0
+              ? Math.max(...sets.map((set) => set.weight))
+              : 0,
           bestEstimatedOneRepMax:
-            sets.length > 0 ? Math.max(...sets.map(estimatedOneRepMax)) : 0,
+            weighted && sets.length > 0
+              ? Math.max(...sets.map(estimatedOneRepMax))
+              : 0,
         },
       ];
     })

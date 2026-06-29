@@ -17,16 +17,28 @@ export const GYM_SUBCATEGORIES: { slug: GymSubcategory; name: string }[] = [
   { slug: "full-body", name: "Full body" },
 ];
 
+export type ExerciseWeightType = "weighted" | "unweighted";
+
+export const EXERCISE_WEIGHT_TYPES: {
+  value: ExerciseWeightType;
+  name: string;
+}[] = [
+  { value: "weighted", name: "Weighted" },
+  { value: "unweighted", name: "No weight" },
+];
+
 export interface Exercise {
   id: string;
   name: string;
   subcategory: GymSubcategory;
+  weightType: ExerciseWeightType;
   archivedAt: string | null;
 }
 
 export interface ExerciseInput {
   name: string;
   subcategory: GymSubcategory;
+  weightType: ExerciseWeightType;
 }
 
 export type ExerciseDeleteResult = {
@@ -50,6 +62,7 @@ export interface PlannedExercise {
   id: string;
   exerciseId: string;
   name: string;
+  weightType: ExerciseWeightType;
   targetSets: number;
   targetReps: number;
   targetWeight: number | null;
