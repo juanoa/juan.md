@@ -84,6 +84,28 @@ function getRecordedSets(sets: PerformedSet[]): PerformedSet[] {
   return sets.filter((set) => set.reps > 0 || set.weight > 0);
 }
 
+function getMostRepeatedNumber(values: number[]): number | undefined {
+  const counts = new Map<number, number>();
+  let mostRepeated:
+    | { value: number; count: number; lastIndex: number }
+    | undefined;
+
+  values.forEach((value, index) => {
+    const count = (counts.get(value) ?? 0) + 1;
+    counts.set(value, count);
+
+    if (
+      mostRepeated === undefined ||
+      count > mostRepeated.count ||
+      (count === mostRepeated.count && index > mostRepeated.lastIndex)
+    ) {
+      mostRepeated = { value, count, lastIndex: index };
+    }
+  });
+
+  return mostRepeated?.value;
+}
+
 function buildPlanningRows(session: Session): DraftRow[] {
   return session.exercises
     .filter((exercise) => exercise.exerciseId !== "")
@@ -110,8 +132,15 @@ function buildPerformedRows(session: Session): DraftRow[] {
     if (!performed) return [];
 
     const recordedSets = getRecordedSets(performed.sets);
-    const lastSet = recordedSets[recordedSets.length - 1];
-    if (!lastSet) return [];
+    if (recordedSets.length === 0) return [];
+
+    const targetReps =
+      getMostRepeatedNumber(
+        recordedSets.map((set) => set.reps).filter((reps) => reps > 0),
+      ) ?? exercise.targetReps;
+    const targetWeight = getMostRepeatedNumber(
+      recordedSets.map((set) => set.weight),
+    );
 
     return [
       {
@@ -119,10 +148,10 @@ function buildPerformedRows(session: Session): DraftRow[] {
         exerciseId: exercise.exerciseId,
         weightType: exercise.weightType,
         targetSets: recordedSets.length,
-        targetReps: lastSet.reps > 0 ? lastSet.reps : exercise.targetReps,
+        targetReps,
         targetWeight:
           exercise.weightType === "weighted"
-            ? formatTargetWeight(lastSet.weight)
+            ? formatTargetWeight(targetWeight)
             : "",
       },
     ];
