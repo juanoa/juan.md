@@ -49,6 +49,8 @@ function GymSessionRunRoute() {
       params: { sessionId: session.id },
     });
   };
+  const finishLabel =
+    session.status === "completed" ? "Save" : "Finish session";
 
   return (
     <Dashboard title={`Gym - ${session.subcategory} · Run`}>
@@ -60,7 +62,7 @@ function GymSessionRunRoute() {
         </Button>
         <Button size="sm" onClick={handleFinish}>
           <CheckCircleIcon />
-          {session.status === "completed" ? "Save" : "Finish session"}
+          {finishLabel}
         </Button>
       </div>
       <div className="flex flex-col gap-3">
@@ -76,6 +78,10 @@ function GymSessionRunRoute() {
           />
         ))}
       </div>
+      <Button className="w-full sm:hidden" onClick={handleFinish}>
+        <CheckCircleIcon />
+        {finishLabel}
+      </Button>
     </Dashboard>
   );
 }
