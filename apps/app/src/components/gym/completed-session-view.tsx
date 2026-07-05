@@ -15,18 +15,21 @@ export function CompletedSessionView({
   sessions,
 }: CompletedSessionViewProps) {
   const cards = useMemo(() => {
-    return session.performed
-      .map((entry) => {
-        const planned = session.exercises.find(
-          (e) => e.id === entry.plannedExerciseId,
+    return session.exercises
+      .map((planned) => {
+        const performed = session.performed.find(
+          (entry) => entry.plannedExerciseId === planned.id,
         );
-        if (!planned) return null;
+        const sets = performed?.sets ?? [];
+        if (sets.length === 0 && planned.notes.trim().length === 0) {
+          return null;
+        }
         const history = getExerciseHistory(
           sessions,
           planned.exerciseId,
           session.date,
         );
-        return { planned, sets: entry.sets, history };
+        return { planned, sets, history };
       })
       .filter((card): card is NonNullable<typeof card> => card !== null);
   }, [session, sessions]);
@@ -61,6 +64,7 @@ export function CompletedSessionView({
           name={planned.name}
           weightType={planned.weightType}
           sets={sets}
+          notes={planned.notes}
           history={history}
           currentDate={session.date}
         />

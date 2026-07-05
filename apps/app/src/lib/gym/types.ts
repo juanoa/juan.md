@@ -66,6 +66,7 @@ export interface PlannedExercise {
   targetSets: number;
   targetReps: number;
   targetWeight: number | null;
+  notes: string;
 }
 
 export interface PerformedSet {

@@ -34,6 +34,11 @@ export interface GymContextValue {
     setIndex: number,
     set: PerformedSet,
   ) => void;
+  recordExerciseNotes: (
+    sessionId: string,
+    plannedExerciseId: string,
+    notes: string,
+  ) => void;
   finishSession: (id: string) => void;
   deleteSession: (id: string) => Promise<void>;
   createExercise: (input: ExerciseInput) => Promise<Exercise>;
@@ -156,6 +161,32 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
     [refresh],
   );
 
+  const recordExerciseNotes = useCallback(
+    (sessionId: string, plannedExerciseId: string, notes: string) => {
+      setSessions((prev) =>
+        prev.map((session) => {
+          if (session.id !== sessionId) return session;
+          return {
+            ...session,
+            status:
+              session.status === "planned" ? "in_progress" : session.status,
+            exercises: session.exercises.map((exercise) =>
+              exercise.id === plannedExerciseId
+                ? { ...exercise, notes }
+                : exercise,
+            ),
+          };
+        }),
+      );
+      void repository
+        .recordExerciseNotes(sessionId, plannedExerciseId, notes)
+        .catch(() => {
+          void refresh();
+        });
+    },
+    [refresh],
+  );
+
   const finishSession = useCallback(
     (id: string) => {
       setSessions((prev) =>
@@ -244,6 +275,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       getSessionsByDate,
       moveSession,
       recordSet,
+      recordExerciseNotes,
       finishSession,
       deleteSession,
       createExercise,
@@ -261,6 +293,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       getSessionsByDate,
       moveSession,
       recordSet,
+      recordExerciseNotes,
       finishSession,
       deleteSession,
       createExercise,

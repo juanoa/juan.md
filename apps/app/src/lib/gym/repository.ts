@@ -26,6 +26,7 @@ interface GymSessionExerciseRow {
   target_sets: number;
   target_reps: number;
   target_weight: number | null;
+  notes: string | null;
   position: number;
   exercise: {
     id: string;
@@ -42,7 +43,7 @@ interface GymPerformedSetRow {
 }
 
 const SESSION_SELECT =
-  "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, target_weight, position, exercise:gym_exercises(id, name, weight_type), gym_performed_sets(set_index, reps, weight))";
+  "id, date, subcategory_slug, status, gym_session_exercises(id, target_sets, target_reps, target_weight, notes, position, exercise:gym_exercises(id, name, weight_type), gym_performed_sets(set_index, reps, weight))";
 
 const EXERCISE_SELECT = "id, name, subcategory_slug, weight_type, archived_at";
 
@@ -86,6 +87,7 @@ function mapSession(row: GymSessionRow): Session {
       targetSets: entry.target_sets,
       targetReps: entry.target_reps,
       targetWeight: entry.target_weight,
+      notes: entry.notes ?? "",
     })),
     performed,
   };
@@ -127,6 +129,26 @@ export async function recordSet(
       { onConflict: "session_exercise_id,set_index" },
     );
   if (upsertError) throw upsertError;
+
+  const { error: statusError } = await supabase
+    .from("gym_sessions")
+    .update({ status: "in_progress" })
+    .eq("id", sessionId)
+    .eq("status", "planned");
+  if (statusError) throw statusError;
+}
+
+export async function recordExerciseNotes(
+  sessionId: string,
+  plannedExerciseId: string,
+  notes: string,
+): Promise<void> {
+  const { error: notesError } = await supabase
+    .from("gym_session_exercises")
+    .update({ notes })
+    .eq("id", plannedExerciseId)
+    .eq("session_id", sessionId);
+  if (notesError) throw notesError;
 
   const { error: statusError } = await supabase
     .from("gym_sessions")

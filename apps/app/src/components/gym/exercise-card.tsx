@@ -8,6 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@juan/ui/components/ui/card";
+import { Label } from "@juan/ui/components/ui/label";
+import { Textarea } from "@juan/ui/components/ui/textarea";
 
 import type {
   PerformedExercise,
@@ -37,9 +39,11 @@ export function ExerciseCard({
   exercise,
   performed,
 }: ExerciseCardProps) {
-  const { recordSet, sessions } = useGymContext();
+  const { recordExerciseNotes, recordSet, sessions } = useGymContext();
   const [extraSets, setExtraSets] = useState(0);
+  const [notes, setNotes] = useState(exercise.notes);
   const usesWeight = exercise.weightType === "weighted";
+  const notesId = `session-notes-${exercise.id}`;
   const history = useMemo(
     () =>
       getExercisePerformances(
@@ -76,6 +80,11 @@ export function ExerciseCard({
 
   const handleCommit = (setIndex: number) => (set: PerformedSet) => {
     recordSet(sessionId, exercise.id, setIndex, set);
+  };
+
+  const handleNotesBlur = () => {
+    if (notes === exercise.notes) return;
+    recordExerciseNotes(sessionId, exercise.id, notes);
   };
 
   return (
@@ -124,6 +133,19 @@ export function ExerciseCard({
             onClick={() => setExtraSets((value) => value + 1)}>
             <PlusIcon /> Add set
           </Button>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor={notesId} className="text-muted-foreground">
+            Session notes
+          </Label>
+          <Textarea
+            id={notesId}
+            value={notes}
+            placeholder="Add notes for this exercise"
+            className="min-h-20 resize-y"
+            onChange={(event) => setNotes(event.target.value)}
+            onBlur={handleNotesBlur}
+          />
         </div>
       </CardContent>
     </Card>
