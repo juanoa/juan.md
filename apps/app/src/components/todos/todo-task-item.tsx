@@ -26,7 +26,7 @@ import {
 import { Input } from "@juan/ui/components/ui/input";
 import { cn } from "@juan/ui/lib/utils";
 
-import { addDaysISO, todayISO } from "../../lib/todos/date";
+import { addDaysISO } from "../../lib/todos/date";
 import type { TodoTask } from "../../lib/todos/types";
 import { MarkdownText } from "./markdown";
 import { useTodosContext } from "./TodosContext";
@@ -53,6 +53,7 @@ export function TodoTaskItem({
   const {
     lists,
     preferences,
+    today,
     updateTask,
     toggleTask,
     deleteTask,
@@ -121,10 +122,10 @@ export function TodoTaskItem({
 
   const nearbyDates = task.dueDate
     ? [
-        { label: "Today", date: todayISO() },
+        { label: "Today", date: today },
         { label: "Tomorrow", date: addDaysISO(task.dueDate, 1) },
       ]
-    : [{ label: "Today", date: todayISO() }];
+    : [{ label: "Today", date: today }];
 
   return (
     <div

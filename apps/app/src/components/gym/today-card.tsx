@@ -17,14 +17,12 @@ import {
   CardTitle,
 } from "@juan/ui/components/ui/card";
 
-import { todayISO } from "../../lib/gym/date";
 import { useGymContext } from "./GymContext";
 import { SessionSummary } from "./session-summary";
 
 export function TodayCard() {
-  const { getSessionsByDate } = useGymContext();
-  const todayIso = todayISO();
-  const todaySessions = getSessionsByDate(todayIso);
+  const { getSessionsByDate, today } = useGymContext();
+  const todaySessions = getSessionsByDate(today);
 
   if (todaySessions.length === 0) {
     return (
@@ -36,7 +34,7 @@ export function TodayCard() {
           </CardDescription>
           <CardAction>
             <Button asChild size="sm">
-              <Link to="/gym/new" search={{ date: todayIso }}>
+              <Link to="/gym/new" search={{ date: today }}>
                 <PlusIcon /> New session
               </Link>
             </Button>
@@ -63,7 +61,7 @@ export function TodayCard() {
             </CardTitle>
             <CardAction>
               <Button asChild size="sm" variant="outline">
-                <Link to="/gym/new" search={{ date: todayIso }}>
+                <Link to="/gym/new" search={{ date: today }}>
                   <PlusIcon /> Add session
                 </Link>
               </Button>

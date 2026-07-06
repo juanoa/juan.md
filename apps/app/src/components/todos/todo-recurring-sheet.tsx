@@ -1,5 +1,5 @@
 import { PlusIcon, TrashIcon } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 
 import { Button } from "@juan/ui/components/ui/button";
@@ -18,7 +18,6 @@ import {
   SheetTitle,
 } from "@juan/ui/components/ui/sheet";
 
-import { todayISO } from "../../lib/todos/date";
 import {
   TODO_FREQUENCY_LABELS,
   frequencyToNaturalLanguage,
@@ -37,10 +36,19 @@ export function TodoRecurringSheet({
   open,
   onOpenChange,
 }: TodoRecurringSheetProps) {
-  const { recurringSeries, createTask } = useTodosContext();
+  const { recurringSeries, createTask, today } = useTodosContext();
   const [title, setTitle] = useState("");
   const [frequency, setFrequency] = useState<TodoFrequency>("daily");
-  const [startDate, setStartDate] = useState(todayISO());
+  const [startDate, setStartDate] = useState(today);
+  const previousTodayRef = useRef(today);
+
+  useEffect(() => {
+    const previousToday = previousTodayRef.current;
+    if (previousToday === today) return;
+
+    setStartDate((value) => (value === previousToday ? today : value));
+    previousTodayRef.current = today;
+  }, [today]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

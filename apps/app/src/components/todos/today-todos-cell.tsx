@@ -3,14 +3,13 @@ import { Link } from "@tanstack/react-router";
 
 import { Checkbox } from "@juan/ui/components/ui/checkbox";
 
-import { todayISO } from "../../lib/todos/date";
 import { DashboardCell } from "../dashboard";
 import { MarkdownText } from "./markdown";
 import { useTodosContext } from "./TodosContext";
 
 export function TodayTodosCell() {
-  const { getTasksForDate, status, toggleTask } = useTodosContext();
-  const todayTasks = getTasksForDate(todayISO());
+  const { getTasksForDate, status, today, toggleTask } = useTodosContext();
+  const todayTasks = getTasksForDate(today);
   const openTasks = todayTasks.filter((task) => task.completedAt === null);
 
   return (

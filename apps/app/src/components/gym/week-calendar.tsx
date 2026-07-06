@@ -15,26 +15,25 @@ import {
   addDays,
   formatISODate,
   formatShortDate,
+  parseISODate,
   startOfWeek,
-  todayISO,
   weekOfYear,
 } from "../../lib/gym/date";
 import { useGymContext } from "./GymContext";
 import { DayCard } from "./day-card";
 
 export function WeekCalendar() {
-  const { sessions, moveSession } = useGymContext();
+  const { sessions, moveSession, today } = useGymContext();
   const [weekOffset, setWeekOffset] = useState(0);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
   );
 
-  const today = useMemo(() => new Date(), []);
-  const todayIso = todayISO();
+  const todayDate = useMemo(() => parseISODate(today), [today]);
   const weekStart = useMemo(
-    () => addDays(startOfWeek(today), weekOffset * 7),
-    [today, weekOffset],
+    () => addDays(startOfWeek(todayDate), weekOffset * 7),
+    [todayDate, weekOffset],
   );
 
   const days = useMemo(
@@ -109,7 +108,7 @@ export function WeekCalendar() {
               key={iso}
               date={date}
               isoDate={iso}
-              isToday={iso === todayIso}
+              isToday={iso === today}
               sessions={sessionsByDate.get(iso) ?? []}
             />
           ))}

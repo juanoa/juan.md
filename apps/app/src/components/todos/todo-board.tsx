@@ -16,7 +16,7 @@ import {
   TimerIcon,
   XIcon,
 } from "@phosphor-icons/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 import { Button } from "@juan/ui/components/ui/button";
@@ -36,7 +36,6 @@ import {
   monthLabel,
   parseISODate,
   shortDateLabel,
-  todayISO,
 } from "../../lib/todos/date";
 import type { TodoScope, TodoTask } from "../../lib/todos/types";
 import { TodoColumn } from "./todo-column";
@@ -50,6 +49,7 @@ export function TodoBoard() {
   const {
     status,
     error,
+    today,
     tasks,
     lists,
     preferences,
@@ -59,8 +59,8 @@ export function TodoBoard() {
     placeTask,
     undoDelete,
   } = useTodosContext();
-  const [startDate, setStartDate] = useState(todayISO());
-  const [selectedDate, setSelectedDate] = useState(todayISO());
+  const [startDate, setStartDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(today);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [focusMode, setFocusMode] = useState(false);
@@ -74,6 +74,7 @@ export function TodoBoard() {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
+  const previousTodayRef = useRef(today);
 
   const columnCount = focusMode ? 1 : preferences.columnCount;
   const days = useMemo(
@@ -84,7 +85,6 @@ export function TodoBoard() {
     () => buildDayRange(startDate, 7),
     [startDate],
   );
-  const today = todayISO();
   const selectedTask = tasks.find((task) => task.id === notesTaskId) ?? null;
   const normalizedSearch = searchQuery.trim().toLowerCase();
 
@@ -94,19 +94,26 @@ export function TodoBoard() {
   }, []);
 
   const jumpToToday = useCallback(() => {
-    const value = todayISO();
-    setStartDate(value);
-    setSelectedDate(value);
-  }, []);
+    setStartDate(today);
+    setSelectedDate(today);
+  }, [today]);
 
   const enterFocusMode = () => {
-    const value = todayISO();
     setFocusMode(true);
-    setStartDate(value);
-    setSelectedDate(value);
+    setStartDate(today);
+    setSelectedDate(today);
     setTimerSeconds(preferences.focusMinutes * 60);
     setTimerRunning(false);
   };
+
+  useEffect(() => {
+    const previousToday = previousTodayRef.current;
+    if (previousToday === today) return;
+
+    setStartDate((value) => (value === previousToday ? today : value));
+    setSelectedDate((value) => (value === previousToday ? today : value));
+    previousTodayRef.current = today;
+  }, [today]);
 
   useEffect(() => {
     if (!timerRunning) return;

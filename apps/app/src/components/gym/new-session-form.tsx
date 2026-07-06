@@ -1,5 +1,5 @@
 import { ArrowCounterClockwiseIcon, PlusIcon } from "@phosphor-icons/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@juan/ui/components/ui/button";
 import {
@@ -26,7 +26,7 @@ import {
 } from "@juan/ui/components/ui/select";
 import { cn } from "@juan/ui/lib/utils";
 
-import { formatShortISODate, todayISO } from "../../lib/gym/date";
+import { formatShortISODate } from "../../lib/gym/date";
 import {
   GYM_SUBCATEGORIES,
   type Exercise,
@@ -190,12 +190,18 @@ export function NewSessionForm({
   onSaved,
   onCancel,
 }: NewSessionFormProps) {
-  const { sessions, exercises, createExercise, createSession, updateSession } =
-    useGymContext();
+  const {
+    sessions,
+    exercises,
+    today,
+    createExercise,
+    createSession,
+    updateSession,
+  } = useGymContext();
   const isEditing = initialSession !== undefined;
 
   const [date, setDate] = useState<string>(
-    initialSession?.date ?? initialDate ?? todayISO(),
+    initialSession?.date ?? initialDate ?? today,
   );
   const [subcategory, setSubcategory] = useState<GymSubcategory>(
     initialSession?.subcategory ?? initialSubcategory ?? "back",
@@ -223,6 +229,17 @@ export function NewSessionForm({
   const [selectedReuseSessionId, setSelectedReuseSessionId] = useState<
     string | null
   >(null);
+  const previousTodayRef = useRef(today);
+
+  useEffect(() => {
+    const previousToday = previousTodayRef.current;
+    if (previousToday === today) return;
+
+    if (!isEditing && initialDate === undefined) {
+      setDate((value) => (value === previousToday ? today : value));
+    }
+    previousTodayRef.current = today;
+  }, [initialDate, isEditing, today]);
 
   const exerciseGroups = useMemo<ExerciseGroup[]>(() => {
     const bySubcategory = new Map<GymSubcategory, Exercise[]>();

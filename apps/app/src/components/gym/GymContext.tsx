@@ -8,6 +8,7 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 
+import { useCurrentDay } from "../../lib/current-day";
 import * as repository from "../../lib/gym/repository";
 import type {
   Exercise,
@@ -25,6 +26,7 @@ export interface GymContextValue {
   exercises: Exercise[];
   status: GymStatus;
   error: string | null;
+  today: string;
   getSession: (id: string) => Session | undefined;
   getSessionsByDate: (date: string) => Session[];
   moveSession: (id: string, newDate: string) => void;
@@ -71,6 +73,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [status, setStatus] = useState<GymStatus>("loading");
   const [error, setError] = useState<string | null>(null);
+  const today = useCurrentDay();
 
   const refresh = useCallback(() => {
     Promise.all([repository.fetchSessions(), repository.fetchExercises()]).then(
@@ -89,7 +92,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
 
   useEffect(() => {
     refresh();
-  }, [refresh]);
+  }, [refresh, today]);
 
   const getSession = useCallback(
     (id: string) => sessions.find((session) => session.id === id),
@@ -271,6 +274,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       exercises,
       status,
       error,
+      today,
       getSession,
       getSessionsByDate,
       moveSession,
@@ -289,6 +293,7 @@ export function GymContextProvider({ children }: GymContextProviderProps) {
       exercises,
       status,
       error,
+      today,
       getSession,
       getSessionsByDate,
       moveSession,

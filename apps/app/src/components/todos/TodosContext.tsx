@@ -8,6 +8,7 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 
+import { useCurrentDay } from "../../lib/current-day";
 import * as repository from "../../lib/todos/repository";
 import { parseRecurringTodoTitle } from "../../lib/todos/recurrence";
 import type {
@@ -27,6 +28,7 @@ export interface TodosContextValue extends TodoData {
   status: TodosStatus;
   error: string | null;
   lastDeletedTask: TodoTask | null;
+  today: string;
   refresh: () => void;
   getTasksForDate: (date: string) => TodoTask[];
   getTasksForList: (listId: string) => TodoTask[];
@@ -122,6 +124,7 @@ export function TodosContextProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<TodosStatus>("loading");
   const [error, setError] = useState<string | null>(null);
   const [lastDeletedTask, setLastDeletedTask] = useState<TodoTask | null>(null);
+  const today = useCurrentDay();
 
   const refresh = useCallback(() => {
     repository.fetchTodoData().then(
@@ -142,7 +145,7 @@ export function TodosContextProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     refresh();
-  }, [refresh]);
+  }, [refresh, today]);
 
   const getTasksForDate = useCallback(
     (date: string) =>
@@ -402,6 +405,7 @@ export function TodosContextProvider({ children }: { children: ReactNode }) {
       status,
       error,
       lastDeletedTask,
+      today,
       refresh,
       getTasksForDate,
       getTasksForList,
@@ -428,6 +432,7 @@ export function TodosContextProvider({ children }: { children: ReactNode }) {
       status,
       error,
       lastDeletedTask,
+      today,
       refresh,
       getTasksForDate,
       getTasksForList,

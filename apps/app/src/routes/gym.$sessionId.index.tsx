@@ -23,7 +23,6 @@ import { Dashboard } from "../components/dashboard";
 import { CompletedSessionView } from "../components/gym/completed-session-view";
 import { SessionSummary } from "../components/gym/session-summary";
 import { useGymContext } from "../components/gym/GymContext";
-import { todayISO } from "../lib/gym/date";
 
 export const Route = createFileRoute("/gym/$sessionId/")({
   component: GymSessionDetailRoute,
@@ -31,7 +30,7 @@ export const Route = createFileRoute("/gym/$sessionId/")({
 
 function GymSessionDetailRoute() {
   const { sessionId } = Route.useParams();
-  const { deleteSession, getSession, moveSession, status, sessions } =
+  const { deleteSession, getSession, moveSession, status, sessions, today } =
     useGymContext();
   const navigate = useNavigate();
   const session = getSession(sessionId);
@@ -94,7 +93,6 @@ function GymSessionDetailRoute() {
     );
   }
 
-  const today = todayISO();
   const isToday = session.date === today;
 
   const handleDoToday = () => {

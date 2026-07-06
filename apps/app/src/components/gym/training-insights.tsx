@@ -15,7 +15,6 @@ import {
 } from "@juan/ui/components/ui/card";
 
 import { getGymOverviewStats } from "../../lib/gym/stats";
-import { todayISO } from "../../lib/gym/date";
 import { formatKg, formatLoad, formatVolume } from "./exercise-format";
 import { useGymContext } from "./GymContext";
 
@@ -25,8 +24,7 @@ function formatPercent(value: number): string {
 }
 
 export function TrainingInsights() {
-  const { sessions } = useGymContext();
-  const today = todayISO();
+  const { sessions, today } = useGymContext();
   const stats = useMemo(
     () => getGymOverviewStats(sessions, today),
     [sessions, today],
