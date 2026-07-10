@@ -34,6 +34,7 @@ import { NetWorthAssetManagement } from "./asset-management";
 import { MonthlyUpdatePanel } from "./monthly-update-panel";
 import { useNetWorthContext } from "./NetWorthContext";
 import {
+  CHART_COLORS,
   NetWorthAssetBarChart,
   NetWorthAssetHistoryChart,
   NetWorthBreakdownChart,
@@ -85,8 +86,16 @@ export function NetWorthOverview() {
     [categoryTrend],
   );
 
-  const activeAssets = assets.filter((asset) => asset.archivedAt === null);
   const total = latestSnapshot ? getSnapshotTotal(latestSnapshot) : 0;
+  const trailingYearBaseline = timeline[Math.max(0, timeline.length - 13)];
+  const trailingYearDelta =
+    latestPoint && trailingYearBaseline
+      ? latestPoint.total - trailingYearBaseline.total
+      : 0;
+  const trailingYearDeltaPercent =
+    trailingYearBaseline?.total && trailingYearBaseline.total > 0
+      ? (trailingYearDelta / trailingYearBaseline.total) * 100
+      : 0;
   const liquidValue = getLiquidValue(assets, latestSnapshot);
   const effectiveSelectedAssetId =
     selectedAssetId || assetSummaries[0]?.asset.id || "";
@@ -134,9 +143,10 @@ export function NetWorthOverview() {
           trend={latestPoint?.delta ?? 0}
         />
         <Metric
-          label="Active assets"
-          value={String(activeAssets.length)}
-          detail={`${assets.length} total tracked`}
+          label="Last 12 months change"
+          value={formatSignedCurrency(trailingYearDelta)}
+          detail={formatPercent(trailingYearDeltaPercent)}
+          trend={trailingYearDelta}
         />
         <Metric
           label="Instant liquidity"
@@ -307,10 +317,19 @@ function BreakdownLegend({
   if (data.length === 0) return null;
 
   return (
-    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-      {data.map((entry) => (
+    <div className="grid grid-cols-1 gap-y-2 sm:grid-cols-2 sm:gap-x-8">
+      {data.map((entry, index) => (
         <div key={entry.key} className="flex justify-between gap-3 text-xs">
-          <span className="text-muted-foreground">{entry.name}</span>
+          <span className="text-muted-foreground flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className="border-border h-2.5 w-2.5 shrink-0 border"
+              style={{
+                backgroundColor: CHART_COLORS[index % CHART_COLORS.length],
+              }}
+            />
+            <span>{entry.name}</span>
+          </span>
           <span className="font-medium tabular-nums">
             {formatCurrency(entry.value)}
           </span>

@@ -47,8 +47,22 @@ export const CHART_COLORS = [
 const currencyFormatter = (value: unknown) =>
   typeof value === "number" ? formatCurrency(value) : String(value);
 
-const labeledCurrencyFormatter = (value: unknown, name: unknown) => (
+const labeledCurrencyFormatter = (
+  value: unknown,
+  name: unknown,
+  item?: unknown,
+  _index?: number,
+  payload?: unknown,
+) => (
   <>
+    <span
+      aria-hidden="true"
+      className="border-border h-2.5 w-2.5 shrink-0 border"
+      style={{
+        backgroundColor:
+          getTooltipItemColor(item, payload) ?? "var(--muted-foreground)",
+      }}
+    />
     <span className="text-muted-foreground">{formatTooltipName(name)}</span>
     <span className="text-foreground ml-auto font-mono font-medium tabular-nums">
       {currencyFormatter(value)}
@@ -74,6 +88,30 @@ function formatTooltipName(name: unknown): string {
     return CATEGORY_NAMES[name as NetWorthAssetCategory];
   }
   return name;
+}
+
+function getTooltipItemColor(
+  item: unknown,
+  payload: unknown,
+): string | undefined {
+  const itemRecord = getRecord(item);
+  const itemPayload = getRecord(itemRecord?.payload);
+  const dataPayload = getRecord(payload);
+  const color = [
+    itemPayload?.fill,
+    itemRecord?.color,
+    itemRecord?.fill,
+    itemRecord?.stroke,
+    dataPayload?.fill,
+  ].find((candidate): candidate is string => typeof candidate === "string");
+
+  return color;
+}
+
+function getRecord(value: unknown): Record<string, unknown> | undefined {
+  return typeof value === "object" && value !== null
+    ? (value as Record<string, unknown>)
+    : undefined;
 }
 
 function formatHorizontalBarAxisLabel(value: string): string {
