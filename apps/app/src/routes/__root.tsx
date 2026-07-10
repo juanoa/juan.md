@@ -13,6 +13,7 @@ import {
   useAuthContext,
 } from "../components/auth/AuthContext";
 import { GymContextProvider } from "../components/gym/GymContext";
+import { NetWorthContextProvider } from "../components/net-worth/NetWorthContext";
 import { TodosContextProvider } from "../components/todos/TodosContext";
 
 export const Route = createRootRoute({
@@ -75,7 +76,9 @@ function RequireAuth({ children }: { children: ReactNode }) {
 
   return (
     <GymContextProvider>
-      <TodosContextProvider>{children}</TodosContextProvider>
+      <TodosContextProvider>
+        <NetWorthContextProvider>{children}</NetWorthContextProvider>
+      </TodosContextProvider>
     </GymContextProvider>
   );
 }

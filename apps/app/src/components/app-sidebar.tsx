@@ -1,6 +1,7 @@
 import {
   BarbellIcon,
   CommandIcon,
+  CurrencyDollarIcon,
   GearIcon,
   ListChecksIcon,
   SquaresFourIcon,
@@ -35,6 +36,11 @@ const data = {
       title: "To-dos",
       to: "/to-dos",
       icon: <ListChecksIcon />,
+    },
+    {
+      title: "Net worth",
+      to: "/net-worth",
+      icon: <CurrencyDollarIcon />,
     },
   ],
   sports: [
