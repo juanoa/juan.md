@@ -1,4 +1,9 @@
-import { PlusIcon, TrashIcon } from "@phosphor-icons/react";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@phosphor-icons/react";
 import { useMemo } from "react";
 
 import { Button } from "@juan/ui/components/ui/button";
@@ -60,6 +65,10 @@ interface NewSessionExerciseRowProps {
   sessions: Session[];
   exerciseGroups: ExerciseGroup[];
   onUpdate: (patch: Partial<DraftRow>) => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
   onRemove: () => void;
   onCreateExercise: () => void;
 }
@@ -157,6 +166,10 @@ export function NewSessionExerciseRow({
   sessions,
   exerciseGroups,
   onUpdate,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp,
+  canMoveDown,
   onRemove,
   onCreateExercise,
 }: NewSessionExerciseRowProps) {
@@ -181,14 +194,34 @@ export function NewSessionExerciseRow({
         <span className="text-muted-foreground text-xs tabular-nums">
           #{index + 1}
         </span>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          onClick={onRemove}
-          aria-label="Remove exercise">
-          <TrashIcon />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            disabled={!canMoveUp}
+            onClick={onMoveUp}
+            aria-label="Move exercise up">
+            <ArrowUpIcon />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            disabled={!canMoveDown}
+            onClick={onMoveDown}
+            aria-label="Move exercise down">
+            <ArrowDownIcon />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={onRemove}
+            aria-label="Remove exercise">
+            <TrashIcon />
+          </Button>
+        </div>
       </div>
       <div className="flex flex-col gap-1.5">
         <Label>

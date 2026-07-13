@@ -307,6 +307,23 @@ export function NewSessionForm({
     setRows((prev) => prev.filter((row) => row.rowId !== rowId));
   };
 
+  const moveRow = (rowId: string, direction: -1 | 1) => {
+    setRows((prev) => {
+      const currentIndex = prev.findIndex((row) => row.rowId === rowId);
+      if (currentIndex === -1) return prev;
+
+      const nextIndex = currentIndex + direction;
+      if (nextIndex < 0 || nextIndex >= prev.length) return prev;
+
+      const next = [...prev];
+      [next[currentIndex], next[nextIndex]] = [
+        next[nextIndex],
+        next[currentIndex],
+      ];
+      return next;
+    });
+  };
+
   const openReuseDialog = () => {
     setSelectedReuseSessionId(null);
     setReuseDialogOpen(true);
@@ -457,6 +474,10 @@ export function NewSessionForm({
                 sessions={sessions}
                 exerciseGroups={exerciseGroups}
                 onUpdate={(patch) => updateRow(row.rowId, patch)}
+                onMoveUp={() => moveRow(row.rowId, -1)}
+                onMoveDown={() => moveRow(row.rowId, 1)}
+                canMoveUp={index > 0}
+                canMoveDown={index < rows.length - 1}
                 onRemove={() => removeRow(row.rowId)}
                 onCreateExercise={() => setExerciseDialogRowId(row.rowId)}
               />
