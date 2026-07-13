@@ -23,7 +23,6 @@ import {
 } from "@juan/ui/components/ui/table";
 
 import { formatShortISODate } from "../../lib/gym/date";
-import { totalLoad } from "../../lib/gym/stats";
 import type {
   Exercise,
   ExerciseWeightType,
@@ -32,11 +31,7 @@ import type {
   Session,
   SessionDraftExercise,
 } from "../../lib/gym/types";
-import {
-  formatLoad,
-  formatSetSummary,
-  getVolumeLabel,
-} from "./exercise-format";
+import { formatSetSummary } from "./exercise-format";
 
 export interface DraftRow extends Omit<SessionDraftExercise, "targetWeight"> {
   rowId: string;
@@ -55,7 +50,7 @@ interface ExerciseHistorySummary {
   date: string;
   weightType: ExerciseWeightType;
   sets: PerformedSet[];
-  totalLoad: number;
+  notes: string;
 }
 
 interface NewSessionExerciseRowProps {
@@ -108,7 +103,7 @@ function getExerciseHistorySummaries(
               date: session.date,
               weightType,
               sets,
-              totalLoad: totalLoad(sets, weightType),
+              notes: exercise.notes.trim(),
             },
           ];
         });
@@ -119,10 +114,8 @@ function getExerciseHistorySummaries(
 
 function ExerciseHistoryTable({
   history,
-  weightType,
 }: {
   history: ExerciseHistorySummary[];
-  weightType: ExerciseWeightType;
 }) {
   return (
     <div className="mt-4 flex flex-col gap-2">
@@ -134,9 +127,7 @@ function ExerciseHistoryTable({
           <TableRow>
             <TableHead>Date</TableHead>
             <TableHead className="min-w-52">Summary</TableHead>
-            <TableHead className="text-right">
-              {getVolumeLabel(weightType)}
-            </TableHead>
+            <TableHead className="min-w-48">Notes</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -148,8 +139,8 @@ function ExerciseHistoryTable({
               <TableCell className="whitespace-normal">
                 {formatSetSummary(entry.sets, entry.weightType)}
               </TableCell>
-              <TableCell className="text-right tabular-nums">
-                {formatLoad(entry.totalLoad, entry.weightType)}
+              <TableCell className="text-muted-foreground whitespace-normal">
+                {entry.notes.length > 0 ? entry.notes : "-"}
               </TableCell>
             </TableRow>
           ))}
@@ -304,9 +295,7 @@ export function NewSessionExerciseRow({
           </div>
         )}
       </div>
-      {history.length > 0 && (
-        <ExerciseHistoryTable history={history} weightType={weightType} />
-      )}
+      {history.length > 0 && <ExerciseHistoryTable history={history} />}
     </li>
   );
 }

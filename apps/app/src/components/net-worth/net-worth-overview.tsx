@@ -28,6 +28,7 @@ import {
   getLiquidValue,
   getNetWorthTimeline,
   getSnapshotTotal,
+  getTrailingTwelveMonthChange,
 } from "../../lib/net-worth/stats";
 import { NET_WORTH_ASSET_CATEGORIES } from "../../lib/net-worth/types";
 import { NetWorthAssetManagement } from "./asset-management";
@@ -87,15 +88,7 @@ export function NetWorthOverview() {
   );
 
   const total = latestSnapshot ? getSnapshotTotal(latestSnapshot) : 0;
-  const trailingYearBaseline = timeline[Math.max(0, timeline.length - 13)];
-  const trailingYearDelta =
-    latestPoint && trailingYearBaseline
-      ? latestPoint.total - trailingYearBaseline.total
-      : 0;
-  const trailingYearDeltaPercent =
-    trailingYearBaseline?.total && trailingYearBaseline.total > 0
-      ? (trailingYearDelta / trailingYearBaseline.total) * 100
-      : 0;
+  const trailingYearChange = getTrailingTwelveMonthChange(timeline);
   const liquidValue = getLiquidValue(assets, latestSnapshot);
   const effectiveSelectedAssetId =
     selectedAssetId || assetSummaries[0]?.asset.id || "";
@@ -144,9 +137,9 @@ export function NetWorthOverview() {
         />
         <Metric
           label="Last 12 months change"
-          value={formatSignedCurrency(trailingYearDelta)}
-          detail={formatPercent(trailingYearDeltaPercent)}
-          trend={trailingYearDelta}
+          value={formatSignedCurrency(trailingYearChange.delta)}
+          detail={formatPercent(trailingYearChange.deltaPercent)}
+          trend={trailingYearChange.delta}
         />
         <Metric
           label="Instant liquidity"

@@ -12,6 +12,12 @@ export interface NetWorthTimelinePoint {
   deltaPercent: number;
 }
 
+export interface NetWorthTrailingChange {
+  baseline: NetWorthTimelinePoint | undefined;
+  delta: number;
+  deltaPercent: number;
+}
+
 export interface NetWorthAssetSummary {
   asset: NetWorthAsset;
   value: number;
@@ -90,6 +96,41 @@ export function getNetWorthTimeline(
       deltaPercent,
     };
   });
+}
+
+export function getTrailingTwelveMonthChange(
+  timeline: NetWorthTimelinePoint[],
+): NetWorthTrailingChange {
+  const latestPoint = timeline[timeline.length - 1];
+  if (!latestPoint) {
+    return { baseline: undefined, delta: 0, deltaPercent: 0 };
+  }
+
+  const targetMonth = getMonthOrdinal(latestPoint.month) - 12;
+  const baseline = timeline
+    .slice(0, -1)
+    .reduce<NetWorthTimelinePoint | undefined>((closest, point) => {
+      if (!closest) return point;
+
+      const pointMonth = getMonthOrdinal(point.month);
+      const closestMonth = getMonthOrdinal(closest.month);
+      const pointDistance = Math.abs(pointMonth - targetMonth);
+      const closestDistance = Math.abs(closestMonth - targetMonth);
+
+      if (pointDistance < closestDistance) return point;
+      if (pointDistance > closestDistance) return closest;
+
+      return pointMonth > closestMonth ? point : closest;
+    }, undefined);
+
+  if (!baseline) {
+    return { baseline: undefined, delta: 0, deltaPercent: 0 };
+  }
+
+  const delta = latestPoint.total - baseline.total;
+  const deltaPercent = baseline.total > 0 ? (delta / baseline.total) * 100 : 0;
+
+  return { baseline, delta, deltaPercent };
 }
 
 export function getLatestAssetSummaries(
@@ -175,6 +216,11 @@ export function getLiquidValue(
   return assets
     .filter((asset) => asset.liquidity === "instant")
     .reduce((total, asset) => total + getSnapshotValue(snapshot, asset.id), 0);
+}
+
+function getMonthOrdinal(month: string): number {
+  const [year, monthNumber] = month.split("-").map(Number);
+  return year * 12 + monthNumber - 1;
 }
 
 function groupBreakdown<T extends string>(
