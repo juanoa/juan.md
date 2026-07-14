@@ -1,5 +1,7 @@
+import { TargetIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 
+import { Button } from "@juan/ui/components/ui/button";
 import { Input } from "@juan/ui/components/ui/input";
 import { Label } from "@juan/ui/components/ui/label";
 
@@ -54,6 +56,13 @@ export function SetRow({
     tryCommit(reps, weight);
   };
 
+  const handleUseTargetWeight = () => {
+    if (targetWeight === null) return;
+    const nextWeight = String(targetWeight);
+    setWeight(nextWeight);
+    tryCommit(reps, nextWeight);
+  };
+
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
       <span className="text-muted-foreground text-xs font-medium tabular-nums sm:w-12">
@@ -84,6 +93,17 @@ export function SetRow({
             onBlur={handleWeightBlur}
             className="h-7 w-20"
           />
+          {targetWeight !== null && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              title="Use target weight"
+              aria-label="Use target weight"
+              onClick={handleUseTargetWeight}>
+              <TargetIcon />
+            </Button>
+          )}
         </div>
       )}
     </div>

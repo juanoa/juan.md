@@ -62,15 +62,8 @@ export function ExerciseCard({
         : currentBest,
     null as (typeof history)[number] | null,
   );
-  const suggestedWeight = usesWeight
-    ? (latest?.sets.find((set) => set.reps >= exercise.targetReps)?.weight ??
-      latest?.maxWeight ??
-      exercise.targetWeight)
-    : null;
-  const shouldShowSuggestedWeight =
-    suggestedWeight !== null &&
-    suggestedWeight !== undefined &&
-    suggestedWeight > 0;
+  const targetWeight = usesWeight ? exercise.targetWeight : null;
+  const shouldShowTargetWeight = targetWeight !== null && targetWeight > 0;
 
   const totalSets = Math.max(
     exercise.targetSets,
@@ -97,9 +90,9 @@ export function ExerciseCard({
           <span className="text-muted-foreground font-normal">
             {exercise.name}
           </span>
-          {shouldShowSuggestedWeight && (
+          {shouldShowTargetWeight && (
             <span className="text-muted-foreground text-xs font-normal">
-              target {formatWeight(suggestedWeight)}kg
+              target {formatWeight(targetWeight)}kg
             </span>
           )}
         </CardTitle>
