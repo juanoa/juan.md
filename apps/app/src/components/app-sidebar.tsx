@@ -5,6 +5,7 @@ import {
   GearIcon,
   ListChecksIcon,
   SquaresFourIcon,
+  WavesIcon,
 } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import * as React from "react";
@@ -48,6 +49,11 @@ const data = {
       title: "Gym",
       to: "/gym",
       icon: <BarbellIcon />,
+    },
+    {
+      title: "Surf cameras",
+      to: "/surf-cameras",
+      icon: <WavesIcon />,
     },
   ],
   navSecondary: [
