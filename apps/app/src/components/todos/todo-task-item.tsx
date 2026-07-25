@@ -61,18 +61,19 @@ export function TodoTaskItem({
     moveTask,
   } = useTodosContext();
   const completed = task.completedAt !== null;
+  const isOptimistic = task.isOptimistic === true;
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(task.title);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { setNodeRef: setDropRef, isOver } = useDroppable({
     id: todoDroppableTaskId(task.id),
-    disabled: !dragEnabled,
+    disabled: !dragEnabled || isOptimistic,
   });
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: todoDraggableId(task.id),
-      disabled: !dragEnabled,
+      disabled: !dragEnabled || isOptimistic,
     });
 
   useEffect(() => {
@@ -140,10 +141,12 @@ export function TodoTaskItem({
         className={cn(
           "group/todo border-border bg-background relative z-10 flex min-h-9 items-start gap-2 border-b px-2 py-1.5 text-xs transition-[background,opacity]",
           dragEnabled && isDragging && "cursor-grabbing will-change-transform",
+          isOptimistic && "opacity-60",
         )}>
         <Checkbox
           checked={completed}
           onCheckedChange={(checked) => toggleTask(task.id, checked === true)}
+          disabled={isOptimistic}
           aria-label={completed ? "Mark incomplete" : "Mark complete"}
           className="mt-0.5"
         />
@@ -169,6 +172,7 @@ export function TodoTaskItem({
                   "pl-4",
               )}
               onClick={() => {
+                if (isOptimistic) return;
                 setDraft(task.title);
                 setIsEditing(true);
               }}>
@@ -196,6 +200,7 @@ export function TodoTaskItem({
             variant="ghost"
             size="icon-xs"
             onClick={() => onOpenNotes(task)}
+            disabled={isOptimistic}
             aria-label="Open notes">
             <NotePencilIcon />
           </Button>
@@ -205,6 +210,7 @@ export function TodoTaskItem({
                 type="button"
                 variant="ghost"
                 size="icon-xs"
+                disabled={isOptimistic}
                 aria-label="Task menu">
                 <DotsThreeVerticalIcon />
               </Button>
@@ -266,6 +272,7 @@ export function TodoTaskItem({
               variant="ghost"
               size="icon-xs"
               className="cursor-grab active:cursor-grabbing"
+              disabled={isOptimistic}
               aria-label="Drag to move"
               {...listeners}
               {...attributes}>

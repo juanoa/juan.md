@@ -81,6 +81,7 @@ export function MonthlyUpdatePanel() {
           value: parseDraftValue(draftValues[asset.id]),
         })),
       );
+      setOpen(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to save snapshot");
     } finally {

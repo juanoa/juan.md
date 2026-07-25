@@ -113,6 +113,73 @@ function scopeUpdates(scope: TodoScope) {
     : { dueDate: null, listId: scope.listId };
 }
 
+function scopeFromCreateInput(
+  input: CreateTodoTaskInput,
+  fallbackDate: string,
+): TodoScope {
+  return input.listId
+    ? { kind: "list", listId: input.listId }
+    : { kind: "date", date: input.dueDate ?? fallbackDate };
+}
+
+function nextLocalPosition(
+  tasks: TodoTask[],
+  scope: TodoScope,
+  atTop = false,
+): number {
+  const scopedPositions = tasks
+    .filter((task) => taskMatchesScope(task, scope))
+    .map((task) => task.position);
+
+  if (scopedPositions.length === 0) return 1000;
+  return atTop
+    ? Math.min(...scopedPositions) - 1000
+    : Math.max(...scopedPositions) + 1000;
+}
+
+function createOptimisticTaskId(): string {
+  return `optimistic-todo-${globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`}`;
+}
+
+function createOptimisticTask(
+  input: CreateTodoTaskInput,
+  title: string,
+  fallbackDate: string,
+  previousTasks: TodoTask[],
+  id: string,
+  createdAt: string,
+): TodoTask {
+  const scope = scopeFromCreateInput(input, fallbackDate);
+
+  return {
+    id,
+    title,
+    notes: input.notes?.trim() ?? "",
+    dueDate: scope.kind === "date" ? scope.date : null,
+    listId: scope.kind === "list" ? scope.listId : null,
+    completedAt: null,
+    position: nextLocalPosition(previousTasks, scope, input.atTop),
+    recurringSeriesId: null,
+    createdAt,
+    isOptimistic: true,
+  };
+}
+
+function replaceOptimisticTask(
+  tasks: TodoTask[],
+  optimisticId: string,
+  savedTask: TodoTask,
+): TodoTask[] {
+  let replaced = false;
+  const nextTasks = tasks.map((task) => {
+    if (task.id !== optimisticId) return task;
+    replaced = true;
+    return savedTask;
+  });
+
+  return sortTasks(replaced ? nextTasks : [...nextTasks, savedTask]);
+}
+
 export function TodosContextProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = useState<TodoTask[]>([]);
   const [lists, setLists] = useState<TodoList[]>([]);
@@ -163,36 +230,62 @@ export function TodosContextProvider({ children }: { children: ReactNode }) {
     [tasks],
   );
 
-  const createTask = useCallback(async (input: CreateTodoTaskInput) => {
-    const title = input.title.trim();
-    if (title.length === 0) {
-      throw new Error("Todo title cannot be empty");
-    }
+  const createTask = useCallback(
+    async (input: CreateTodoTaskInput) => {
+      const title = input.title.trim();
+      if (title.length === 0) {
+        throw new Error("Todo title cannot be empty");
+      }
 
-    const parsed =
-      input.dueDate && !input.listId
-        ? parseRecurringTodoTitle(title)
-        : { recurring: false as const, title };
+      const parsed =
+        input.dueDate && !input.listId
+          ? parseRecurringTodoTitle(title)
+          : { recurring: false as const, title };
+      const optimisticId = createOptimisticTaskId();
+      const optimisticCreatedAt = new Date().toISOString();
 
-    if (parsed.recurring && input.dueDate && !input.listId) {
-      const created = await repository.createRecurringTodo({
-        title: parsed.title,
-        notes: input.notes,
-        frequency: parsed.frequency,
-        startDate: input.dueDate,
-      });
-      setRecurringSeries((prev) => sortSeries([...prev, created.series]));
-      setTasks((prev) => sortTasks([...prev, created.task]));
-      return created.task;
-    }
+      setTasks((prev) =>
+        sortTasks([
+          ...prev,
+          createOptimisticTask(
+            input,
+            parsed.title,
+            today,
+            prev,
+            optimisticId,
+            optimisticCreatedAt,
+          ),
+        ]),
+      );
 
-    const task = await repository.createTask({
-      ...input,
-      title: parsed.title,
-    });
-    setTasks((prev) => sortTasks([...prev, task]));
-    return task;
-  }, []);
+      try {
+        if (parsed.recurring && input.dueDate && !input.listId) {
+          const created = await repository.createRecurringTodo({
+            title: parsed.title,
+            notes: input.notes,
+            frequency: parsed.frequency,
+            startDate: input.dueDate,
+          });
+          setRecurringSeries((prev) => sortSeries([...prev, created.series]));
+          setTasks((prev) =>
+            replaceOptimisticTask(prev, optimisticId, created.task),
+          );
+          return created.task;
+        }
+
+        const task = await repository.createTask({
+          ...input,
+          title: parsed.title,
+        });
+        setTasks((prev) => replaceOptimisticTask(prev, optimisticId, task));
+        return task;
+      } catch (e) {
+        setTasks((prev) => prev.filter((task) => task.id !== optimisticId));
+        throw e;
+      }
+    },
+    [today],
+  );
 
   const updateTask = useCallback(
     async (

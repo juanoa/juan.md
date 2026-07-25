@@ -35,15 +35,20 @@ export function TodoAddInput({
     const trimmed = title.trim();
     if (!trimmed) return;
     setIsSaving(true);
+    const createPromise = createTask({
+      title: trimmed,
+      dueDate: scope.kind === "date" ? scope.date : undefined,
+      listId: scope.kind === "list" ? scope.listId : undefined,
+      atTop,
+    });
+    setTitle("");
+    onCreated?.();
+
     try {
-      await createTask({
-        title: trimmed,
-        dueDate: scope.kind === "date" ? scope.date : undefined,
-        listId: scope.kind === "list" ? scope.listId : undefined,
-        atTop,
-      });
-      setTitle("");
-      onCreated?.();
+      await createPromise;
+    } catch (e) {
+      setTitle(trimmed);
+      throw e;
     } finally {
       setIsSaving(false);
     }

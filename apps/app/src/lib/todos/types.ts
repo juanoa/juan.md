@@ -19,6 +19,7 @@ export interface TodoTask {
   position: number;
   recurringSeriesId: string | null;
   createdAt: string;
+  isOptimistic?: boolean;
 }
 
 export interface TodoList {

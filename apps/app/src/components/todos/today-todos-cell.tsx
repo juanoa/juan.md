@@ -29,6 +29,7 @@ export function TodayTodosCell() {
               const displayTitle = task.title.startsWith("- ")
                 ? task.title.slice(2)
                 : task.title;
+              const isOptimistic = task.isOptimistic === true;
 
               return (
                 <li
@@ -39,6 +40,7 @@ export function TodayTodosCell() {
                     onCheckedChange={(checked) => {
                       if (checked === true) toggleTask(task.id, true);
                     }}
+                    disabled={isOptimistic}
                     aria-label="Mark to-do complete"
                     className="mt-0.5"
                   />
