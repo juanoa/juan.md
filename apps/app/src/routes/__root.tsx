@@ -12,6 +12,7 @@ import {
   AuthContextProvider,
   useAuthContext,
 } from "../components/auth/AuthContext";
+import { BooksContextProvider } from "../components/books/BooksContext";
 import { GymContextProvider } from "../components/gym/GymContext";
 import { NetWorthContextProvider } from "../components/net-worth/NetWorthContext";
 import { TodosContextProvider } from "../components/todos/TodosContext";
@@ -77,7 +78,9 @@ function RequireAuth({ children }: { children: ReactNode }) {
   return (
     <GymContextProvider>
       <TodosContextProvider>
-        <NetWorthContextProvider>{children}</NetWorthContextProvider>
+        <NetWorthContextProvider>
+          <BooksContextProvider>{children}</BooksContextProvider>
+        </NetWorthContextProvider>
       </TodosContextProvider>
     </GymContextProvider>
   );
