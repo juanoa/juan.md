@@ -179,20 +179,6 @@ export function BooksLibrary() {
 
   return (
     <section className="flex flex-col gap-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">My library</h2>
-          <p className="text-muted-foreground text-sm">
-            {books.length === 1
-              ? "1 saved book"
-              : `${books.length} saved books`}
-          </p>
-        </div>
-        <Button type="button" onClick={() => setCreateOpen(true)}>
-          <PlusIcon /> Add book
-        </Button>
-      </div>
-
       <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_180px_180px]">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="books-search">Search your library</Label>
@@ -248,10 +234,16 @@ export function BooksLibrary() {
         </div>
       </div>
 
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-end">
+        <Button type="button" onClick={() => setCreateOpen(true)}>
+          <PlusIcon /> Add book
+        </Button>
+      </div>
+
       {actionError && <p className="text-destructive text-sm">{actionError}</p>}
 
       {filteredBooks.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-3">
           {filteredBooks.map((book) => (
             <BookCard
               key={book.id}
