@@ -318,7 +318,7 @@ function BookCard({
   onDelete: () => void;
 }) {
   return (
-    <article className="border-border bg-card flex min-w-0 gap-4 border p-4">
+    <article className="group border-border bg-card flex min-w-0 gap-4 border p-4">
       <BookCover coverUrl={book.coverUrl} title={book.title} />
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <div className="flex items-start justify-between gap-2">
@@ -330,7 +330,7 @@ function BookCard({
                 : "Unknown author"}
             </p>
           </div>
-          <div className="flex shrink-0 gap-0.5">
+          <div className="flex shrink-0 gap-0.5 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100">
             <Button
               type="button"
               variant="ghost"
