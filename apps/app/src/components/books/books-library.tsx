@@ -458,6 +458,7 @@ function BookDialogForm({
     [],
   );
   const [searching, setSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const [draft, setDraft] = useState<BookDraft>(() => toDraft(initialBook));
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -475,6 +476,7 @@ function BookDialogForm({
   const handleSearch = async () => {
     if (searchQuery.trim() === "") return;
     setSearching(true);
+    setHasSearched(true);
     setError(null);
     try {
       setSearchResults(await searchGoogleBooks(searchQuery));
@@ -524,7 +526,12 @@ function BookDialogForm({
           <Input
             value={searchQuery}
             autoFocus
-            onChange={(event) => setSearchQuery(event.target.value)}
+            onChange={(event) => {
+              setSearchQuery(event.target.value);
+              setSearchResults([]);
+              setHasSearched(false);
+              setError(null);
+            }}
             onKeyDown={(event) => {
               if (event.key === "Enter") {
                 event.preventDefault();
@@ -571,12 +578,9 @@ function BookDialogForm({
             ))}
           </div>
         )}
-        {!searching &&
-          searchQuery !== "" &&
-          searchResults.length === 0 &&
-          !error && (
-            <p className="text-muted-foreground text-sm">No books found.</p>
-          )}
+        {!searching && hasSearched && searchResults.length === 0 && !error && (
+          <p className="text-muted-foreground text-sm">No books found.</p>
+        )}
         <DialogFooter>
           <Button
             type="button"
