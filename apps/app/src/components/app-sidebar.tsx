@@ -1,7 +1,6 @@
 import {
   BarbellIcon,
   BookOpenIcon,
-  CommandIcon,
   CurrencyDollarIcon,
   GearIcon,
   ListChecksIcon,
@@ -95,9 +94,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!">
-              <Link to="/">
-                <CommandIcon className="size-5!" />
-                <span className="text-base font-semibold">J.O.A.</span>
+              <Link to="/" className="flex items-center gap-3">
+                <div className="size-5 rounded-full bg-black" />
+                <span className="text-base font-semibold">app.juan.md</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
