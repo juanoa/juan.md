@@ -42,14 +42,14 @@ const data = {
       icon: <ListChecksIcon />,
     },
     {
-      title: "Net worth",
-      to: "/net-worth",
-      icon: <CurrencyDollarIcon />,
-    },
-    {
       title: "Books",
       to: "/books",
       icon: <BookOpenIcon />,
+    },
+    {
+      title: "Net worth",
+      to: "/net-worth",
+      icon: <CurrencyDollarIcon />,
     },
   ],
   sports: [
