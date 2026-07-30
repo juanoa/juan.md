@@ -55,9 +55,7 @@ export function BooksContextProvider({ children }: { children: ReactNode }) {
       (reason: unknown) => {
         setStatus("error");
         setError(
-          reason instanceof Error
-            ? reason.message
-            : "No se han podido cargar los libros",
+          reason instanceof Error ? reason.message : "Unable to load books",
         );
       },
     );
@@ -76,9 +74,7 @@ export function BooksContextProvider({ children }: { children: ReactNode }) {
         if (!isCurrent) return;
         setStatus("error");
         setError(
-          reason instanceof Error
-            ? reason.message
-            : "No se han podido cargar los libros",
+          reason instanceof Error ? reason.message : "Unable to load books",
         );
       },
     );

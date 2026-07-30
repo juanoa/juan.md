@@ -39,7 +39,7 @@ export async function searchGoogleBooks(
     { signal },
   );
   if (!response.ok) {
-    throw new Error("No se han podido buscar libros en Google Books");
+    throw new Error("Unable to search for books");
   }
 
   const payload = (await response.json()) as GoogleBooksResponse;
@@ -48,7 +48,7 @@ export async function searchGoogleBooks(
       const info = volume.volumeInfo;
       return {
         googleBooksId: volume.id,
-        title: info?.title?.trim() || "Sin título",
+        title: info?.title?.trim() || "Untitled",
         authors: info?.authors ?? [],
         coverUrl: toSecureUrl(
           info?.imageLinks?.thumbnail ?? info?.imageLinks?.smallThumbnail,
@@ -56,5 +56,5 @@ export async function searchGoogleBooks(
         publishedDate: info?.publishedDate ?? null,
       };
     })
-    .filter((book) => book.title !== "Sin título");
+    .filter((book) => book.title !== "Untitled");
 }

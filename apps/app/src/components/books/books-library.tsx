@@ -101,8 +101,8 @@ function toDraftFromGoogleBook(book: GoogleBookSearchResult): BookDraft {
 }
 
 function formatLastReadDate(date: string | null): string {
-  if (!date) return "Sin registrar";
-  return new Intl.DateTimeFormat("es-ES", { dateStyle: "medium" }).format(
+  if (!date) return "Not recorded";
+  return new Intl.DateTimeFormat("en-GB", { dateStyle: "medium" }).format(
     new Date(`${date}T00:00:00`),
   );
 }
@@ -127,7 +127,7 @@ export function BooksLibrary() {
         book.publishedDate ?? "",
         getStatusLabel(book.status),
         book.status,
-        book.rating ? String(book.rating) : "sin puntuacion",
+        book.rating ? String(book.rating) : "not rated",
         book.lastReadAt ?? "",
         book.coverUrl ?? "",
         book.googleBooksId ?? "",
@@ -155,25 +155,23 @@ export function BooksLibrary() {
       await deleteBook(target.id);
     } catch (reason) {
       setActionError(
-        reason instanceof Error
-          ? reason.message
-          : "No se ha podido eliminar el libro",
+        reason instanceof Error ? reason.message : "Unable to remove the book",
       );
     }
   };
 
   if (status === "loading") {
-    return <p className="text-muted-foreground text-sm">Cargando libros...</p>;
+    return <p className="text-muted-foreground text-sm">Loading books...</p>;
   }
 
   if (status === "error") {
     return (
       <div className="flex flex-col items-start gap-3">
         <p className="text-destructive text-sm">
-          {error ?? "No se han podido cargar los libros"}
+          {error ?? "Unable to load books"}
         </p>
         <Button type="button" variant="outline" size="sm" onClick={refresh}>
-          Reintentar
+          Try again
         </Button>
       </div>
     );
@@ -183,21 +181,21 @@ export function BooksLibrary() {
     <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold">Mi biblioteca</h2>
+          <h2 className="text-lg font-semibold">My library</h2>
           <p className="text-muted-foreground text-sm">
             {books.length === 1
-              ? "1 libro guardado"
-              : `${books.length} libros guardados`}
+              ? "1 saved book"
+              : `${books.length} saved books`}
           </p>
         </div>
         <Button type="button" onClick={() => setCreateOpen(true)}>
-          <PlusIcon /> Añadir libro
+          <PlusIcon /> Add book
         </Button>
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_180px_180px]">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="books-search">Buscar en tu biblioteca</Label>
+          <Label htmlFor="books-search">Search your library</Label>
           <div className="relative">
             <MagnifyingGlassIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
             <Input
@@ -205,12 +203,12 @@ export function BooksLibrary() {
               className="pl-9"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Título, autor, estado, fecha..."
+              placeholder="Title, author, status, date..."
             />
           </div>
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="books-status-filter">Estado</Label>
+          <Label htmlFor="books-status-filter">Status</Label>
           <Select
             value={statusFilter}
             onValueChange={(value) =>
@@ -220,7 +218,7 @@ export function BooksLibrary() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos los estados</SelectItem>
+              <SelectItem value="all">All statuses</SelectItem>
               {BOOK_STATUSES.map((item) => (
                 <SelectItem key={item.value} value={item.value}>
                   {item.label}
@@ -230,7 +228,7 @@ export function BooksLibrary() {
           </Select>
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="books-rating-filter">Puntuación</Label>
+          <Label htmlFor="books-rating-filter">Rating</Label>
           <Select
             value={ratingFilter}
             onValueChange={(value) => setRatingFilter(value as RatingFilter)}>
@@ -238,11 +236,11 @@ export function BooksLibrary() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todas</SelectItem>
-              <SelectItem value="unrated">Sin puntuar</SelectItem>
+              <SelectItem value="all">All ratings</SelectItem>
+              <SelectItem value="unrated">Not rated</SelectItem>
               {[1, 2, 3, 4, 5].map((rating) => (
                 <SelectItem key={rating} value={String(rating)}>
-                  {rating} {rating === 1 ? "estrella" : "estrellas"}
+                  {rating} {rating === 1 ? "star" : "stars"}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -306,12 +304,12 @@ function EmptyBooksState({ hasFilters }: { hasFilters: boolean }) {
       <BookOpenIcon className="size-8" />
       <div>
         <p className="text-foreground font-medium">
-          {hasFilters ? "No hay coincidencias" : "Tu biblioteca está vacía"}
+          {hasFilters ? "No matches found" : "Your library is empty"}
         </p>
         <p className="mt-1 text-sm">
           {hasFilters
-            ? "Prueba a cambiar la búsqueda o los filtros."
-            : "Busca un libro en Google Books para añadirlo."}
+            ? "Try changing your search or filters."
+            : "Search for a book to add it to your library."}
         </p>
       </div>
     </div>
@@ -337,7 +335,7 @@ function BookCard({
             <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
               {book.authors.length > 0
                 ? book.authors.join(", ")
-                : "Autor desconocido"}
+                : "Unknown author"}
             </p>
           </div>
           <div className="flex shrink-0 gap-0.5">
@@ -345,7 +343,7 @@ function BookCard({
               type="button"
               variant="ghost"
               size="icon-sm"
-              aria-label={`Editar ${book.title}`}
+              aria-label={`Edit ${book.title}`}
               onClick={onEdit}>
               <PencilSimpleIcon />
             </Button>
@@ -353,7 +351,7 @@ function BookCard({
               type="button"
               variant="ghost"
               size="icon-sm"
-              aria-label={`Eliminar ${book.title}`}
+              aria-label={`Delete ${book.title}`}
               onClick={onDelete}>
               <TrashIcon />
             </Button>
@@ -365,10 +363,10 @@ function BookCard({
           <RatingDisplay rating={book.rating} />
         </div>
         <div className="text-muted-foreground flex flex-col gap-1 text-xs">
-          {book.publishedDate && <span>Publicado: {book.publishedDate}</span>}
+          {book.publishedDate && <span>Published: {book.publishedDate}</span>}
           <span className="flex items-center gap-1">
             <CalendarBlankIcon className="size-3.5" />
-            Última lectura: {formatLastReadDate(book.lastReadAt)}
+            Last read: {formatLastReadDate(book.lastReadAt)}
           </span>
         </div>
       </div>
@@ -387,14 +385,14 @@ function BookCover({
   if (!coverUrl || hasImageError) {
     return (
       <div className="bg-muted text-muted-foreground flex aspect-2/3 w-20 shrink-0 items-center justify-center">
-        <BookOpenIcon className="size-6" aria-label={`Sin portada: ${title}`} />
+        <BookOpenIcon className="size-6" aria-label={`No cover: ${title}`} />
       </div>
     );
   }
   return (
     <img
       src={coverUrl}
-      alt={`Portada de ${title}`}
+      alt={`Cover of ${title}`}
       className="bg-muted aspect-2/3 w-20 shrink-0 object-cover"
       loading="lazy"
       referrerPolicy="no-referrer"
@@ -405,7 +403,7 @@ function BookCover({
 
 function RatingDisplay({ rating }: { rating: number | null }) {
   if (!rating) {
-    return <Badge variant="secondary">Sin puntuar</Badge>;
+    return <Badge variant="secondary">Not rated</Badge>;
   }
   return (
     <Badge variant="secondary" className="gap-1">
@@ -482,9 +480,7 @@ function BookDialogForm({
       setSearchResults(await searchGoogleBooks(searchQuery));
     } catch (reason) {
       setError(
-        reason instanceof Error
-          ? reason.message
-          : "No se han podido buscar libros",
+        reason instanceof Error ? reason.message : "Unable to search for books",
       );
     } finally {
       setSearching(false);
@@ -509,9 +505,7 @@ function BookDialogForm({
       onOpenChange(false);
     } catch (reason) {
       setError(
-        reason instanceof Error
-          ? reason.message
-          : "No se ha podido guardar el libro",
+        reason instanceof Error ? reason.message : "Unable to save the book",
       );
       setSubmitting(false);
     }
@@ -521,9 +515,9 @@ function BookDialogForm({
     return (
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Añadir libro</DialogTitle>
+          <DialogTitle>Add book</DialogTitle>
           <DialogDescription>
-            Busca en Google Books y revisa los datos antes de guardarlos.
+            Search for a book and review its details before saving it.
           </DialogDescription>
         </DialogHeader>
         <div className="flex gap-2">
@@ -537,13 +531,13 @@ function BookDialogForm({
                 void handleSearch();
               }
             }}
-            placeholder="Título, autor o ISBN"
+            placeholder="Title, author, or ISBN"
           />
           <Button
             type="button"
             disabled={searching || searchQuery.trim() === ""}
             onClick={() => void handleSearch()}>
-            <MagnifyingGlassIcon /> {searching ? "Buscando..." : "Buscar"}
+            <MagnifyingGlassIcon /> {searching ? "Searching..." : "Search"}
           </Button>
         </div>
         {error && <p className="text-destructive text-sm">{error}</p>}
@@ -565,11 +559,11 @@ function BookDialogForm({
                   <span className="text-muted-foreground mt-1 block text-sm">
                     {result.authors.length > 0
                       ? result.authors.join(", ")
-                      : "Autor desconocido"}
+                      : "Unknown author"}
                   </span>
                   {result.publishedDate && (
                     <span className="text-muted-foreground mt-1 block text-xs">
-                      Publicado: {result.publishedDate}
+                      Published: {result.publishedDate}
                     </span>
                   )}
                 </span>
@@ -581,16 +575,14 @@ function BookDialogForm({
           searchQuery !== "" &&
           searchResults.length === 0 &&
           !error && (
-            <p className="text-muted-foreground text-sm">
-              No se han encontrado libros.
-            </p>
+            <p className="text-muted-foreground text-sm">No books found.</p>
           )}
         <DialogFooter>
           <Button
             type="button"
             variant="ghost"
             onClick={() => onOpenChange(false)}>
-            Cancelar
+            Cancel
           </Button>
           <Button
             type="button"
@@ -600,7 +592,7 @@ function BookDialogForm({
               setError(null);
               setStep("form");
             }}>
-            Añadir manualmente
+            Add manually
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -610,20 +602,18 @@ function BookDialogForm({
   return (
     <DialogContent className="sm:max-w-xl">
       <DialogHeader>
-        <DialogTitle>
-          {initialBook ? "Editar libro" : "Revisar libro"}
-        </DialogTitle>
+        <DialogTitle>{initialBook ? "Edit book" : "Review book"}</DialogTitle>
         <DialogDescription>
-          Completa o corrige los datos que quieras guardar en tu biblioteca.
+          Complete or correct any details you want to save in your library.
         </DialogDescription>
       </DialogHeader>
       <div className="grid gap-3 sm:grid-cols-[96px_1fr]">
         <BookCover
           coverUrl={draft.coverUrl || null}
-          title={draft.title || "Libro"}
+          title={draft.title || "Book"}
         />
         <div className="flex flex-col gap-3">
-          <FormField label="Título" htmlFor="book-title" required>
+          <FormField label="Title" htmlFor="book-title" required>
             <Input
               id="book-title"
               value={draft.title}
@@ -636,7 +626,7 @@ function BookDialogForm({
               }
             />
           </FormField>
-          <FormField label="Autores" htmlFor="book-authors">
+          <FormField label="Authors" htmlFor="book-authors">
             <Input
               id="book-authors"
               value={draft.authors}
@@ -646,13 +636,13 @@ function BookDialogForm({
                   authors: event.target.value,
                 }))
               }
-              placeholder="Separados por comas"
+              placeholder="Separate with commas"
             />
           </FormField>
         </div>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
-        <FormField label="Fecha de publicación" htmlFor="book-published-date">
+        <FormField label="Publication date" htmlFor="book-published-date">
           <Input
             id="book-published-date"
             value={draft.publishedDate}
@@ -662,10 +652,10 @@ function BookDialogForm({
                 publishedDate: event.target.value,
               }))
             }
-            placeholder="2024 o 2024-05-17"
+            placeholder="2024 or 2024-05-17"
           />
         </FormField>
-        <FormField label="Fecha de última lectura" htmlFor="book-last-read-at">
+        <FormField label="Last read date" htmlFor="book-last-read-at">
           <Input
             id="book-last-read-at"
             type="date"
@@ -678,7 +668,7 @@ function BookDialogForm({
             }
           />
         </FormField>
-        <FormField label="Estado" htmlFor="book-status" required>
+        <FormField label="Status" htmlFor="book-status" required>
           <Select
             value={draft.status}
             onValueChange={(value) =>
@@ -699,7 +689,7 @@ function BookDialogForm({
             </SelectContent>
           </Select>
         </FormField>
-        <FormField label="Puntuación" htmlFor="book-rating">
+        <FormField label="Rating" htmlFor="book-rating">
           <Select
             value={draft.rating}
             onValueChange={(value) =>
@@ -709,7 +699,7 @@ function BookDialogForm({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">Sin puntuar</SelectItem>
+              <SelectItem value="none">Not rated</SelectItem>
               {[1, 2, 3, 4, 5].map((rating) => (
                 <SelectItem key={rating} value={String(rating)}>
                   {rating}/5
@@ -719,7 +709,7 @@ function BookDialogForm({
           </Select>
         </FormField>
       </div>
-      <FormField label="URL de la portada" htmlFor="book-cover-url">
+      <FormField label="Cover URL" htmlFor="book-cover-url">
         <Input
           id="book-cover-url"
           type="url"
@@ -735,7 +725,7 @@ function BookDialogForm({
       </FormField>
       {duplicateGoogleBook && (
         <p className="text-destructive text-sm">
-          Este libro ya está en tu biblioteca.
+          This book is already in your library.
         </p>
       )}
       {error && <p className="text-destructive text-sm">{error}</p>}
@@ -745,24 +735,20 @@ function BookDialogForm({
             type="button"
             variant="ghost"
             onClick={() => setStep("search")}>
-            Volver a la búsqueda
+            Back to search
           </Button>
         )}
         <Button
           type="button"
           variant="ghost"
           onClick={() => onOpenChange(false)}>
-          Cancelar
+          Cancel
         </Button>
         <Button
           type="button"
           disabled={!canSave || submitting}
           onClick={() => void handleSubmit()}>
-          {submitting
-            ? "Guardando..."
-            : initialBook
-              ? "Guardar cambios"
-              : "Añadir libro"}
+          {submitting ? "Saving..." : initialBook ? "Save changes" : "Add book"}
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -804,16 +790,16 @@ function DeleteBookDialog({
     <AlertDialog open={book !== null} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>¿Eliminar libro?</AlertDialogTitle>
+          <AlertDialogTitle>Delete book?</AlertDialogTitle>
           <AlertDialogDescription>
             {book
-              ? `Eliminarás “${book.title}” de tu biblioteca. Esta acción no se puede deshacer.`
+              ? `You will remove “${book.title}” from your library. This cannot be undone.`
               : ""}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Eliminar</AlertDialogAction>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

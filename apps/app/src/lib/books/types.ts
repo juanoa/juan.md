@@ -1,9 +1,9 @@
 export type BookStatus = "want_to_read" | "reading" | "read";
 
 export const BOOK_STATUSES: { value: BookStatus; label: string }[] = [
-  { value: "want_to_read", label: "Quiero leer" },
-  { value: "reading", label: "Leyendo" },
-  { value: "read", label: "Leído" },
+  { value: "want_to_read", label: "Want to read" },
+  { value: "reading", label: "Reading" },
+  { value: "read", label: "Read" },
 ];
 
 export interface Book {
