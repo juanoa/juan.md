@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import {
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -14,9 +15,17 @@ interface NavMainItem {
   icon?: React.ReactNode;
 }
 
-export function NavMain({ items }: { items: NavMainItem[] }) {
+export function NavMain({
+  items,
+  label,
+}: {
+  items: NavMainItem[];
+  label?: string;
+}) {
   return (
-    <SidebarGroup>
+    <SidebarGroup
+      className={label ? "group-data-[collapsible=icon]:hidden" : undefined}>
+      {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           {items.map((item) => (

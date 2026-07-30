@@ -34,6 +34,8 @@ const data = {
       to: "/",
       icon: <SquaresFourIcon />,
     },
+  ],
+  productivity: [
     {
       title: "To-dos",
       to: "/to-dos",
@@ -103,6 +105,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
+        <NavMain items={data.productivity} label="Productivity" />
         <NavSports items={data.sports} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
