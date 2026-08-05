@@ -23,8 +23,8 @@ function GymOverviewRoute() {
   return (
     <Dashboard title={PAGE_NAME}>
       <TodayCard />
-      <TrainingInsights />
       <WeekCalendar />
+      <TrainingInsights />
       <GymSettings />
     </Dashboard>
   );
