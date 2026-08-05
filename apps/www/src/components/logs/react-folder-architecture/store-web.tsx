@@ -33,57 +33,63 @@ export const StoreWeb = () => {
 
   return (
     <div className="space-y-4">
-      <TooltipProvider delayDuration={500}>
+      <TooltipProvider delay={500}>
         <div className="flex gap-2 border text-sm">
           <div className="flex flex-2 flex-col gap-4 p-4">
             <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="inline-flex w-fit items-center gap-1 bg-amber-300 px-2 py-1">
-                  <DropIcon />
-                  <span>WATER-COMMERCE</span>
-                </div>
-              </TooltipTrigger>
+              <TooltipTrigger
+                render={
+                  <div className="inline-flex w-fit items-center gap-1 bg-amber-300 px-2 py-1">
+                    <DropIcon />
+                    <span>WATER-COMMERCE</span>
+                  </div>
+                }
+              />
               <TooltipContent>Logo.tsx</TooltipContent>
             </Tooltip>
 
             <div className="flex gap-4">
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex flex-1 items-center justify-center border bg-amber-50">
-                    <BeerBottleIcon className="size-1/2 text-amber-900" />
-                  </div>
-                </TooltipTrigger>
+                <TooltipTrigger
+                  render={
+                    <div className="flex flex-1 items-center justify-center border bg-amber-50">
+                      <BeerBottleIcon className="size-1/2 text-amber-900" />
+                    </div>
+                  }
+                />
                 <TooltipContent side="left">ProductImage.tsx</TooltipContent>
               </Tooltip>
               <div className="flex-1">
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <p>Bottle of water</p>
-                  </TooltipTrigger>
+                  <TooltipTrigger render={<p>Bottle of water</p>} />
                   <TooltipContent>ProductName.tsx</TooltipContent>
                 </Tooltip>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <p className="text-muted-foreground w-fit">$2</p>
-                  </TooltipTrigger>
+                  <TooltipTrigger
+                    render={<p className="text-muted-foreground w-fit">$2</p>}
+                  />
                   <TooltipContent side="right">ProductPrice.tsx</TooltipContent>
                 </Tooltip>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button className="mt-6" onClick={handleAddToCart}>
-                      Add to cart
-                    </Button>
-                  </TooltipTrigger>
+                  <TooltipTrigger
+                    render={
+                      <Button className="mt-6" onClick={handleAddToCart}>
+                        Add to cart
+                      </Button>
+                    }
+                  />
                   <TooltipContent side="right">
                     AddToCartButton.tsx
                   </TooltipContent>
                 </Tooltip>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <p className="text-muted-foreground mt-10 mb-2 hidden text-xs lg:block">
-                      100% mineral water
-                    </p>
-                  </TooltipTrigger>
+                  <TooltipTrigger
+                    render={
+                      <p className="text-muted-foreground mt-10 mb-2 hidden text-xs lg:block">
+                        100% mineral water
+                      </p>
+                    }
+                  />
                   <TooltipContent>ProductDescription.tsx</TooltipContent>
                 </Tooltip>
               </div>
@@ -97,27 +103,31 @@ export const StoreWeb = () => {
               </div>
               {numberOfBottles > 0 && (
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Item variant="outline">
-                      <p>Bottle of water</p>
-                      <ItemActions>x{numberOfBottles}</ItemActions>
-                    </Item>
-                  </TooltipTrigger>
+                  <TooltipTrigger
+                    render={
+                      <Item variant="outline">
+                        <p>Bottle of water</p>
+                        <ItemActions>x{numberOfBottles}</ItemActions>
+                      </Item>
+                    }
+                  />
                   <TooltipContent side="bottom">CartItem.tsx</TooltipContent>
                 </Tooltip>
               )}
             </div>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="secondary"
-                  onClick={handlePay}
-                  disabled={paymentState !== "idle" || numberOfBottles === 0}>
-                  {paymentState === "idle" && "Pay"}
-                  {paymentState === "pending" && <Spinner />}
-                  {paymentState === "done" && "Complete"}
-                </Button>
-              </TooltipTrigger>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant="secondary"
+                    onClick={handlePay}
+                    disabled={paymentState !== "idle" || numberOfBottles === 0}>
+                    {paymentState === "idle" && "Pay"}
+                    {paymentState === "pending" && <Spinner />}
+                    {paymentState === "done" && "Complete"}
+                  </Button>
+                }
+              />
               <TooltipContent>PayButton.tsx</TooltipContent>
             </Tooltip>
           </div>
