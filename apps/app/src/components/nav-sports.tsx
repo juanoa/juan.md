@@ -25,15 +25,17 @@ export function NavSports({
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton asChild>
-              <Link
-                to={item.to}
-                activeProps={{ "data-active": "true" }}
-                activeOptions={{ exact: item.to === "/" }}>
-                {item.icon}
-                <span>{item.title}</span>
-              </Link>
-            </SidebarMenuButton>
+            <SidebarMenuButton
+              render={
+                <Link
+                  to={item.to}
+                  activeProps={{ "data-active": "true" }}
+                  activeOptions={{ exact: item.to === "/" }}>
+                  {item.icon}
+                  <span>{item.title}</span>
+                </Link>
+              }
+            />
           </SidebarMenuItem>
         ))}
       </SidebarMenu>

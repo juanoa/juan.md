@@ -43,12 +43,12 @@ export function TodoPreferencesSheet({
           <section className="flex flex-col gap-2">
             <h3 className="text-xs font-medium">Columns</h3>
             <ToggleGroup
-              type="single"
+              multiple={false}
               variant="outline"
               size="sm"
               spacing={0}
-              value={String(preferences.columnCount)}
-              onValueChange={(value) => {
+              value={[String(preferences.columnCount)]}
+              onValueChange={([value]) => {
                 if (value) {
                   void updatePreferences({
                     columnCount: Number(
@@ -68,12 +68,12 @@ export function TodoPreferencesSheet({
           <section className="flex flex-col gap-2">
             <h3 className="text-xs font-medium">Bullets</h3>
             <ToggleGroup
-              type="single"
+              multiple={false}
               variant="outline"
               size="sm"
               spacing={0}
-              value={preferences.bulletStyle}
-              onValueChange={(value) => {
+              value={[preferences.bulletStyle]}
+              onValueChange={([value]) => {
                 if (value) {
                   void updatePreferences({
                     bulletStyle: value as TodoBulletStyle,

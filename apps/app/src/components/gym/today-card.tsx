@@ -7,7 +7,7 @@ import {
 import { Link } from "@tanstack/react-router";
 
 import { Badge } from "@juan/ui/components/ui/badge";
-import { Button } from "@juan/ui/components/ui/button";
+import { buttonVariants } from "@juan/ui/components/ui/button";
 import {
   Card,
   CardAction,
@@ -33,11 +33,12 @@ export function TodayCard() {
             Drag a session onto today, or plan a new one.
           </CardDescription>
           <CardAction>
-            <Button asChild size="sm">
-              <Link to="/gym/new" search={{ date: today }}>
-                <PlusIcon /> New session
-              </Link>
-            </Button>
+            <Link
+              to="/gym/new"
+              search={{ date: today }}
+              className={buttonVariants({ size: "sm" })}>
+              <PlusIcon /> New session
+            </Link>
           </CardAction>
         </CardHeader>
       </Card>
@@ -60,11 +61,12 @@ export function TodayCard() {
               </span>
             </CardTitle>
             <CardAction>
-              <Button asChild size="sm" variant="outline">
-                <Link to="/gym/new" search={{ date: today }}>
-                  <PlusIcon /> Add session
-                </Link>
-              </Button>
+              <Link
+                to="/gym/new"
+                search={{ date: today }}
+                className={buttonVariants({ variant: "outline", size: "sm" })}>
+                <PlusIcon /> Add session
+              </Link>
             </CardAction>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
@@ -93,25 +95,24 @@ export function TodayCard() {
                       View details
                     </Link>
                   </div>
-                  <Button asChild size="sm">
-                    <Link
-                      to="/gym/$sessionId/run"
-                      params={{ sessionId: session.id }}>
-                      {session.status === "planned" ? (
-                        <>
-                          <PlayIcon /> Start
-                        </>
-                      ) : session.status === "in_progress" ? (
-                        <>
-                          <PlayIcon /> Continue
-                        </>
-                      ) : (
-                        <>
-                          <PencilIcon /> Edit
-                        </>
-                      )}
-                    </Link>
-                  </Button>
+                  <Link
+                    to="/gym/$sessionId/run"
+                    params={{ sessionId: session.id }}
+                    className={buttonVariants({ size: "sm" })}>
+                    {session.status === "planned" ? (
+                      <>
+                        <PlayIcon /> Start
+                      </>
+                    ) : session.status === "in_progress" ? (
+                      <>
+                        <PlayIcon /> Continue
+                      </>
+                    ) : (
+                      <>
+                        <PencilIcon /> Edit
+                      </>
+                    )}
+                  </Link>
                 </div>
                 <SessionSummary exercises={session.exercises} />
               </div>

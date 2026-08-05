@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 
 import { Badge } from "@juan/ui/components/ui/badge";
-import { Button } from "@juan/ui/components/ui/button";
+import { buttonVariants } from "@juan/ui/components/ui/button";
 import {
   Card,
   CardContent,
@@ -89,16 +89,15 @@ export function ExerciseDetail({ exerciseId }: ExerciseDetailProps) {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            asChild
-            className="w-fit">
-            <Link to="/gym/exercises">
-              <ArrowLeftIcon /> Exercises
-            </Link>
-          </Button>
+          <Link
+            to="/gym/exercises"
+            className={buttonVariants({
+              variant: "ghost",
+              size: "sm",
+              className: "w-fit",
+            })}>
+            <ArrowLeftIcon /> Exercises
+          </Link>
           <div className="flex flex-col gap-1">
             <h2 className="text-lg font-medium">{exercise.name}</h2>
             <Badge variant="outline" className="w-fit">
@@ -220,14 +219,13 @@ function ExerciseSessionRow({
       </TableCell>
       <TableCell>
         <div className="flex justify-end">
-          <Button type="button" variant="ghost" size="icon-sm" asChild>
-            <Link
-              to="/gym/$sessionId"
-              params={{ sessionId: entry.sessionId }}
-              aria-label={`Open ${formatShortISODate(entry.date)}`}>
-              <ArrowRightIcon />
-            </Link>
-          </Button>
+          <Link
+            to="/gym/$sessionId"
+            params={{ sessionId: entry.sessionId }}
+            aria-label={`Open ${formatShortISODate(entry.date)}`}
+            className={buttonVariants({ variant: "ghost", size: "icon-sm" })}>
+            <ArrowRightIcon />
+          </Link>
         </div>
       </TableCell>
     </TableRow>
@@ -249,11 +247,11 @@ function ExerciseNotFound() {
   return (
     <div className="flex flex-col items-start gap-3">
       <p className="text-muted-foreground text-sm">Exercise not found.</p>
-      <Button type="button" variant="outline" size="sm" asChild>
-        <Link to="/gym/exercises">
-          <ArrowLeftIcon /> Exercises
-        </Link>
-      </Button>
+      <Link
+        to="/gym/exercises"
+        className={buttonVariants({ variant: "outline", size: "sm" })}>
+        <ArrowLeftIcon /> Exercises
+      </Link>
     </div>
   );
 }

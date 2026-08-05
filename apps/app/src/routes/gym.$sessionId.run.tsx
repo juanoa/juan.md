@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, CheckCircleIcon } from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { Button } from "@juan/ui/components/ui/button";
+import { Button, buttonVariants } from "@juan/ui/components/ui/button";
 
 import { Dashboard } from "../components/dashboard";
 import { ExerciseCard } from "../components/gym/exercise-card";
@@ -32,11 +32,15 @@ function GymSessionRunRoute() {
           <p className="text-muted-foreground text-sm">
             We could not find that session.
           </p>
-          <Button asChild variant="outline" size="sm" className="w-fit">
-            <Link to="/gym">
-              <ArrowLeftIcon /> Back to Gym
-            </Link>
-          </Button>
+          <Link
+            to="/gym"
+            className={buttonVariants({
+              variant: "outline",
+              size: "sm",
+              className: "w-fit",
+            })}>
+            <ArrowLeftIcon /> Back to Gym
+          </Link>
         </div>
       </Dashboard>
     );
@@ -55,11 +59,12 @@ function GymSessionRunRoute() {
   return (
     <Dashboard title={`Gym - ${session.subcategory} · Run`}>
       <div className="flex items-start justify-between gap-3">
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/gym/$sessionId" params={{ sessionId: session.id }}>
-            <ArrowLeftIcon /> Back
-          </Link>
-        </Button>
+        <Link
+          to="/gym/$sessionId"
+          params={{ sessionId: session.id }}
+          className={buttonVariants({ variant: "ghost", size: "sm" })}>
+          <ArrowLeftIcon /> Back
+        </Link>
         <Button size="sm" onClick={handleFinish}>
           <CheckCircleIcon />
           {finishLabel}

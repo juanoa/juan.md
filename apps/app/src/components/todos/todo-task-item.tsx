@@ -205,16 +205,18 @@ export function TodoTaskItem({
             <NotePencilIcon />
           </Button>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-xs"
-                disabled={isOptimistic}
-                aria-label="Task menu">
-                <DotsThreeVerticalIcon />
-              </Button>
-            </DropdownMenuTrigger>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  disabled={isOptimistic}
+                  aria-label="Task menu">
+                  <DotsThreeVerticalIcon />
+                </Button>
+              }
+            />
             <DropdownMenuContent align="end" className="w-44">
               <DropdownMenuLabel>Move</DropdownMenuLabel>
               <DropdownMenuGroup>

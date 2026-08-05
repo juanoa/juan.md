@@ -219,7 +219,7 @@ export function NetWorthOverview() {
           action={
             <Select
               value={effectiveSelectedAssetId}
-              onValueChange={setSelectedAssetId}>
+              onValueChange={(value) => setSelectedAssetId(value ?? "")}>
               <SelectTrigger className="h-7 w-56">
                 <SelectValue />
               </SelectTrigger>

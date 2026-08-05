@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, PencilSimpleIcon } from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { Button } from "@juan/ui/components/ui/button";
+import { buttonVariants } from "@juan/ui/components/ui/button";
 
 import { Dashboard } from "../components/dashboard";
 import { useGymContext } from "../components/gym/GymContext";
@@ -41,11 +41,15 @@ function GymEditSessionRoute() {
           <p className="text-muted-foreground text-sm">
             We could not find that session.
           </p>
-          <Button asChild variant="outline" size="sm" className="w-fit">
-            <Link to="/gym">
-              <ArrowLeftIcon /> Back to Gym
-            </Link>
-          </Button>
+          <Link
+            to="/gym"
+            className={buttonVariants({
+              variant: "outline",
+              size: "sm",
+              className: "w-fit",
+            })}>
+            <ArrowLeftIcon /> Back to Gym
+          </Link>
         </div>
       </Dashboard>
     );
@@ -55,21 +59,31 @@ function GymEditSessionRoute() {
     return (
       <Dashboard title="Gym - Plan locked">
         <div className="flex flex-col gap-4">
-          <Button asChild variant="ghost" size="sm" className="w-fit">
-            <Link to="/gym/$sessionId" params={{ sessionId: session.id }}>
-              <ArrowLeftIcon /> Back
-            </Link>
-          </Button>
+          <Link
+            to="/gym/$sessionId"
+            params={{ sessionId: session.id }}
+            className={buttonVariants({
+              variant: "ghost",
+              size: "sm",
+              className: "w-fit",
+            })}>
+            <ArrowLeftIcon /> Back
+          </Link>
           <div className="flex flex-col gap-3">
             <p className="text-muted-foreground text-sm">
               Completed sessions keep their plan locked. You can still edit the
               recorded sets.
             </p>
-            <Button asChild size="sm" variant="outline" className="w-fit">
-              <Link to="/gym/$sessionId/run" params={{ sessionId: session.id }}>
-                <PencilSimpleIcon /> Edit sets
-              </Link>
-            </Button>
+            <Link
+              to="/gym/$sessionId/run"
+              params={{ sessionId: session.id }}
+              className={buttonVariants({
+                variant: "outline",
+                size: "sm",
+                className: "w-fit",
+              })}>
+              <PencilSimpleIcon /> Edit sets
+            </Link>
           </div>
         </div>
       </Dashboard>
@@ -79,11 +93,12 @@ function GymEditSessionRoute() {
   return (
     <Dashboard title="Gym - Edit session">
       <div className="flex items-start justify-between gap-3">
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/gym/$sessionId" params={{ sessionId: session.id }}>
-            <ArrowLeftIcon /> Back
-          </Link>
-        </Button>
+        <Link
+          to="/gym/$sessionId"
+          params={{ sessionId: session.id }}
+          className={buttonVariants({ variant: "ghost", size: "sm" })}>
+          <ArrowLeftIcon /> Back
+        </Link>
       </div>
       <NewSessionForm
         initialSession={session}

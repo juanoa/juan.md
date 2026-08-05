@@ -231,6 +231,7 @@ export function NewSessionExerciseRow({
           <Select
             value={row.exerciseId}
             onValueChange={(value) => {
+              if (!value) return;
               const exercise = availableExercises.find(
                 (entry) => entry.id === value,
               );

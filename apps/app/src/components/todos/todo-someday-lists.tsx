@@ -145,11 +145,13 @@ function SomedayListColumn({
           </button>
         )}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon-sm" aria-label="List menu">
-              <DotsThreeVerticalIcon />
-            </Button>
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger
+            render={
+              <Button variant="ghost" size="icon-sm" aria-label="List menu">
+                <DotsThreeVerticalIcon />
+              </Button>
+            }
+          />
           <DropdownMenuContent align="end" className="w-40">
             <DropdownMenuItem
               disabled={index === 0}
