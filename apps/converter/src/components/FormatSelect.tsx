@@ -15,7 +15,9 @@ interface FormatSelectProps {
 
 export function FormatSelect({ options, value, onChange }: FormatSelectProps) {
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select
+      value={value}
+      onValueChange={(nextValue) => nextValue && onChange(nextValue)}>
       <SelectTrigger size="sm">
         <SelectValue />
       </SelectTrigger>

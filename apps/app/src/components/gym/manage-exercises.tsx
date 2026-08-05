@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
 } from "@juan/ui/components/ui/alert-dialog";
 import { Badge } from "@juan/ui/components/ui/badge";
-import { Button } from "@juan/ui/components/ui/button";
+import { Button, buttonVariants } from "@juan/ui/components/ui/button";
 import { Input } from "@juan/ui/components/ui/input";
 import { Label } from "@juan/ui/components/ui/label";
 import {
@@ -276,14 +276,13 @@ function ExerciseRow({
       </TableCell>
       <TableCell>
         <div className="flex justify-end gap-1">
-          <Button type="button" variant="ghost" size="icon-sm" asChild>
-            <Link
-              to="/gym/exercises/$exerciseId"
-              params={{ exerciseId: exercise.id }}
-              aria-label={`Open ${exercise.name}`}>
-              <ArrowRightIcon />
-            </Link>
-          </Button>
+          <Link
+            to="/gym/exercises/$exerciseId"
+            params={{ exerciseId: exercise.id }}
+            aria-label={`Open ${exercise.name}`}
+            className={buttonVariants({ variant: "ghost", size: "icon-sm" })}>
+            <ArrowRightIcon />
+          </Link>
           <Button
             type="button"
             variant="ghost"

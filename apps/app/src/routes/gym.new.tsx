@@ -1,7 +1,7 @@
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { Button } from "@juan/ui/components/ui/button";
+import { buttonVariants } from "@juan/ui/components/ui/button";
 
 import { Dashboard } from "../components/dashboard";
 import { NewSessionForm } from "../components/gym/new-session-form";
@@ -45,11 +45,11 @@ function GymNewSessionRoute() {
   return (
     <Dashboard title="Gym - New session">
       <div className="flex items-start justify-between gap-3">
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/gym">
-            <ArrowLeftIcon /> Back
-          </Link>
-        </Button>
+        <Link
+          to="/gym"
+          className={buttonVariants({ variant: "ghost", size: "sm" })}>
+          <ArrowLeftIcon /> Back
+        </Link>
       </div>
       <NewSessionForm
         initialDate={date}

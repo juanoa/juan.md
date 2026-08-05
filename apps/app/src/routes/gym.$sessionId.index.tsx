@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@juan/ui/components/ui/alert-dialog";
-import { Button } from "@juan/ui/components/ui/button";
+import { Button, buttonVariants } from "@juan/ui/components/ui/button";
 
 import { Dashboard } from "../components/dashboard";
 import { CompletedSessionView } from "../components/gym/completed-session-view";
@@ -50,11 +50,15 @@ function GymSessionDetailRoute() {
           <p className="text-muted-foreground text-sm">
             We could not find that session.
           </p>
-          <Button asChild variant="outline" size="sm" className="w-fit">
-            <Link to="/gym">
-              <ArrowLeftIcon /> Back to Gym
-            </Link>
-          </Button>
+          <Link
+            to="/gym"
+            className={buttonVariants({
+              variant: "outline",
+              size: "sm",
+              className: "w-fit",
+            })}>
+            <ArrowLeftIcon /> Back to Gym
+          </Link>
         </div>
       </Dashboard>
     );
@@ -74,18 +78,19 @@ function GymSessionDetailRoute() {
     return (
       <Dashboard title={`Gym - ${session.subcategory}`}>
         <div className="flex flex-wrap items-start justify-between gap-3">
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/gym">
-              <ArrowLeftIcon /> Back
-            </Link>
-          </Button>
+          <Link
+            to="/gym"
+            className={buttonVariants({ variant: "ghost", size: "sm" })}>
+            <ArrowLeftIcon /> Back
+          </Link>
           <div className="flex flex-wrap items-center justify-end gap-2">
             <DeleteSessionDialog onDelete={handleDelete} />
-            <Button asChild size="sm" variant="outline">
-              <Link to="/gym/$sessionId/run" params={{ sessionId: session.id }}>
-                <PencilSimpleIcon /> Edit sets
-              </Link>
-            </Button>
+            <Link
+              to="/gym/$sessionId/run"
+              params={{ sessionId: session.id }}
+              className={buttonVariants({ variant: "outline", size: "sm" })}>
+              <PencilSimpleIcon /> Edit sets
+            </Link>
           </div>
         </div>
         <CompletedSessionView session={session} sessions={sessions} />
@@ -103,18 +108,19 @@ function GymSessionDetailRoute() {
   return (
     <Dashboard title={`Gym - ${session.subcategory}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/gym">
-            <ArrowLeftIcon /> Back
-          </Link>
-        </Button>
+        <Link
+          to="/gym"
+          className={buttonVariants({ variant: "ghost", size: "sm" })}>
+          <ArrowLeftIcon /> Back
+        </Link>
         <div className="flex flex-wrap items-center justify-end gap-2">
           <DeleteSessionDialog onDelete={handleDelete} />
-          <Button asChild size="sm" variant="outline">
-            <Link to="/gym/$sessionId/edit" params={{ sessionId: session.id }}>
-              <PencilSimpleIcon /> Edit plan
-            </Link>
-          </Button>
+          <Link
+            to="/gym/$sessionId/edit"
+            params={{ sessionId: session.id }}
+            className={buttonVariants({ variant: "outline", size: "sm" })}>
+            <PencilSimpleIcon /> Edit plan
+          </Link>
           {isToday ? (
             <Button
               size="sm"
@@ -142,11 +148,13 @@ function GymSessionDetailRoute() {
 function DeleteSessionDialog({ onDelete }: { onDelete: () => void }) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="destructive" size="sm">
-          <TrashIcon /> Delete
-        </Button>
-      </AlertDialogTrigger>
+      <AlertDialogTrigger
+        render={
+          <Button variant="destructive" size="sm">
+            <TrashIcon /> Delete
+          </Button>
+        }
+      />
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete session?</AlertDialogTitle>

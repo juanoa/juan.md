@@ -689,7 +689,7 @@ function BookDialogForm({
           <Select
             value={draft.rating}
             onValueChange={(value) =>
-              setDraft((previous) => ({ ...previous, rating: value }))
+              setDraft((previous) => ({ ...previous, rating: value ?? "none" }))
             }>
             <SelectTrigger id="book-rating" className="w-full">
               <SelectValue />

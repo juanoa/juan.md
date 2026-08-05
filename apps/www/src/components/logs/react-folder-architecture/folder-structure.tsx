@@ -16,16 +16,18 @@ export const FolderStructure = ({ fileTree }: { fileTree: FileTreeItem[] }) => {
     if ("items" in fileItem) {
       return (
         <Collapsible key={fileItem.name}>
-          <CollapsibleTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="group hover:bg-accent hover:text-accent-foreground w-full scale-none! justify-start transition-none">
-              <CaretRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
-              <FolderIcon />
-              {fileItem.name}
-            </Button>
-          </CollapsibleTrigger>
+          <CollapsibleTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="sm"
+                className="group hover:bg-accent hover:text-accent-foreground w-full scale-none! justify-start transition-none">
+                <CaretRightIcon className="transition-transform group-aria-expanded:rotate-90" />
+                <FolderIcon />
+                {fileItem.name}
+              </Button>
+            }
+          />
           <CollapsibleContent className="style-lyra:ml-4 mt-1 ml-5">
             <div className="flex flex-col gap-1">
               {fileItem.items.map((child) => renderItem(child))}
