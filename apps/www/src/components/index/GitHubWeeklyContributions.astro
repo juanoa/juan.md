@@ -277,12 +277,12 @@ const weeklyContributions: WeeklyContribution[] = rawWeeklyContributions.map(
 );
 ---
 
-<div class="not-prose space-y-2">
+<div class="not-prose">
   <GitHubWeeklyContributionsGrid
     weeklyContributions={weeklyContributions}
     client:load
   />
-  <p class="text-muted-foreground text-center text-xs italic">
+  <p class="text-muted-foreground mt-2 text-center text-xs italic">
     GitHub contributions per week since 2022
   </p>
 </div>
