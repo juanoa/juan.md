@@ -4,12 +4,22 @@ import type {
   NetWorthAssetLiquidity,
   NetWorthSnapshot,
 } from "./types";
+import { nextMonth } from "./date";
+
+export const NET_WORTH_PROJECTION_END_YEAR = 2080;
+export const DEFAULT_ANNUAL_MARKET_GROWTH_RATE = 0.08;
 
 export interface NetWorthTimelinePoint {
   month: string;
   total: number;
   delta: number;
   deltaPercent: number;
+}
+
+export interface NetWorthProjectionPoint {
+  month: string;
+  actual?: number;
+  projected?: number;
 }
 
 export interface NetWorthTrailingChange {
@@ -96,6 +106,38 @@ export function getNetWorthTimeline(
       deltaPercent,
     };
   });
+}
+
+export function getNetWorthProjection(
+  timeline: NetWorthTimelinePoint[],
+  endYear = NET_WORTH_PROJECTION_END_YEAR,
+  annualGrowthRate = DEFAULT_ANNUAL_MARKET_GROWTH_RATE,
+): NetWorthProjectionPoint[] {
+  const latestPoint = timeline[timeline.length - 1];
+  if (!latestPoint) return [];
+
+  const projection: NetWorthProjectionPoint[] = timeline.map(
+    (point, index) => ({
+      month: point.month,
+      actual: point.total,
+      ...(index === timeline.length - 1 ? { projected: point.total } : {}),
+    }),
+  );
+  const finalMonth = `${endYear}-12-01`;
+  let month = nextMonth(latestPoint.month);
+
+  while (month <= finalMonth) {
+    const monthsElapsed =
+      getMonthOrdinal(month) - getMonthOrdinal(latestPoint.month);
+    projection.push({
+      month,
+      projected:
+        latestPoint.total * Math.pow(1 + annualGrowthRate, monthsElapsed / 12),
+    });
+    month = nextMonth(month);
+  }
+
+  return projection;
 }
 
 export function getTrailingTwelveMonthChange(

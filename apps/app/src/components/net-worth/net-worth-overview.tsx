@@ -26,6 +26,7 @@ import {
   getLatestAssetSummaries,
   getLatestSnapshot,
   getLiquidValue,
+  getNetWorthProjection,
   getNetWorthTimeline,
   getSnapshotTotal,
   getTrailingTwelveMonthChange,
@@ -42,6 +43,7 @@ import {
   NetWorthCategoryTrendChart,
   NetWorthDeltaChart,
   NetWorthMoverChart,
+  NetWorthProjectionChart,
   NetWorthTimelineChart,
 } from "./net-worth-charts";
 import {
@@ -57,6 +59,7 @@ export function NetWorthOverview() {
   const [selectedAssetId, setSelectedAssetId] = useState("");
 
   const timeline = useMemo(() => getNetWorthTimeline(snapshots), [snapshots]);
+  const projection = useMemo(() => getNetWorthProjection(timeline), [timeline]);
   const latestSnapshot = useMemo(
     () => getLatestSnapshot(snapshots),
     [snapshots],
@@ -169,6 +172,22 @@ export function NetWorthOverview() {
           )}
         </ChartCard>
 
+        <ChartCard
+          className="xl:col-span-2"
+          title="Projected net worth to 2080">
+          {projection.length > 0 ? (
+            <>
+              <p className="text-muted-foreground text-sm">
+                Actual progress with an 8% annual compound-growth projection.
+                Excludes future contributions, withdrawals, fees, and inflation.
+              </p>
+              <NetWorthProjectionChart data={projection} />
+            </>
+          ) : (
+            <EmptyChartMessage />
+          )}
+        </ChartCard>
+
         <ChartCard title="Category allocation">
           {categoryBreakdown.length > 0 ? (
             <NetWorthBreakdownChart data={categoryBreakdown} />
@@ -275,14 +294,16 @@ function Metric({
 function ChartCard({
   title,
   action,
+  className,
   children,
 }: {
   title: string;
   action?: ReactNode;
+  className?: string;
   children: ReactNode;
 }) {
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle className="flex flex-wrap items-center justify-between gap-3">
           <span>{title}</span>

@@ -20,11 +20,12 @@ import {
   type ChartConfig,
 } from "@juan/ui/components/ui/chart";
 
-import { formatCompactMonth } from "../../lib/net-worth/date";
+import { formatCompactMonth, formatMonth } from "../../lib/net-worth/date";
 import type {
   NetWorthAssetHistoryPoint,
   NetWorthBreakdownPoint,
   NetWorthCategoryTrendPoint,
+  NetWorthProjectionPoint,
   NetWorthTimelinePoint,
 } from "../../lib/net-worth/stats";
 import type { NetWorthAssetCategory } from "../../lib/net-worth/types";
@@ -174,6 +175,75 @@ export function NetWorthTimelineChart({
           stroke="var(--color-total)"
           strokeWidth={2}
           dot={!compact}
+          isAnimationActive={false}
+        />
+      </LineChart>
+    </ChartContainer>
+  );
+}
+
+export function NetWorthProjectionChart({
+  data,
+}: {
+  data: NetWorthProjectionPoint[];
+}) {
+  const config = {
+    actual: {
+      label: "Actual net worth",
+      color: "var(--primary)",
+    },
+    projected: {
+      label: "Projected net worth",
+      color: "#f59e0b",
+    },
+  } satisfies ChartConfig;
+
+  return (
+    <ChartContainer config={config} className="aspect-auto h-80 w-full">
+      <LineChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
+        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+        <XAxis
+          dataKey="month"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={6}
+          minTickGap={40}
+          tickFormatter={formatCompactMonth}
+        />
+        <YAxis
+          tickLine={false}
+          axisLine={false}
+          tickMargin={4}
+          width={56}
+          tickFormatter={compactCurrencyFormatter}
+        />
+        <ChartTooltip
+          content={
+            <ChartTooltipContent
+              labelFormatter={(value) =>
+                typeof value === "string" ? formatMonth(value) : value
+              }
+              formatter={labeledCurrencyFormatter}
+            />
+          }
+        />
+        <Line
+          type="monotone"
+          dataKey="actual"
+          name="Actual net worth"
+          stroke="var(--color-actual)"
+          strokeWidth={2}
+          dot={false}
+          isAnimationActive={false}
+        />
+        <Line
+          type="monotone"
+          dataKey="projected"
+          name="Projected net worth"
+          stroke="var(--color-projected)"
+          strokeWidth={2}
+          strokeDasharray="6 4"
+          dot={false}
           isAnimationActive={false}
         />
       </LineChart>
