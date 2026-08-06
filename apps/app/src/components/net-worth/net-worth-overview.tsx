@@ -174,7 +174,7 @@ export function NetWorthOverview() {
 
         <ChartCard
           className="xl:col-span-2"
-          title="Projected net worth to 2060 (8% annual)">
+          title="Projected net worth to 2060 (8% annual + 1,000€/month)">
           {projection.length > 0 ? (
             <NetWorthProjectionChart data={projection} />
           ) : (
