@@ -20,6 +20,7 @@ import {
 import { formatMonth } from "../../lib/net-worth/date";
 import {
   getAssetHistory,
+  getAverageAnnualGrowthRate,
   getBreakdownByCategory,
   getBreakdownByLiquidity,
   getCategoryTrend,
@@ -59,7 +60,17 @@ export function NetWorthOverview() {
   const [selectedAssetId, setSelectedAssetId] = useState("");
 
   const timeline = useMemo(() => getNetWorthTimeline(snapshots), [snapshots]);
-  const projection = useMemo(() => getNetWorthProjection(timeline), [timeline]);
+  const averageAnnualGrowthRate = useMemo(
+    () => getAverageAnnualGrowthRate(timeline),
+    [timeline],
+  );
+  const projection = useMemo(
+    () =>
+      averageAnnualGrowthRate === undefined
+        ? []
+        : getNetWorthProjection(timeline, averageAnnualGrowthRate),
+    [averageAnnualGrowthRate, timeline],
+  );
   const latestSnapshot = useMemo(
     () => getLatestSnapshot(snapshots),
     [snapshots],
@@ -174,11 +185,14 @@ export function NetWorthOverview() {
 
         <ChartCard
           className="xl:col-span-2"
-          title="Projected net worth to 2060 (8% annual + 1,000€/month)">
-          {projection.length > 0 ? (
-            <NetWorthProjectionChart data={projection} />
+          title="Projected net worth to 2060 (average YoY growth + €1,000/month)">
+          {averageAnnualGrowthRate !== undefined ? (
+            <NetWorthProjectionChart
+              annualGrowthRate={averageAnnualGrowthRate}
+              data={projection}
+            />
           ) : (
-            <EmptyChartMessage />
+            <ProjectionUnavailableMessage />
           )}
         </ChartCard>
 
@@ -313,6 +327,14 @@ function EmptyChartMessage() {
   return (
     <div className="text-muted-foreground flex h-48 items-center justify-center text-sm">
       No monthly values yet.
+    </div>
+  );
+}
+
+function ProjectionUnavailableMessage() {
+  return (
+    <div className="text-muted-foreground flex h-48 items-center justify-center text-sm">
+      At least 12 months of values are required for a year-over-year projection.
     </div>
   );
 }

@@ -7,7 +7,6 @@ import type {
 import { nextMonth } from "./date";
 
 export const NET_WORTH_PROJECTION_END_YEAR = 2060;
-export const DEFAULT_ANNUAL_MARKET_GROWTH_RATE = 0.08;
 export const DEFAULT_MONTHLY_CONTRIBUTION = 1_000;
 
 export interface NetWorthTimelinePoint {
@@ -109,10 +108,32 @@ export function getNetWorthTimeline(
   });
 }
 
+export function getAverageAnnualGrowthRate(
+  timeline: NetWorthTimelinePoint[],
+): number | undefined {
+  const totalsByMonth = new Map(
+    timeline.map((point) => [getMonthOrdinal(point.month), point.total]),
+  );
+  const annualGrowthRates = timeline.flatMap((point) => {
+    const previousYearTotal = totalsByMonth.get(
+      getMonthOrdinal(point.month) - 12,
+    );
+    if (previousYearTotal === undefined || previousYearTotal <= 0) return [];
+    return [point.total / previousYearTotal - 1];
+  });
+
+  if (annualGrowthRates.length === 0) return undefined;
+
+  return (
+    annualGrowthRates.reduce((total, rate) => total + rate, 0) /
+    annualGrowthRates.length
+  );
+}
+
 export function getNetWorthProjection(
   timeline: NetWorthTimelinePoint[],
+  annualGrowthRate: number,
   endYear = NET_WORTH_PROJECTION_END_YEAR,
-  annualGrowthRate = DEFAULT_ANNUAL_MARKET_GROWTH_RATE,
   monthlyContribution = DEFAULT_MONTHLY_CONTRIBUTION,
 ): NetWorthProjectionPoint[] {
   const latestPoint = timeline[timeline.length - 1];

@@ -33,6 +33,7 @@ import {
   CATEGORY_NAMES,
   formatCompactCurrency,
   formatCurrency,
+  formatPercent,
 } from "./net-worth-format";
 
 export const CHART_COLORS = [
@@ -184,9 +185,14 @@ export function NetWorthTimelineChart({
 
 export function NetWorthProjectionChart({
   data,
+  annualGrowthRate,
 }: {
   data: NetWorthProjectionPoint[];
+  annualGrowthRate: number;
 }) {
+  const projectedNetWorthLabel = `Projected net worth (${formatPercent(
+    annualGrowthRate * 100,
+  )} avg. YoY + €1,000/month)`;
   const config = {
     actual: {
       label: "Actual net worth",
@@ -239,7 +245,7 @@ export function NetWorthProjectionChart({
         <Line
           type="monotone"
           dataKey="projected"
-          name="Projected net worth (8% + €1,000/month)"
+          name={projectedNetWorthLabel}
           stroke="var(--color-projected)"
           strokeWidth={2}
           strokeDasharray="6 4"
