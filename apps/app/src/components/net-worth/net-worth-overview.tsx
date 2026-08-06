@@ -174,15 +174,9 @@ export function NetWorthOverview() {
 
         <ChartCard
           className="xl:col-span-2"
-          title="Projected net worth to 2060">
+          title="Projected net worth to 2060 (8% annual)">
           {projection.length > 0 ? (
-            <>
-              <p className="text-muted-foreground text-sm">
-                Actual progress with an 8% annual compound-growth projection.
-                Excludes future contributions, withdrawals, fees, and inflation.
-              </p>
-              <NetWorthProjectionChart data={projection} />
-            </>
+            <NetWorthProjectionChart data={projection} />
           ) : (
             <EmptyChartMessage />
           )}
