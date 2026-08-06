@@ -6,7 +6,7 @@ import type {
 } from "./types";
 import { nextMonth } from "./date";
 
-export const NET_WORTH_PROJECTION_END_YEAR = 2080;
+export const NET_WORTH_PROJECTION_END_YEAR = 2060;
 export const DEFAULT_ANNUAL_MARKET_GROWTH_RATE = 0.08;
 
 export interface NetWorthTimelinePoint {

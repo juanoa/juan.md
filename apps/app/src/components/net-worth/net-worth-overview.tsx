@@ -174,7 +174,7 @@ export function NetWorthOverview() {
 
         <ChartCard
           className="xl:col-span-2"
-          title="Projected net worth to 2080">
+          title="Projected net worth to 2060">
           {projection.length > 0 ? (
             <>
               <p className="text-muted-foreground text-sm">
