@@ -4,6 +4,8 @@ interface Props {
   from?: string;
 }
 
+import { GitHubWeeklyContributionsGrid } from "./GitHubWeeklyContributionsGrid";
+
 type ContributionDay = {
   date: string;
   contributionCount: number;
@@ -273,54 +275,13 @@ const weeklyContributions: WeeklyContribution[] = rawWeeklyContributions.map(
     toneClass: getToneClass(week.total),
   }),
 );
-
-const getIsoWeekInfo = (date: Date) => {
-  const normalizedDate = startOfUtcDay(date);
-  const dayOfWeek = normalizedDate.getUTCDay() || 7;
-
-  normalizedDate.setUTCDate(normalizedDate.getUTCDate() + 4 - dayOfWeek);
-
-  const weekYear = normalizedDate.getUTCFullYear();
-  const firstDayOfYear = new Date(Date.UTC(weekYear, 0, 1));
-  const weekNumber = Math.ceil(
-    ((normalizedDate.getTime() - firstDayOfYear.getTime()) / 86_400_000 + 1) /
-      7,
-  );
-
-  return {
-    weekNumber,
-    weekYear,
-  };
-};
-
-const getWeekLabel = (start: string, end: string) => {
-  const bucketStart = new Date(`${start}T00:00:00.000Z`);
-  const bucketEnd = new Date(`${end}T00:00:00.000Z`);
-  const midpoint = addDays(
-    bucketStart,
-    Math.floor((bucketEnd.getTime() - bucketStart.getTime()) / 86_400_000 / 2),
-  );
-  const { weekNumber, weekYear } = getIsoWeekInfo(midpoint);
-
-  return `Week ${weekNumber}, ${weekYear}`;
-};
-
-const getContributionLabel = (total: number) =>
-  total === 1 ? "1 contribution" : `${total} contributions`;
 ---
 
 <div class="not-prose space-y-2">
-  <div class="grid grid-cols-30 gap-0.75 sm:grid-cols-52">
-    {
-      weeklyContributions.map((week) => (
-        <div
-          class:list={["aspect-square rounded-[2px]", week.toneClass]}
-          aria-label={`${getWeekLabel(week.start, week.end)}: ${getContributionLabel(week.total)}`}
-          title={`${getWeekLabel(week.start, week.end)}: ${getContributionLabel(week.total)}`}
-        />
-      ))
-    }
-  </div>
+  <GitHubWeeklyContributionsGrid
+    weeklyContributions={weeklyContributions}
+    client:load
+  />
   <p class="text-muted-foreground text-center text-xs italic">
     GitHub contributions per week since 2022
   </p>
