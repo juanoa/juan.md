@@ -239,7 +239,7 @@ export function NetWorthProjectionChart({
         <Line
           type="monotone"
           dataKey="projected"
-          name="Projected net worth"
+          name="Projected net worth (8% + €1,000/month)"
           stroke="var(--color-projected)"
           strokeWidth={2}
           strokeDasharray="6 4"
