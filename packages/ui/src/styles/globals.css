@@ -2,6 +2,10 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource/spectral/400.css";
+@import "@fontsource/spectral/500.css";
+@import "@fontsource/spectral/600.css";
+@import "@fontsource/spectral/700.css";
 
 @source "../**/*.{js,jsx,ts,tsx,astro}";
 
@@ -24,6 +28,15 @@
   .prose h5,
   .prose h6 {
     font-weight: 400 !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Spectral", Georgia, serif !important;
   }
 
   /* For me, buttons should have cursor: pointer */
