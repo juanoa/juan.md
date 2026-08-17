@@ -165,6 +165,10 @@ function NetWorthAssetDialogForm({
               Category <RequiredMark />
             </Label>
             <Select
+              items={NET_WORTH_ASSET_CATEGORIES.map((option) => ({
+                value: option.value,
+                label: option.name,
+              }))}
               value={category}
               onValueChange={(value) => {
                 setCategory(value as NetWorthAssetCategory);
@@ -188,6 +192,10 @@ function NetWorthAssetDialogForm({
               Liquidity <RequiredMark />
             </Label>
             <Select
+              items={NET_WORTH_ASSET_LIQUIDITY_LEVELS.map((option) => ({
+                value: option.value,
+                label: option.name,
+              }))}
               value={liquidity}
               onValueChange={(value) => {
                 setLiquidity(value as NetWorthAssetLiquidity);

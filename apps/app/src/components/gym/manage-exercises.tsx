@@ -145,6 +145,13 @@ export function ManageExercises() {
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="exercise-focus">Focus</Label>
           <Select
+            items={[
+              { value: "all", label: "All focus" },
+              ...GYM_SUBCATEGORIES.map((option) => ({
+                value: option.slug,
+                label: option.name,
+              })),
+            ]}
             value={focus}
             onValueChange={(value) => setFocus(value as FocusFilter)}>
             <SelectTrigger id="exercise-focus" className="w-full">

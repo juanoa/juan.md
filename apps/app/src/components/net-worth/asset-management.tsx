@@ -130,6 +130,13 @@ export function NetWorthAssetManagement() {
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="net-worth-category-filter">Category</Label>
           <Select
+            items={[
+              { value: "all", label: "All categories" },
+              ...NET_WORTH_ASSET_CATEGORIES.map((option) => ({
+                value: option.value,
+                label: option.name,
+              })),
+            ]}
             value={category}
             onValueChange={(value) => setCategory(value as CategoryFilter)}>
             <SelectTrigger id="net-worth-category-filter" className="w-full">
@@ -148,6 +155,11 @@ export function NetWorthAssetManagement() {
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="net-worth-status-filter">Status</Label>
           <Select
+            items={[
+              { value: "active", label: "Active" },
+              { value: "archived", label: "Archived" },
+              { value: "all", label: "All" },
+            ]}
             value={status}
             onValueChange={(value) => setStatus(value as StatusFilter)}>
             <SelectTrigger id="net-worth-status-filter" className="w-full">

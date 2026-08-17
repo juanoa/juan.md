@@ -428,6 +428,10 @@ export function NewSessionForm({
             Focus <RequiredMark />
           </Label>
           <Select
+            items={GYM_SUBCATEGORIES.map((option) => ({
+              value: option.slug,
+              label: option.name,
+            }))}
             value={subcategory}
             onValueChange={(value) => setSubcategory(value as GymSubcategory)}>
             <SelectTrigger id="session-subcategory" className="w-full">

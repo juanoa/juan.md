@@ -77,6 +77,10 @@ export function TodoRecurringSheet({
               placeholder="To-do"
             />
             <Select
+              items={FREQUENCIES.map((entry) => ({
+                value: entry,
+                label: TODO_FREQUENCY_LABELS[entry],
+              }))}
               value={frequency}
               onValueChange={(value) => setFrequency(value as TodoFrequency)}>
               <SelectTrigger className="w-full sm:w-40">
@@ -145,6 +149,10 @@ function RecurringSeriesRow({ series }: { series: TodoRecurringSeries }) {
     <div className="border-border grid gap-2 border-b p-3 last:border-b-0 sm:grid-cols-[1fr_auto_auto_auto]">
       <Input value={title} onChange={(event) => setTitle(event.target.value)} />
       <Select
+        items={FREQUENCIES.map((entry) => ({
+          value: entry,
+          label: TODO_FREQUENCY_LABELS[entry],
+        }))}
         value={frequency}
         onValueChange={(value) => setFrequency(value as TodoFrequency)}>
         <SelectTrigger className="w-full sm:w-40">

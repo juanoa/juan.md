@@ -245,6 +245,10 @@ export function NetWorthOverview() {
           title="Asset history"
           action={
             <Select
+              items={assetSummaries.map(({ asset }) => ({
+                value: asset.id,
+                label: asset.name,
+              }))}
               value={effectiveSelectedAssetId}
               onValueChange={(value) => setSelectedAssetId(value ?? "")}>
               <SelectTrigger className="h-7 w-56">

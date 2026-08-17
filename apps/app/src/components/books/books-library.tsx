@@ -196,6 +196,7 @@ export function BooksLibrary() {
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="books-status-filter">Status</Label>
           <Select
+            items={[{ value: "all", label: "All statuses" }, ...BOOK_STATUSES]}
             value={statusFilter}
             onValueChange={(value) =>
               setStatusFilter(value as BookStatus | "all")
@@ -216,6 +217,14 @@ export function BooksLibrary() {
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="books-rating-filter">Rating</Label>
           <Select
+            items={[
+              { value: "all", label: "All ratings" },
+              { value: "unrated", label: "Not rated" },
+              ...[1, 2, 3, 4, 5].map((rating) => ({
+                value: String(rating),
+                label: `${rating} ${rating === 1 ? "star" : "stars"}`,
+              })),
+            ]}
             value={ratingFilter}
             onValueChange={(value) => setRatingFilter(value as RatingFilter)}>
             <SelectTrigger id="books-rating-filter" className="w-full">
@@ -666,6 +675,7 @@ function BookDialogForm({
         </FormField>
         <FormField label="Status" htmlFor="book-status" required>
           <Select
+            items={BOOK_STATUSES}
             value={draft.status}
             onValueChange={(value) =>
               setDraft((previous) => ({
@@ -687,6 +697,13 @@ function BookDialogForm({
         </FormField>
         <FormField label="Rating" htmlFor="book-rating">
           <Select
+            items={[
+              { value: "none", label: "Not rated" },
+              ...[1, 2, 3, 4, 5].map((rating) => ({
+                value: String(rating),
+                label: `${rating}/5`,
+              })),
+            ]}
             value={draft.rating}
             onValueChange={(value) =>
               setDraft((previous) => ({ ...previous, rating: value ?? "none" }))

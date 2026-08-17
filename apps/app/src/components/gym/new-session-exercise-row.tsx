@@ -229,6 +229,10 @@ export function NewSessionExerciseRow({
         </Label>
         <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
           <Select
+            items={availableExercises.map((exercise) => ({
+              value: exercise.id,
+              label: exercise.name,
+            }))}
             value={row.exerciseId}
             onValueChange={(value) => {
               if (!value) return;

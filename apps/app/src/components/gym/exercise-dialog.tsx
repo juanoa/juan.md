@@ -168,6 +168,10 @@ function ExerciseDialogForm({
             Focus <RequiredMark />
           </Label>
           <Select
+            items={GYM_SUBCATEGORIES.map((option) => ({
+              value: option.slug,
+              label: option.name,
+            }))}
             value={subcategory}
             onValueChange={(value) => {
               setSubcategory(value as GymSubcategory);
@@ -190,6 +194,10 @@ function ExerciseDialogForm({
             Load type <RequiredMark />
           </Label>
           <Select
+            items={EXERCISE_WEIGHT_TYPES.map((option) => ({
+              value: option.value,
+              label: option.name,
+            }))}
             value={weightType}
             onValueChange={(value) => {
               setWeightType(value as ExerciseWeightType);
