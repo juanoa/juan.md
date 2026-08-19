@@ -7,7 +7,14 @@ interface Props {
 export const InditexHoverCard = ({ text }: Props) => {
   return (
     <HomePageHoverCard text={text}>
-      <video src="/inditex-video.webm" autoPlay loop muted playsInline />
+      <video
+        src="/inditex-video.webm"
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden="true"
+      />
     </HomePageHoverCard>
   );
 };

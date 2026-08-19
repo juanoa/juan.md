@@ -7,7 +7,14 @@ interface Props {
 export const MitoHoverCard = ({ text }: Props) => {
   return (
     <HomePageHoverCard text={text}>
-      <video src="/mito-video.webm" autoPlay loop muted playsInline />
+      <video
+        src="/mito-video.webm"
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden="true"
+      />
     </HomePageHoverCard>
   );
 };
