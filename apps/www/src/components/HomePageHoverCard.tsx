@@ -65,7 +65,7 @@ export const HomePageHoverCard = ({ text, children }: Props) => {
         render={
           <button
             type="button"
-            className="border-foreground/60 hover:border-foreground focus-visible:ring-ring font-inherit leading-inherit inline border-b border-dashed bg-transparent p-0 text-inherit no-underline outline-none focus-visible:ring-2 focus-visible:ring-offset-2">
+            className="decoration-foreground/60 hover:decoration-foreground focus-visible:ring-ring font-inherit leading-inherit inline bg-transparent p-0 text-inherit underline decoration-dashed underline-offset-1 outline-none focus-visible:ring-2 focus-visible:ring-offset-2">
             {text}
           </button>
         }
