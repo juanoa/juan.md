@@ -218,8 +218,8 @@ export function TodoTaskItem({
               }
             />
             <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuLabel>Move</DropdownMenuLabel>
               <DropdownMenuGroup>
+                <DropdownMenuLabel>Move</DropdownMenuLabel>
                 {nearbyDates.map((date) => (
                   <DropdownMenuItem
                     key={date.label}
