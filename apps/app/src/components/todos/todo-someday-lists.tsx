@@ -155,20 +155,20 @@ function SomedayListColumn({
           <DropdownMenuContent align="end" className="w-40">
             <DropdownMenuItem
               disabled={index === 0}
-              onSelect={() => void moveList(list.id, -1)}>
+              onClick={() => void moveList(list.id, -1)}>
               <ArrowLeftIcon />
               Move left
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled={index === listCount - 1}
-              onSelect={() => void moveList(list.id, 1)}>
+              onClick={() => void moveList(list.id, 1)}>
               <ArrowRightIcon />
               Move right
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               variant="destructive"
-              onSelect={() => {
+              onClick={() => {
                 if (window.confirm(`Delete "${list.name}"?`)) {
                   void deleteList(list.id);
                 }

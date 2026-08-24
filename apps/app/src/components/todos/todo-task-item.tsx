@@ -223,7 +223,7 @@ export function TodoTaskItem({
                 {nearbyDates.map((date) => (
                   <DropdownMenuItem
                     key={date.label}
-                    onSelect={() =>
+                    onClick={() =>
                       void moveTask(task.id, {
                         kind: "date",
                         date: date.date,
@@ -236,7 +236,7 @@ export function TodoTaskItem({
                 {lists.map((list) => (
                   <DropdownMenuItem
                     key={list.id}
-                    onSelect={() =>
+                    onClick={() =>
                       void moveTask(task.id, {
                         kind: "list",
                         listId: list.id,
@@ -250,14 +250,14 @@ export function TodoTaskItem({
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 variant="destructive"
-                onSelect={() => void deleteTask(task.id)}>
+                onClick={() => void deleteTask(task.id)}>
                 <TrashIcon />
                 Delete
               </DropdownMenuItem>
               {task.recurringSeriesId && (
                 <DropdownMenuItem
                   variant="destructive"
-                  onSelect={() => {
+                  onClick={() => {
                     if (task.recurringSeriesId) {
                       void deleteRecurringTodo(task.recurringSeriesId);
                     }
