@@ -7,7 +7,7 @@ import type {
 import { nextMonth } from "./date";
 
 export const NET_WORTH_PROJECTION_END_YEAR = 2060;
-export const DEFAULT_MONTHLY_CONTRIBUTION = 1_000;
+export const DEFAULT_MONTHLY_CONTRIBUTION = 1_500;
 
 export interface NetWorthTimelinePoint {
   month: string;

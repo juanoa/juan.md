@@ -192,7 +192,7 @@ export function NetWorthProjectionChart({
 }) {
   const projectedNetWorthLabel = `Projected net worth (${formatPercent(
     annualGrowthRate * 100,
-  )} avg. YoY + €1,000/month)`;
+  )} avg. YoY + €1,500/month)`;
   const config = {
     actual: {
       label: "Actual net worth",

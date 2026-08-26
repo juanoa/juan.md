@@ -185,7 +185,7 @@ export function NetWorthOverview() {
 
         <ChartCard
           className="xl:col-span-2"
-          title="Projected net worth to 2060 (average YoY growth + €1,000/month)">
+          title="Projected net worth to 2060 (average YoY growth + €1,500/month)">
           {averageAnnualGrowthRate !== undefined ? (
             <NetWorthProjectionChart
               annualGrowthRate={averageAnnualGrowthRate}
