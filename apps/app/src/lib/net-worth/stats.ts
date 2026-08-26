@@ -6,7 +6,7 @@ import type {
 } from "./types";
 import { nextMonth } from "./date";
 
-export const NET_WORTH_PROJECTION_END_YEAR = 2060;
+export const NET_WORTH_PROJECTION_TARGET = 1_000_000;
 export const DEFAULT_MONTHLY_CONTRIBUTION = 1_500;
 
 export interface NetWorthTimelinePoint {
@@ -133,7 +133,7 @@ export function getAverageAnnualGrowthRate(
 export function getNetWorthProjection(
   timeline: NetWorthTimelinePoint[],
   annualGrowthRate: number,
-  endYear = NET_WORTH_PROJECTION_END_YEAR,
+  targetNetWorth = NET_WORTH_PROJECTION_TARGET,
   monthlyContribution = DEFAULT_MONTHLY_CONTRIBUTION,
 ): NetWorthProjectionPoint[] {
   const latestPoint = timeline[timeline.length - 1];
@@ -146,14 +146,22 @@ export function getNetWorthProjection(
       ...(index === timeline.length - 1 ? { projected: point.total } : {}),
     }),
   );
-  const finalMonth = `${endYear}-12-01`;
   const monthlyGrowthRate = Math.pow(1 + annualGrowthRate, 1 / 12) - 1;
+  const monthlyGrowthFactor = 1 + monthlyGrowthRate;
   let projectedValue = latestPoint.total;
   let month = nextMonth(latestPoint.month);
 
-  while (month <= finalMonth) {
+  const targetIsReachable =
+    Number.isFinite(monthlyGrowthFactor) &&
+    (monthlyGrowthFactor >= 1
+      ? monthlyContribution > 0 || projectedValue > 0
+      : monthlyContribution > 0 &&
+        monthlyContribution / (1 - monthlyGrowthFactor) > targetNetWorth);
+  if (!targetIsReachable) return projection;
+
+  while (projectedValue < targetNetWorth) {
     projectedValue =
-      projectedValue * (1 + monthlyGrowthRate) + monthlyContribution;
+      projectedValue * monthlyGrowthFactor + monthlyContribution;
     projection.push({
       month,
       projected: projectedValue,
