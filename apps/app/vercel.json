@@ -1,4 +1,0 @@
-{
-  "ignoreCommand": "npx turbo-ignore app",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
-}
