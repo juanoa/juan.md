@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist-mono";
+@import "@fontsource-variable/jetbrains-mono";
 
 @source "../**/*.{js,jsx,ts,tsx,astro}";
 
@@ -109,7 +109,7 @@
 }
 
 @theme inline {
-  --font-sans: "Geist Mono Variable", monospace;
+  --font-sans: "JetBrains Mono Variable", monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
