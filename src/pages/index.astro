@@ -17,8 +17,8 @@ import GitHubWeeklyContributions from "@/components/index/GitHubWeeklyContributi
 const pageTitle = "Juan Otálora";
 ---
 
-<BaseLayout pageTitle={pageTitle} isHomePage={true}>
-  <article class="prose prose-sm dark:prose-invert">
+<BaseLayout pageTitle={pageTitle}>
+  <article class="prose dark:prose-invert">
     <section>
       <h2>Work</h2>
       <p>
@@ -49,7 +49,7 @@ const pageTitle = "Juan Otálora";
             <ItemMedia variant="image">
               <OnePointZeroOneLogo />
             </ItemMedia>
-            <ItemContent>
+            <ItemContent className="gap-0">
               <ItemTitle>1.01^n</ItemTitle>
               <ItemDescription>
                 An almanack of evergreen content for SWE
@@ -64,7 +64,7 @@ const pageTitle = "Juan Otálora";
             <ItemMedia variant="image">
               <CollocationsLogo />
             </ItemMedia>
-            <ItemContent>
+            <ItemContent className="gap-0">
               <ItemTitle>Collocations</ItemTitle>
               <ItemDescription>
                 A search engine for English collocations
@@ -80,10 +80,8 @@ const pageTitle = "Juan Otálora";
       <LogList />
     </section>
 
-    <section class="mt-10">
-      <hr />
-
-      <p>
+    <section class="mt-20">
+      <p class="*:no-underline">
         <a href="https://x.com/juanoa_">X</a> / <a
           href="https://linkedin.com/in/juanoa">LinkedIn</a
         > / <a href="https://github.com/juanoa">GitHub</a>

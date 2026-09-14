@@ -29,14 +29,14 @@ const logs = (
 });
 ---
 
-<ul class="not-prose mt-6 space-y-4">
+<ul class="not-prose mt-6 space-y-3">
   {
     logs.map((log) => (
       <li>
         <a href={`/${log.id}`} class="group block">
-          <div class="flex flex-col gap-1 text-sm sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline sm:gap-x-2">
+          <div class="flex flex-col gap-1 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline sm:gap-x-2">
             <div class="flex min-w-0 items-baseline gap-1">
-              <span class="min-w-0 truncate font-medium hover:underline">
+              <span class="group-hover:text-foreground min-w-0 truncate">
                 {log.data.title}
               </span>
               <span
@@ -47,7 +47,7 @@ const logs = (
             <time
               datetime={log.data.createdAt.toISOString().split("T")[0]}
               data-log-date
-              class="text-muted-foreground group-hover:text-foreground shrink-0 text-xs font-normal transition-all sm:text-sm">
+              class="text-muted-foreground group-hover:text-foreground shrink-0 font-mono font-normal transition-all sm:text-sm">
               {formatLogDate(log.data.createdAt)}
             </time>
           </div>
