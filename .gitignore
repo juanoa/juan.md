@@ -1,11 +1,10 @@
-# turbo
-.turbo/
-
 # dependencies
 node_modules/
-**/node_modules/
 .pnpm-store/
-**/dist/
+
+# build output
+dist/
+.astro/
 
 # logs
 npm-debug.log*

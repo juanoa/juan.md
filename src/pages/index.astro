@@ -1,0 +1,93 @@
+---
+import {
+  ItemDescription,
+  ItemContent,
+  ItemTitle,
+  Item,
+  ItemMedia,
+} from "@/components/ui/item";
+import LogList from "@/components/logs/LogList.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { CollocationsLogo } from "@/components/projects/CollocationsLogo";
+import { OnePointZeroOneLogo } from "@/components/projects/OnePointZeroOneLogo";
+import { MitoHoverCard } from "@/components/index/hover-cards/MitoHoverCard";
+import { InditexHoverCard } from "@/components/index/hover-cards/InditexHoverCard";
+import GitHubWeeklyContributions from "@/components/index/GitHubWeeklyContributions.astro";
+
+const pageTitle = "Juan Otálora";
+---
+
+<BaseLayout pageTitle={pageTitle} isHomePage={true}>
+  <article class="prose prose-sm dark:prose-invert">
+    <section>
+      <h2>Work</h2>
+      <p>
+        I work on the engineering team at <MitoHoverCard
+          text="MITO"
+          client:load
+        />. I was one of the company's first engineers. I like to craft
+        interfaces and make them easy to use.
+      </p>
+      <p>
+        I previously worked at <InditexHoverCard text="Inditex" client:load /> (zara.com).
+      </p>
+      <h2>About</h2>
+      <p>
+        I’ve always liked technology. I got my first computer when I was 5. It
+        had no internet connection. I just messed around changing the settings.
+      </p>
+      <p>I started programming at 15.</p>
+      <GitHubWeeklyContributions />
+      <p>I like working with people who believe in what they do.</p>
+    </section>
+
+    <section>
+      <h2>Projects</h2>
+      <div class="not-prose mt-6">
+        <a href="https://www.onepointzeroone.dev/">
+          <Item variant="outline">
+            <ItemMedia variant="image">
+              <OnePointZeroOneLogo />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>1.01^n</ItemTitle>
+              <ItemDescription>
+                An almanack of evergreen content for SWE
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </a>
+      </div>
+      <div class="not-prose mt-3">
+        <a href="https://collocations.juan.md">
+          <Item variant="outline">
+            <ItemMedia variant="image">
+              <CollocationsLogo />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>Collocations</ItemTitle>
+              <ItemDescription>
+                A search engine for English collocations
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </a>
+      </div>
+    </section>
+
+    <section class="mt-10">
+      <h2>Logs</h2>
+      <LogList />
+    </section>
+
+    <section class="mt-10">
+      <hr />
+
+      <p>
+        <a href="https://x.com/juanoa_">X</a> / <a
+          href="https://linkedin.com/in/juanoa">LinkedIn</a
+        > / <a href="https://github.com/juanoa">GitHub</a>
+      </p>
+    </section>
+  </article>
+</BaseLayout>

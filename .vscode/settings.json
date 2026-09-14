@@ -1,5 +1,4 @@
 {
-  "deno.enablePaths": ["apps/collocations/supabase/functions"],
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.requireConfig": true,
