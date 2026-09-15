@@ -1,0 +1,56 @@
+---
+import {
+  ItemDescription,
+  ItemContent,
+  ItemTitle,
+  Item,
+  ItemMedia,
+} from "@/components/ui/item";
+import LogList from "@/components/logs/LogList.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { CollocationsLogo } from "@/components/projects/CollocationsLogo";
+import { OnePointZeroOneLogo } from "@/components/projects/OnePointZeroOneLogo";
+import { MitoHoverCard } from "@/components/index/hover-cards/MitoHoverCard";
+import { InditexHoverCard } from "@/components/index/hover-cards/InditexHoverCard";
+import GitHubWeeklyContributions from "@/components/index/GitHubWeeklyContributions.astro";
+
+const pageTitle = "Trips";
+---
+
+<BaseLayout pageTitle={pageTitle}>
+  <h1 class="text-2xl">Trips</h1>
+  <div class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
+    <div
+      class="relative aspect-square rounded-sm bg-neutral-800 bg-[url(/trips/brazil/brazil-thumbnail.webp)] bg-cover bg-center">
+      <div
+        class="absolute bottom-2 left-2 flex flex-col gap-1 rounded-lg p-2 text-neutral-50">
+        <h2 class="text-lg leading-none font-medium">Brazil</h2>
+        <span class="text-sm leading-none">2026</span>
+      </div>
+    </div>
+    <div
+      class="relative aspect-square rounded-sm bg-neutral-800 bg-[url(/trips/agadir/agadir-thumbnail.webp)] bg-cover bg-center">
+      <div
+        class="absolute bottom-2 left-2 flex flex-col gap-1 rounded-lg p-2 text-neutral-50">
+        <h2 class="text-lg leading-none font-medium">Agadir</h2>
+        <span class="text-sm leading-none">2025</span>
+      </div>
+    </div>
+    <div
+      class="relative aspect-square rounded-sm bg-neutral-800 bg-[url(/trips/senegal/senegal-thumbnail.webp)] bg-cover bg-center">
+      <div
+        class="absolute bottom-2 left-2 flex flex-col gap-1 rounded-lg p-2 text-neutral-50">
+        <h2 class="text-lg leading-none font-medium">Senegal</h2>
+        <span class="text-sm leading-none">2025</span>
+      </div>
+    </div>
+    <div
+      class="relative aspect-square rounded-sm bg-neutral-800 bg-[url(/trips/japan/japan-thumbnail.webp)] bg-cover bg-center">
+      <div
+        class="dark absolute bottom-2 left-2 flex flex-col gap-1 rounded-lg p-2 text-neutral-50">
+        <h2 class="text-lg leading-none font-medium">Japan</h2>
+        <span class="text-sm leading-none">2024</span>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -33,6 +33,10 @@
     font-weight: 400 !important;
   }
 
+  .prose a {
+    font-weight: 400 !important;
+  }
+
   /* For me, buttons should have cursor: pointer */
   button:not([disabled]),
   [role="button"]:not([disabled]) {
