@@ -10,6 +10,13 @@ import { fileURLToPath } from "node:url";
 // https://astro.build/config
 export default defineConfig({
   site: "https://juan.md",
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "viewport",
+  },
+  experimental: {
+    clientPrerender: true,
+  },
   adapter: vercel({
     imageService: true,
     imagesConfig: {
