@@ -1,0 +1,406 @@
+---
+const places = [
+  {
+    id: "brazil",
+    name: "Brazil",
+    location: [-23.55, -46.63],
+    size: 0.05,
+  },
+  {
+    id: "agadir",
+    name: "Agadir",
+    location: [30.43, -9.6],
+    size: 0.04,
+  },
+  {
+    id: "senegal",
+    name: "Senegal",
+    location: [14.72, -17.47],
+    size: 0.04,
+  },
+  {
+    id: "japan",
+    name: "Japan",
+    location: [35.68, 139.65],
+    size: 0.045,
+  },
+] as const;
+
+const labelOffsets: Record<string, string> = {
+  agadir: "0.5rem 0.85rem",
+};
+---
+
+<section aria-label="Visited destinations">
+  <div
+    class="relative aspect-square w-full"
+    data-hub-latitude="40.42"
+    data-hub-longitude="-3.7"
+    data-trips-globe-container>
+    <canvas
+      class="block size-full cursor-grab touch-none select-none"
+      data-trips-globe
+      role="img"
+      aria-label="Interactive globe connecting Brazil, Agadir, Senegal, and Japan to Madrid. Drag to rotate."
+    ></canvas>
+    {
+      places.map((place) => (
+        <span
+          class="marker-label"
+          data-globe-marker
+          data-id={place.id}
+          data-latitude={place.location[0]}
+          data-longitude={place.location[1]}
+          data-size={place.size}
+          style={`position-anchor: --cobe-${place.id}; opacity: var(--cobe-visible-${place.id}, 0); translate: ${labelOffsets[place.id] ?? "-50% -0.45rem"};`}>
+          {place.name}
+        </span>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .marker-label {
+    position: absolute;
+    z-index: 1;
+    bottom: anchor(top);
+    left: anchor(center);
+    translate: -50% -0.45rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--background);
+    box-shadow: 0 1px 2px oklch(0 0 0 / 6%);
+    color: var(--foreground);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1;
+    padding: 0.3rem 0.45rem;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity 180ms ease;
+  }
+
+  [data-trips-globe][data-dragging] {
+    cursor: grabbing;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marker-label {
+      transition-duration: 0ms;
+    }
+  }
+</style>
+
+<script>
+  import createGlobe, { type Arc, type COBEOptions, type Marker } from "cobe";
+
+  const canvas =
+    document.querySelector<HTMLCanvasElement>("[data-trips-globe]");
+  const container = document.querySelector<HTMLElement>(
+    "[data-trips-globe-container]",
+  );
+
+  if (canvas && container && !canvas.dataset.initialized) {
+    canvas.dataset.initialized = "true";
+
+    const reducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+    const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const markerElements = Array.from(
+      container.querySelectorAll<HTMLElement>("[data-globe-marker]"),
+    );
+    const markers: Marker[] = markerElements.map((element) => ({
+      id: element.dataset.id,
+      location: [
+        Number(element.dataset.latitude),
+        Number(element.dataset.longitude),
+      ],
+      size: Number(element.dataset.size),
+    }));
+    const madridLocation: Arc["to"] = [
+      Number(container.dataset.hubLatitude),
+      Number(container.dataset.hubLongitude),
+    ];
+    const arcs: Arc[] = markers.map((marker) => ({
+      from: marker.location,
+      to: madridLocation,
+    }));
+
+    const AUTO_ROTATION_SPEED = 0.00012;
+    const DRAG_SENSITIVITY = 1 / 220;
+    const TILT_SENSITIVITY = 1 / 320;
+    const MIN_THETA = -0.45;
+    const MAX_THETA = 0.45;
+    const FRAME_DURATION = 1000 / 60;
+    const INERTIA_DECAY = 0.92;
+    const MIN_INERTIA_VELOCITY = 0.00002;
+
+    let globe: ReturnType<typeof createGlobe> | undefined;
+    let animationFrame: number | undefined;
+    let phi = -0.35;
+    let theta = 0.18;
+    let isVisible = false;
+    let isDestroyed = false;
+    let activePointerId: number | undefined;
+    let previousPointerX = 0;
+    let previousPointerY = 0;
+    let previousPointerTime = 0;
+    let phiVelocity = 0;
+    let thetaVelocity = 0;
+    let hasInertia = false;
+    let lastAnimationTime: number | undefined;
+    let resumeRotationAt = 0;
+
+    const clamp = (value: number, min: number, max: number) =>
+      Math.min(Math.max(value, min), max);
+
+    const getPalette = (): Pick<
+      COBEOptions,
+      "arcColor" | "baseColor" | "dark" | "glowColor" | "markerColor"
+    > => {
+      if (darkModeQuery.matches) {
+        return {
+          arcColor: [0.68, 0.68, 0.7],
+          baseColor: [0.2, 0.2, 0.21],
+          dark: 1,
+          glowColor: [0.08, 0.08, 0.08],
+          markerColor: [0.92, 0.92, 0.92],
+        };
+      }
+
+      return {
+        arcColor: [0.28, 0.28, 0.3],
+        baseColor: [0.93, 0.93, 0.94],
+        dark: 0,
+        glowColor: [1, 1, 1],
+        markerColor: [0.12, 0.12, 0.13],
+      };
+    };
+
+    const stopAnimation = () => {
+      if (animationFrame !== undefined) {
+        window.cancelAnimationFrame(animationFrame);
+        animationFrame = undefined;
+      }
+
+      lastAnimationTime = undefined;
+    };
+
+    const animate = (timestamp: number) => {
+      animationFrame = undefined;
+
+      if (
+        !globe ||
+        isDestroyed ||
+        !isVisible ||
+        document.hidden ||
+        reducedMotionQuery.matches ||
+        activePointerId !== undefined
+      ) {
+        return;
+      }
+
+      const elapsed = Math.min(
+        lastAnimationTime === undefined
+          ? FRAME_DURATION
+          : timestamp - lastAnimationTime,
+        FRAME_DURATION * 2,
+      );
+      lastAnimationTime = timestamp;
+
+      if (hasInertia) {
+        phi += phiVelocity * elapsed;
+        theta = clamp(theta + thetaVelocity * elapsed, MIN_THETA, MAX_THETA);
+
+        const decay = Math.pow(INERTIA_DECAY, elapsed / FRAME_DURATION);
+        phiVelocity *= decay;
+        thetaVelocity *= decay;
+
+        if (
+          Math.abs(phiVelocity) + Math.abs(thetaVelocity) <
+          MIN_INERTIA_VELOCITY
+        ) {
+          hasInertia = false;
+          resumeRotationAt = timestamp + 500;
+        }
+      } else if (timestamp >= resumeRotationAt) {
+        phi += AUTO_ROTATION_SPEED * elapsed;
+      }
+
+      globe.update({ phi, theta });
+      animationFrame = window.requestAnimationFrame(animate);
+    };
+
+    const syncAnimation = () => {
+      stopAnimation();
+
+      if (
+        globe &&
+        isVisible &&
+        !document.hidden &&
+        !reducedMotionQuery.matches &&
+        activePointerId === undefined
+      ) {
+        animationFrame = window.requestAnimationFrame(animate);
+      } else {
+        globe?.update({ phi, theta });
+      }
+    };
+
+    const resizeGlobe = () => {
+      if (!globe) return;
+
+      const size = Math.round(container.getBoundingClientRect().width);
+      globe.update({ height: size, width: size });
+    };
+
+    const resizeObserver = new ResizeObserver(resizeGlobe);
+    const themeObserver = new MutationObserver(() => {
+      globe?.update(getPalette());
+    });
+
+    const initializeGlobe = () => {
+      if (globe || isDestroyed) return;
+
+      const size = Math.round(container.getBoundingClientRect().width);
+      globe = createGlobe(canvas, {
+        ...getPalette(),
+        arcHeight: 0.22,
+        arcs,
+        arcWidth: 0.45,
+        devicePixelRatio: Math.min(window.devicePixelRatio, 2),
+        diffuse: 1.1,
+        height: size,
+        mapBrightness: 5.5,
+        mapSamples: 16_000,
+        markerElevation: 0.02,
+        markers,
+        phi,
+        scale: 0.95,
+        theta,
+        width: size,
+      });
+
+      resizeObserver.observe(container);
+      themeObserver.observe(document.documentElement, {
+        attributeFilter: ["class"],
+        attributes: true,
+      });
+
+      // The map texture loads asynchronously. These static updates ensure it is
+      // painted even when reduced motion keeps the globe from rotating.
+      window.requestAnimationFrame(() => {
+        if (!isDestroyed) globe?.update({ phi, theta });
+      });
+      window.setTimeout(() => {
+        if (!isDestroyed) globe?.update({ phi, theta });
+      }, 100);
+      syncAnimation();
+    };
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (
+        !globe ||
+        activePointerId !== undefined ||
+        (event.pointerType === "mouse" && event.button !== 0)
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      activePointerId = event.pointerId;
+      previousPointerX = event.clientX;
+      previousPointerY = event.clientY;
+      previousPointerTime = event.timeStamp;
+      phiVelocity = 0;
+      thetaVelocity = 0;
+      hasInertia = false;
+      canvas.dataset.dragging = "true";
+      canvas.setPointerCapture(event.pointerId);
+      stopAnimation();
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!globe || event.pointerId !== activePointerId) return;
+
+      const elapsed = Math.max(event.timeStamp - previousPointerTime, 1);
+      const deltaPhi = (event.clientX - previousPointerX) * DRAG_SENSITIVITY;
+      const deltaTheta = (event.clientY - previousPointerY) * TILT_SENSITIVITY;
+
+      phi += deltaPhi;
+      theta = clamp(theta + deltaTheta, MIN_THETA, MAX_THETA);
+      phiVelocity = phiVelocity * 0.6 + (deltaPhi / elapsed) * 0.4;
+      thetaVelocity = thetaVelocity * 0.6 + (deltaTheta / elapsed) * 0.4;
+      previousPointerX = event.clientX;
+      previousPointerY = event.clientY;
+      previousPointerTime = event.timeStamp;
+      globe.update({ phi, theta });
+    };
+
+    const finishDrag = (event: PointerEvent, allowInertia: boolean) => {
+      if (event.pointerId !== activePointerId) return;
+
+      if (canvas.hasPointerCapture(event.pointerId)) {
+        canvas.releasePointerCapture(event.pointerId);
+      }
+
+      activePointerId = undefined;
+      delete canvas.dataset.dragging;
+      hasInertia =
+        allowInertia &&
+        !reducedMotionQuery.matches &&
+        Math.abs(phiVelocity) + Math.abs(thetaVelocity) >= MIN_INERTIA_VELOCITY;
+      resumeRotationAt = performance.now() + (hasInertia ? 0 : 600);
+      syncAnimation();
+    };
+
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+
+        if (isVisible) initializeGlobe();
+        syncAnimation();
+      },
+      { rootMargin: "200px" },
+    );
+
+    const handleVisibilityChange = () => syncAnimation();
+    const handleMotionChange = () => {
+      hasInertia = false;
+      syncAnimation();
+    };
+    const handleThemeChange = () => globe?.update(getPalette());
+
+    const handlePointerUp = (event: PointerEvent) => finishDrag(event, true);
+    const handlePointerCancel = (event: PointerEvent) =>
+      finishDrag(event, false);
+
+    const cleanup = () => {
+      isDestroyed = true;
+      stopAnimation();
+      visibilityObserver.disconnect();
+      resizeObserver.disconnect();
+      themeObserver.disconnect();
+      reducedMotionQuery.removeEventListener("change", handleMotionChange);
+      darkModeQuery.removeEventListener("change", handleThemeChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      canvas.removeEventListener("pointerdown", handlePointerDown);
+      canvas.removeEventListener("pointermove", handlePointerMove);
+      canvas.removeEventListener("pointerup", handlePointerUp);
+      canvas.removeEventListener("pointercancel", handlePointerCancel);
+      globe?.destroy();
+    };
+
+    visibilityObserver.observe(container);
+    reducedMotionQuery.addEventListener("change", handleMotionChange);
+    darkModeQuery.addEventListener("change", handleThemeChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    canvas.addEventListener("pointerdown", handlePointerDown);
+    canvas.addEventListener("pointermove", handlePointerMove);
+    canvas.addEventListener("pointerup", handlePointerUp);
+    canvas.addEventListener("pointercancel", handlePointerCancel);
+    window.addEventListener("pagehide", cleanup, { once: true });
+  }
+</script>
