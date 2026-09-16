@@ -1,6 +1,40 @@
 import type { ReactNode } from "react";
 
+import { TripCard } from "@/components/trips/TripCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const trips = [
+  {
+    name: "Brazil",
+    thumbnail: "/trips/brazil/brazil-thumbnail.webp",
+    year: 2026,
+  },
+  {
+    name: "Morocco",
+    thumbnail: "/trips/morocco/morocco-thumbnail.webp",
+    year: 2025,
+  },
+  {
+    name: "Senegal",
+    thumbnail: "/trips/senegal/senegal-thumbnail.webp",
+    year: 2025,
+  },
+  {
+    name: "Japan",
+    thumbnail: "/trips/japan/japan-thumbnail.webp",
+    year: 2024,
+  },
+  {
+    name: "Dolomites",
+    thumbnail: "/trips/dolomites/dolomites-thumbnail.webp",
+    year: 2023,
+  },
+  {
+    name: "Iceland",
+    thumbnail: "/trips/iceland/iceland-thumbnail.webp",
+    year: 2023,
+  },
+] as const;
 
 interface TripsTabsProps {
   children: ReactNode;
@@ -19,30 +53,9 @@ export function TripsTabs({ children }: TripsTabsProps) {
 
       <TabsContent value="gallery" className="mt-5">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-          <div className="relative aspect-square rounded-sm bg-neutral-800 bg-[url(/trips/brazil/brazil-thumbnail.webp)] bg-cover bg-center">
-            <div className="absolute bottom-2 left-2 flex flex-col gap-1 rounded-lg p-2 text-neutral-50">
-              <h2 className="text-lg leading-none font-medium">Brazil</h2>
-              <span className="text-sm leading-none">2026</span>
-            </div>
-          </div>
-          <div className="relative aspect-square rounded-sm bg-neutral-800 bg-[url(/trips/agadir/agadir-thumbnail.webp)] bg-cover bg-center">
-            <div className="absolute bottom-2 left-2 flex flex-col gap-1 rounded-lg p-2 text-neutral-50">
-              <h2 className="text-lg leading-none font-medium">Agadir</h2>
-              <span className="text-sm leading-none">2025</span>
-            </div>
-          </div>
-          <div className="relative aspect-square rounded-sm bg-neutral-800 bg-[url(/trips/senegal/senegal-thumbnail.webp)] bg-cover bg-center">
-            <div className="absolute bottom-2 left-2 flex flex-col gap-1 rounded-lg p-2 text-neutral-50">
-              <h2 className="text-lg leading-none font-medium">Senegal</h2>
-              <span className="text-sm leading-none">2025</span>
-            </div>
-          </div>
-          <div className="relative aspect-square rounded-sm bg-neutral-800 bg-[url(/trips/japan/japan-thumbnail.webp)] bg-cover bg-center">
-            <div className="dark absolute bottom-2 left-2 flex flex-col gap-1 rounded-lg p-2 text-neutral-50">
-              <h2 className="text-lg leading-none font-medium">Japan</h2>
-              <span className="text-sm leading-none">2024</span>
-            </div>
-          </div>
+          {trips.map((trip) => (
+            <TripCard key={trip.name} {...trip} />
+          ))}
         </div>
       </TabsContent>
 

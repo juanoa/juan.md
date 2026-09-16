@@ -7,8 +7,8 @@ const places = [
     size: 0.05,
   },
   {
-    id: "agadir",
-    name: "Agadir",
+    id: "morocco",
+    name: "Morocco",
     location: [30.43, -9.6],
     size: 0.04,
   },
@@ -24,10 +24,22 @@ const places = [
     location: [35.68, 139.65],
     size: 0.045,
   },
+  {
+    id: "dolomites",
+    name: "Dolomites",
+    location: [46.54, 11.87],
+    size: 0.04,
+  },
+  {
+    id: "iceland",
+    name: "Iceland",
+    location: [64.96, -19.02],
+    size: 0.04,
+  },
 ] as const;
 
 const labelOffsets: Record<string, string> = {
-  agadir: "0.5rem 0.85rem",
+  morocco: "0.5rem 0.85rem",
 };
 ---
 
@@ -41,7 +53,7 @@ const labelOffsets: Record<string, string> = {
       class="block size-full cursor-grab touch-none select-none"
       data-trips-globe
       role="img"
-      aria-label="Interactive globe connecting Brazil, Agadir, Senegal, and Japan to Madrid. Drag to rotate."
+      aria-label="Interactive globe connecting Brazil, Morocco, Senegal, Japan, the Dolomites, and Iceland to Madrid. Drag to rotate."
     ></canvas>
     {
       places.map((place) => (
