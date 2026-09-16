@@ -19,17 +19,22 @@ interface PointerPosition {
 const MOBILE_MEDIA_QUERY =
   "(max-width: 639px), (hover: none) and (pointer: coarse)";
 
+const isMobileViewport = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+
 export const HomePageHoverCard = ({ text, children }: Props) => {
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const isTouchTriggerRef = useRef(false);
   const [open, setOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(isMobileViewport);
   const [isTouchTrigger, setIsTouchTrigger] = useState(false);
   const [pointerPosition, setPointerPosition] = useState<PointerPosition>({
     x: 0,
     y: 0,
   });
 
-  const anchor = useMemo(
+  const pointerAnchor = useMemo(
     () => ({
       getBoundingClientRect: () => ({
         x: pointerPosition.x,
@@ -57,7 +62,9 @@ export const HomePageHoverCard = ({ text, children }: Props) => {
   }, []);
 
   const updatePointerPosition = (event: React.PointerEvent<HTMLElement>) => {
-    if (event.pointerType !== "mouse") {
+    if (event.pointerType !== "mouse" || isMobileViewport()) {
+      isTouchTriggerRef.current = true;
+      setIsTouchTrigger(true);
       return;
     }
 
@@ -66,36 +73,26 @@ export const HomePageHoverCard = ({ text, children }: Props) => {
     setPointerPosition({ x: event.clientX, y: event.clientY });
   };
 
-  const updatePositionFromTrigger = (
-    event: React.SyntheticEvent<HTMLElement>,
-  ) => {
-    const { left, top, width, height } =
-      event.currentTarget.getBoundingClientRect();
-
-    setPointerPosition({
-      x: left + width / 2,
-      y: top + height / 2,
-    });
+  const activateTriggerAnchor = () => {
+    isTouchTriggerRef.current = true;
+    setIsTouchTrigger(true);
   };
 
   const prepareTouchTrigger = (event: React.PointerEvent<HTMLElement>) => {
-    if (event.pointerType === "mouse") {
+    if (event.pointerType === "mouse" && !isMobileViewport()) {
       updatePointerPosition(event);
       return;
     }
 
-    isTouchTriggerRef.current = true;
-    setIsTouchTrigger(true);
-    updatePositionFromTrigger(event);
+    activateTriggerAnchor();
   };
 
-  const openFromTouch = (event: React.MouseEvent<HTMLElement>) => {
-    const isMobileViewport = window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+  const openFromTouch = () => {
+    const mobileViewport = isMobileViewport();
 
-    if (isMobileViewport || isTouchTriggerRef.current) {
-      setIsMobile(isMobileViewport);
-      setIsTouchTrigger(true);
-      updatePositionFromTrigger(event);
+    if (mobileViewport || isTouchTriggerRef.current) {
+      setIsMobile(mobileViewport);
+      activateTriggerAnchor();
       setOpen(true);
     }
   };
@@ -106,12 +103,13 @@ export const HomePageHoverCard = ({ text, children }: Props) => {
         delay={0}
         closeDelay={100}
         onClick={openFromTouch}
-        onFocus={updatePositionFromTrigger}
+        onFocus={activateTriggerAnchor}
         onPointerDown={prepareTouchTrigger}
         onPointerEnter={updatePointerPosition}
         onPointerMove={updatePointerPosition}
         render={
           <button
+            ref={triggerRef}
             type="button"
             className="decoration-foreground/60 hover:decoration-foreground focus-visible:ring-ring font-inherit leading-inherit inline bg-transparent p-0 text-inherit underline decoration-dashed underline-offset-2 outline-none focus-visible:ring-2 focus-visible:ring-offset-2">
             {text}
@@ -119,7 +117,7 @@ export const HomePageHoverCard = ({ text, children }: Props) => {
         }
       />
       <HoverCardContent
-        anchor={anchor}
+        anchor={isMobile || isTouchTrigger ? triggerRef : pointerAnchor}
         positionMethod="fixed"
         side="bottom"
         align={isMobile || isTouchTrigger ? "center" : "start"}
