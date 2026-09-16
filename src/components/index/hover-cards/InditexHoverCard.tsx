@@ -13,6 +13,7 @@ export const InditexHoverCard = ({ text }: Props) => {
         loop
         muted
         playsInline
+        preload="none"
         aria-hidden="true"
       />
     </HomePageHoverCard>

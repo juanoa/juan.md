@@ -38,6 +38,7 @@ export const CorunaHoverCard = ({ text }: Props) => {
         loop
         muted
         playsInline
+        preload="none"
         aria-hidden={shouldReduceMotion ? undefined : "true"}
         aria-label={shouldReduceMotion ? "A Coruña aerial map" : undefined}
         autoPlay>

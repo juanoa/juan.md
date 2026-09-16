@@ -13,6 +13,7 @@ export const MitoHoverCard = ({ text }: Props) => {
         loop
         muted
         playsInline
+        preload="none"
         aria-hidden="true"
       />
     </HomePageHoverCard>
