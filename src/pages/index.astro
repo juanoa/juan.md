@@ -12,6 +12,7 @@ import { CollocationsLogo } from "@/components/projects/CollocationsLogo";
 import { OnePointZeroOneLogo } from "@/components/projects/OnePointZeroOneLogo";
 import { MitoHoverCard } from "@/components/index/hover-cards/MitoHoverCard";
 import { InditexHoverCard } from "@/components/index/hover-cards/InditexHoverCard";
+import { CorunaHoverCard } from "@/components/index/hover-cards/CorunaHoverCard";
 import GitHubWeeklyContributions from "@/components/index/GitHubWeeklyContributions.astro";
 
 const pageTitle = "Juan Otálora";
@@ -44,8 +45,8 @@ const pageTitle = "Juan Otálora";
       <GitHubWeeklyContributions />
       <p>I like working with people who believe in what they do.</p>
       <p>
-        I'm based in A Coruña, Spain. Spending my free time climbing, surfing,
-        or running.
+        I'm based in <CorunaHoverCard text="A Coruña" client:load />, Spain.
+        Spending my free time climbing, surfing, or running.
       </p>
       <div class="not-prose flex flex-col gap-2">
         <div class="grid grid-cols-2 gap-2 sm:gap-4">
