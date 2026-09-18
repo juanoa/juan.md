@@ -101,7 +101,7 @@ const mosaics = [xerion, hercules_tower, wave, surfboard, h, depor];
 export const XerionGallery = () => {
   return (
     <div className="mx-auto w-full max-w-64">
-      <Xerion mosaics={mosaics} />
+      <Xerion mosaics={mosaics} interval={1000} />
     </div>
   );
 };
