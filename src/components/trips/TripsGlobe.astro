@@ -143,16 +143,18 @@ const labelOffsets: Record<string, string> = {
     const AUTO_ROTATION_SPEED = 0.00012;
     const DRAG_SENSITIVITY = 1 / 220;
     const TILT_SENSITIVITY = 1 / 320;
-    const MIN_THETA = -0.45;
-    const MAX_THETA = 0.45;
+    const MIN_THETA = -Math.PI / 2;
+    const MAX_THETA = Math.PI / 2;
     const FRAME_DURATION = 1000 / 60;
     const INERTIA_DECAY = 0.92;
     const MIN_INERTIA_VELOCITY = 0.00002;
+    const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180;
+    const [madridLatitude, madridLongitude] = madridLocation;
 
     let globe: ReturnType<typeof createGlobe> | undefined;
     let animationFrame: number | undefined;
-    let phi = -0.35;
-    let theta = 0.18;
+    let phi = -Math.PI / 2 - degreesToRadians(madridLongitude);
+    let theta = degreesToRadians(madridLatitude);
     let isVisible = false;
     let isDestroyed = false;
     let activePointerId: number | undefined;
