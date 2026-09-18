@@ -1,0 +1,245 @@
+---
+import { YamanoteLineSign } from "@/components/trips/japan/YamanoteLineSign";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { HeadphonesIcon } from "@phosphor-icons/react/dist/ssr";
+
+const pageTitle = "Japan";
+
+const vendingMachines = [
+  {
+    image: 1,
+    position: "left-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-12",
+    rotation: "rotate-0",
+    offset: "translate-x-[5rem]",
+    width: "w-20",
+  },
+  {
+    image: 6,
+    position:
+      "right-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-12",
+    rotation: "-rotate-[6.5deg]",
+    offset: "-translate-x-[4rem]",
+    width: "w-[4.75rem]",
+  },
+  {
+    image: 11,
+    position: "left-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-[28rem]",
+    rotation: "rotate-[4.75deg]",
+    offset: "-translate-x-[6rem]",
+    width: "w-[4.5rem]",
+  },
+  {
+    image: 16,
+    position:
+      "right-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-[28rem]",
+    rotation: "rotate-0",
+    offset: "translate-x-[3rem]",
+    width: "w-[5.25rem]",
+  },
+  {
+    image: 21,
+    position: "left-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-[53rem]",
+    rotation: "-rotate-[5.75deg]",
+    offset: "translate-x-[6rem]",
+    width: "w-20",
+  },
+  {
+    image: 26,
+    position:
+      "right-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-[53rem]",
+    rotation: "rotate-[7.25deg]",
+    offset: "-translate-x-[5rem]",
+    width: "w-[4.75rem]",
+  },
+  {
+    image: 31,
+    position: "left-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-[78rem]",
+    rotation: "rotate-0",
+    offset: "-translate-x-[4rem]",
+    width: "w-[5.125rem]",
+  },
+  {
+    image: 36,
+    position:
+      "right-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-[78rem]",
+    rotation: "-rotate-[4.5deg]",
+    offset: "translate-x-[4rem]",
+    width: "w-[4.5rem]",
+  },
+  {
+    image: 41,
+    position: "left-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-[103rem]",
+    rotation: "rotate-[6.75deg]",
+    offset: "-translate-x-[5rem]",
+    width: "w-20",
+  },
+  {
+    image: 46,
+    position:
+      "right-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-[103rem]",
+    rotation: "rotate-0",
+    offset: "translate-x-[3rem]",
+    width: "w-[5.25rem]",
+  },
+  {
+    image: 51,
+    position: "left-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-[128rem]",
+    rotation: "-rotate-[7.5deg]",
+    offset: "translate-x-[6rem]",
+    width: "w-[4.5rem]",
+  },
+  {
+    image: 56,
+    position:
+      "right-[calc(50%_-_50vw_+_max(1.5rem,_calc((100vw_-_65ch)_/_8)))]",
+    top: "top-[128rem]",
+    rotation: "rotate-[5.5deg]",
+    offset: "-translate-x-[4rem]",
+    width: "w-20",
+  },
+];
+---
+
+<BaseLayout pageTitle={pageTitle}>
+  <main class="relative min-[1280px]:min-h-[140rem]">
+    <article class="prose dark:prose-invert">
+      <h1 class="text-[24px]">Japan</h1>
+      <p>
+        Japan is one of those trips you didn't expect to do. I was tons of free
+        days at work, so I decided where to go next. The final choice was Japan,
+        not for the country, but for the flight tickets price.
+      </p>
+      <p>This is the result of 2 weeks wandering around Japan.</p>
+      <div class="not-prose mt-[1.25em]">
+        <Item size="xs" className="rounded bg-slate-50">
+          <ItemMedia>
+            <HeadphonesIcon className="mt-px size-4 text-slate-600" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle className="text-slate-700"
+              >Japan is a country full of sounds</ItemTitle
+            >
+            <ItemDescription className="ml-px line-clamp-none text-slate-500"
+              >I've designed this experience with a lot of them. Please use your
+              headphones to enjoy the full experience.</ItemDescription
+            >
+          </ItemContent>
+        </Item>
+      </div>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac tortor
+        sodales, interdum leo at, aliquet diam. Integer sagittis vulputate
+        cursus. Donec est quam, ullamcorper rhoncus mi ac, blandit tincidunt
+        ipsum. Maecenas porttitor dui vel mauris venenatis, eu elementum turpis
+        tincidunt. Nunc quis nibh et lorem placerat sagittis. Cras euismod a mi
+        sit amet convallis. Fusce vitae nunc dapibus diam finibus blandit.
+        Pellentesque tortor nisl, suscipit eu consequat vel, finibus in purus.
+        Vivamus ullamcorper pretium interdum. Ut vulputate sagittis laoreet.
+        Phasellus ultrices ac justo eget fermentum. Nullam ex enim, euismod eget
+        condimentum quis, iaculis sollicitudin odio. Fusce rutrum neque id quam
+        congue, et euismod nisl luctus. Duis placerat hendrerit venenatis.
+      </p>
+      <div class="not-prose my-10 flex justify-center">
+        <YamanoteLineSign
+          current="Ōtsuka"
+          next="Sugamo"
+          previous="Ikebukuro"
+          client:load
+        />
+      </div>
+      <p>
+        Quisque purus nibh, porttitor ornare nisi eget, lacinia viverra magna.
+        Vestibulum vitae lacus nec est consequat imperdiet. Nunc at diam eget
+        lorem consequat semper eget sed mauris. Sed vitae dolor eros.
+        Pellentesque nec dolor lorem. Vestibulum venenatis nibh id aliquam
+        consequat. Donec iaculis, elit imperdiet facilisis varius, mi lacus
+        commodo quam, ut bibendum est nisl imperdiet urna. Aliquam eget diam
+        dictum, facilisis urna sed, pretium metus. Cras vitae rutrum dolor, vel
+        sodales felis. Vivamus pharetra, sapien a iaculis maximus, magna nunc
+        interdum mauris, congue congue orci neque non lectus. Vestibulum ante
+        ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
+        Fusce pretium, libero sed vehicula tristique, nibh dui imperdiet est, ut
+        pellentesque sapien leo eget risus. Nulla vitae leo quis enim porta
+        pharetra quis et dui.
+      </p>
+      <p>
+        Nam nunc nisi, feugiat et rutrum et, posuere sed nisl. Nam commodo
+        consequat rhoncus. Mauris pretium leo quis placerat efficitur. Mauris
+        porta ipsum lacinia metus condimentum, et tincidunt dolor hendrerit.
+        Aenean imperdiet commodo quam. Mauris nibh ligula, mattis ac dolor id,
+        dictum auctor eros. Fusce congue neque dolor, vitae interdum mi mollis
+        vitae. Proin malesuada imperdiet erat non tincidunt. Nulla et mi id
+        ipsum ultricies aliquam. Proin venenatis enim dui, a facilisis tortor
+        bibendum in. In tristique massa vitae scelerisque viverra. Cras
+        vulputate nec ipsum at imperdiet. Duis sagittis velit in leo tristique,
+        vitae consectetur erat rutrum.
+      </p>
+      <p>
+        In tincidunt neque eu velit consequat, non tincidunt sem varius. Mauris
+        auctor, elit ac condimentum vehicula, velit lorem tincidunt nunc, nec
+        rhoncus dolor eros at leo. In vitae ipsum eros. Maecenas tempus erat
+        ligula, ut lobortis orci pellentesque non. Cras non sapien id lectus
+        dictum finibus vitae eu mauris. Praesent rutrum fermentum nisl, vitae
+        efficitur massa pharetra in. Proin malesuada, sapien ac congue pharetra,
+        quam turpis facilisis massa, vitae sagittis nunc neque id est.
+        Suspendisse pharetra, ipsum nec rutrum porttitor, arcu nisl porttitor
+        ex, ut vehicula sem erat sed diam. Sed fermentum odio faucibus magna
+        euismod sagittis. Pellentesque habitant morbi tristique senectus et
+        netus et malesuada fames ac turpis egestas. Nunc vitae mollis nisl.
+      </p>
+      <p>
+        Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+        cubilia curae; Duis eget velit sit amet metus dictum iaculis tincidunt
+        eu sem. Maecenas mollis mauris dui. Integer purus nisi, rhoncus eu dui
+        eu, mattis condimentum justo. Proin vitae molestie ex. Pellentesque in
+        consequat ligula, ut pharetra orci. Curabitur hendrerit, urna vitae
+        mattis blandit, nibh mauris dictum risus, sed consequat nisl mi ac
+        nulla.
+      </p>
+    </article>
+    <aside class="hidden min-[1280px]:block" aria-hidden="true">
+      {
+        vendingMachines.map(
+          ({ image, position, top, rotation, offset, width }) => (
+            <div
+              class:list={[
+                "group/machine absolute select-none",
+                position,
+                top,
+                rotation,
+                offset,
+                width,
+              ]}>
+              <img
+                class="block h-auto w-full max-w-none rounded border-6 border-white shadow-[0_2px_6px_-1px_rgba(0,0,0,0.4)] drop-shadow-[0_0.35rem_0.25rem_rgb(0_0_0/0.16)] transition-[translate,scale,filter] motion-safe:duration-150 motion-safe:ease-out motion-safe:group-hover/machine:-translate-y-2 motion-safe:group-hover/machine:scale-[1.03] motion-safe:group-hover/machine:drop-shadow-[0_0.75rem_0.6rem_rgb(0_0_0/0.12)] motion-reduce:transition-none"
+                src={`/trips/japan/venging-machine-${image}.webp`}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                draggable="false"
+              />
+            </div>
+          ),
+        )
+      }
+    </aside>
+  </main>
+</BaseLayout>
