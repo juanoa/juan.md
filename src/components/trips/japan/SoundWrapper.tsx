@@ -47,13 +47,6 @@ export function SoundWrapper({
     const audio = audioRef.current;
     const wrapper = wrapperRef.current;
 
-    const preloadAudio = () => {
-      if (!audio || audio.preload === "auto") return;
-
-      audio.preload = "auto";
-      audio.load();
-    };
-
     const pauseOnOutsideClick = (event: MouseEvent) => {
       if (!(event.target instanceof Node)) return;
       if (wrapper?.contains(event.target)) return;
@@ -62,13 +55,9 @@ export function SoundWrapper({
     };
 
     document.addEventListener("click", pauseOnOutsideClick, true);
-    wrapper?.addEventListener("focusin", preloadAudio);
-    wrapper?.addEventListener("mouseover", preloadAudio);
 
     return () => {
       document.removeEventListener("click", pauseOnOutsideClick, true);
-      wrapper?.removeEventListener("focusin", preloadAudio);
-      wrapper?.removeEventListener("mouseover", preloadAudio);
 
       if (!audio) return;
 
@@ -129,12 +118,13 @@ export function SoundWrapper({
       onClick={togglePlayback}
       onKeyDown={handleKeyDown}
       role="button"
-      tabIndex={0}>
+      tabIndex={0}
+    >
       {children}
       <audio
         ref={audioRef}
         src={src}
-        preload="none"
+        preload="auto"
         onEnded={(event) => {
           releaseAudio(event.currentTarget);
           setIsPlaying(false);
