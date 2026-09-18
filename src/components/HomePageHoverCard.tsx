@@ -111,7 +111,8 @@ export const HomePageHoverCard = ({ text, children }: Props) => {
           <button
             ref={triggerRef}
             type="button"
-            className="decoration-foreground/60 hover:decoration-foreground focus-visible:ring-ring font-inherit leading-inherit inline bg-transparent p-0 text-inherit underline decoration-dashed underline-offset-2 outline-none focus-visible:ring-2 focus-visible:ring-offset-2">
+            className="decoration-foreground/60 hover:decoration-foreground focus-visible:ring-ring font-inherit leading-inherit inline bg-transparent p-0 text-inherit underline decoration-dashed underline-offset-2 outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          >
             {text}
           </button>
         }
@@ -123,7 +124,8 @@ export const HomePageHoverCard = ({ text, children }: Props) => {
         align={isMobile || isTouchTrigger ? "center" : "start"}
         alignOffset={0}
         sideOffset={10}
-        className="w-64 overflow-hidden p-0 [&>video]:block [&>video]:w-full">
+        className="w-64 overflow-hidden p-0 [&>video]:block [&>video]:w-full"
+      >
         {children}
       </HoverCardContent>
     </HoverCard>

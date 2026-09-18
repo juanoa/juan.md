@@ -221,7 +221,8 @@ export const FixedToolbarCanvas = ({
           onPointerMove={handlePointerMove}
           onPointerUp={finishDragging}
           onPointerCancel={finishDragging}
-          aria-label="Infinite canvas">
+          aria-label="Infinite canvas"
+        >
           <canvas ref={canvasRef} className="block h-full w-full" />
         </div>
 
@@ -233,7 +234,8 @@ export const FixedToolbarCanvas = ({
           ].join(" ")}
           style={{
             overscrollBehavior: disableAsideOverscroll ? "none" : undefined,
-          }}>
+          }}
+        >
           <div className="flex flex-col gap-2">
             {tools.map((tool) => {
               const isActive = tool.value === activeTool;
@@ -250,7 +252,8 @@ export const FixedToolbarCanvas = ({
                       ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
                       : "border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800",
                   ].join(" ")}
-                  aria-label={tool.label}>
+                  aria-label={tool.label}
+                >
                   <Icon size={20} />
                 </button>
               );

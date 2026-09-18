@@ -3,7 +3,7 @@ import * as tailwindcss from "prettier-plugin-tailwindcss";
 
 /** @type {import("prettier").Config} */
 const config = {
-  bracketSameLine: true,
+  bracketSameLine: false,
   plugins: [astro, tailwindcss],
 };
 

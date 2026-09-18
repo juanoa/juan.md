@@ -13,7 +13,8 @@ export const MitoLogo = ({
     role="img"
     aria-label="MITO AI"
     className={cn("block", className)}
-    {...props}>
+    {...props}
+  >
     <path
       d="M94.2693 0C92.3823 4.89337 91.2517 9.64903 91.2516 15.0339C91.2516 21.4001 92.7384 26.6419 94.8944 32H86.6392C84.0763 26.6536 82.2881 21.2318 82.2881 15.0339C82.2882 9.90259 83.6438 4.70078 85.7698 0H94.2693Z"
       fill="currentColor"

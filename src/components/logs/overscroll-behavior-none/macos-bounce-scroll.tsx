@@ -30,7 +30,8 @@ export const MacosBounceScroll = () => {
             {logEntries.map((entry, index) => (
               <div
                 key={entry}
-                className="rounded border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200">
+                className="rounded border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+              >
                 <span className="mr-2 text-zinc-400 dark:text-zinc-500">
                   {String(index + 1).padStart(2, "0")}
                 </span>

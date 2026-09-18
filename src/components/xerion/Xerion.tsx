@@ -72,7 +72,8 @@ export const Xerion = ({ interval = 2600, mosaics }: Props) => {
       className={styles.grid}
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
       role="img"
-      aria-label={`Xerion mosaic cycling through ${mosaicCount} designs`}>
+      aria-label={`Xerion mosaic cycling through ${mosaicCount} designs`}
+    >
       {initialMosaic.flatMap((row, rowIndex) =>
         [...row].map((_, columnIndex) => {
           const isFilled = activeMosaic[rowIndex]?.[columnIndex] === "#";

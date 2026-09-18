@@ -58,7 +58,8 @@ function HoverCardContent({
         side={side}
         sideOffset={sideOffset}
         sticky={sticky}
-        className="isolate z-50">
+        className="isolate z-50"
+      >
         <PreviewCardPrimitive.Popup
           data-slot="hover-card-content"
           className={cn(

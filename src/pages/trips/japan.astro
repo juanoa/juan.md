@@ -1,4 +1,5 @@
 ---
+import { SoundWrapper } from "@/components/trips/japan/SoundWrapper";
 import { YamanoteLineSign } from "@/components/trips/japan/YamanoteLineSign";
 import {
   Item,
@@ -138,8 +139,8 @@ const vendingMachines = [
               >Japan is a country full of sounds</ItemTitle
             >
             <ItemDescription className="ml-px line-clamp-none text-slate-500"
-              >I've designed this experience with a lot of them. Please use your
-              headphones to enjoy the full experience.</ItemDescription
+              >I've designed this experience with a lot of them. Some items emit
+              sound on click.</ItemDescription
             >
           </ItemContent>
         </Item>
@@ -158,12 +159,18 @@ const vendingMachines = [
         congue, et euismod nisl luctus. Duis placerat hendrerit venenatis.
       </p>
       <div class="not-prose my-10 flex justify-center">
-        <YamanoteLineSign
-          current="Ōtsuka"
-          next="Sugamo"
-          previous="Ikebukuro"
+        <SoundWrapper
+          src="/trips/japan/yamanote-line.mp3"
+          scaleWhilePlaying
           client:load
-        />
+        >
+          <YamanoteLineSign
+            current="Ōtsuka"
+            next="Sugamo"
+            previous="Ikebukuro"
+            client:load
+          />
+        </SoundWrapper>
       </div>
       <p>
         Quisque purus nibh, porttitor ornare nisi eget, lacinia viverra magna.
@@ -227,7 +234,8 @@ const vendingMachines = [
                 rotation,
                 offset,
                 width,
-              ]}>
+              ]}
+            >
               <img
                 class="block h-auto w-full max-w-none rounded border-6 border-white shadow-[0_2px_6px_-1px_rgba(0,0,0,0.4)] drop-shadow-[0_0.35rem_0.25rem_rgb(0_0_0/0.16)] transition-[translate,scale,filter] motion-safe:duration-150 motion-safe:ease-out motion-safe:group-hover/machine:-translate-y-2 motion-safe:group-hover/machine:scale-[1.03] motion-safe:group-hover/machine:drop-shadow-[0_0.75rem_0.6rem_rgb(0_0_0/0.12)] motion-reduce:transition-none"
                 src={`/trips/japan/venging-machine-${image}.webp`}

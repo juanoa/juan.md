@@ -48,7 +48,8 @@ const labelOffsets: Record<string, string> = {
     class="relative aspect-square w-full"
     data-hub-latitude="40.42"
     data-hub-longitude="-3.7"
-    data-trips-globe-container>
+    data-trips-globe-container
+  >
     <canvas
       class="block size-full cursor-grab touch-none select-none"
       data-trips-globe
@@ -64,7 +65,8 @@ const labelOffsets: Record<string, string> = {
           data-latitude={place.location[0]}
           data-longitude={place.location[1]}
           data-size={place.size}
-          style={`position-anchor: --cobe-${place.id}; opacity: var(--cobe-visible-${place.id}, 0); translate: ${labelOffsets[place.id] ?? "-50% -0.45rem"};`}>
+          style={`position-anchor: --cobe-${place.id}; opacity: var(--cobe-visible-${place.id}, 0); translate: ${labelOffsets[place.id] ?? "-50% -0.45rem"};`}
+        >
           {place.name}
         </span>
       ))

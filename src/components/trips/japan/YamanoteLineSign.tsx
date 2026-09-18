@@ -11,13 +11,15 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
   return (
     <figure
       aria-label={`${previous}, ${current}, ${next}. Yamanote Line station sign.`}
-      className="border-2 border-[#121319] sm:border-4">
+      className="border-2 border-[#121319] sm:border-4"
+    >
       <svg
         aria-hidden="true"
         className="block h-auto w-full bg-white"
         role="img"
         viewBox="0 0 1200 335"
-        xmlns="http://www.w3.org/2000/svg">
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <defs>
           <linearGradient id="sign-face" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0" stopColor="#ffffff" />
@@ -39,7 +41,8 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
             fontFamily="Geist Variable, Arial, sans-serif"
             fontSize="25"
             fontWeight="750"
-            textAnchor="middle">
+            textAnchor="middle"
+          >
             SMB
           </text>
           <rect
@@ -58,7 +61,8 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
             fontFamily="Geist Variable, Arial, sans-serif"
             fontSize="24"
             fontWeight="650"
-            textAnchor="middle">
+            textAnchor="middle"
+          >
             JY
           </text>
           <text
@@ -68,7 +72,8 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
             fontFamily="Geist Variable, Arial, sans-serif"
             fontSize="35"
             fontWeight="650"
-            textAnchor="middle">
+            textAnchor="middle"
+          >
             29
           </text>
         </g>
@@ -81,7 +86,8 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
           fontSize="82"
           fontWeight="800"
           letterSpacing="28"
-          textAnchor="middle">
+          textAnchor="middle"
+        >
           大塚
         </text>
         <text
@@ -92,7 +98,8 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
           fontSize="28"
           fontWeight="700"
           letterSpacing="2"
-          textAnchor="middle">
+          textAnchor="middle"
+        >
           おおつか
         </text>
 
@@ -101,14 +108,16 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
             x="750"
             y="46"
             fontFamily="Hiragino Kaku Gothic ProN, Yu Gothic, Noto Sans JP, sans-serif"
-            fontSize="27">
+            fontSize="27"
+          >
             新桥
           </text>
           <text
             x="750"
             y="87"
             fontFamily="Apple SD Gothic Neo, Noto Sans KR, sans-serif"
-            fontSize="25">
+            fontSize="25"
+          >
             신바시
           </text>
         </g>
@@ -118,7 +127,8 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
           stroke={INK}
           strokeLinejoin="round"
           strokeWidth="6"
-          transform="translate(1013 25)">
+          transform="translate(1013 25)"
+        >
           <path d="M0 0h48v48H0z" />
           <path d="M12 8v31M34 8v31M8 39h31" />
           <path d="M64 0h48v48H64z" />
@@ -132,7 +142,8 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
           fill="#ffffff"
           fontFamily="Hiragino Kaku Gothic ProN, Yu Gothic, Noto Sans JP, sans-serif"
           fontSize="39"
-          fontWeight="700">
+          fontWeight="700"
+        >
           <text x="43" y="232">
             池袋
           </text>
@@ -150,7 +161,8 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
             y="311"
             fontSize="45"
             fontWeight="720"
-            textAnchor="middle">
+            textAnchor="middle"
+          >
             {current}
           </text>
           <text x="888" y="302" fontSize="31" fontWeight="400">
@@ -168,7 +180,8 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
             fontFamily="Geist Variable, Arial, sans-serif"
             fontSize="17"
             fontWeight="650"
-            textAnchor="middle">
+            textAnchor="middle"
+          >
             JY
           </text>
           <text
@@ -178,7 +191,8 @@ export const YamanoteLineSign = ({ current, previous, next }: Props) => {
             fontFamily="Geist Variable, Arial, sans-serif"
             fontSize="22"
             fontWeight="650"
-            textAnchor="middle">
+            textAnchor="middle"
+          >
             30
           </text>
         </g>

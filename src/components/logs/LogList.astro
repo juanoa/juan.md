@@ -52,7 +52,8 @@ const logs = (
             <time
               datetime={log.data.createdAt.toISOString().split("T")[0]}
               data-log-date
-              class="text-muted-foreground group-hover:text-foreground shrink-0 font-mono text-xs font-normal transition-all sm:text-sm">
+              class="text-muted-foreground group-hover:text-foreground shrink-0 font-mono text-xs font-normal transition-all sm:text-sm"
+            >
               <span data-log-date-year class="sm:hidden">
                 {logDateYearFormatter.format(log.data.createdAt)}
               </span>

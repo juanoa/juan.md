@@ -21,7 +21,8 @@ export const FolderStructure = ({ fileTree }: { fileTree: FileTreeItem[] }) => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="group hover:bg-accent hover:text-accent-foreground w-full scale-none! justify-start transition-none">
+                className="group hover:bg-accent hover:text-accent-foreground w-full scale-none! justify-start transition-none"
+              >
                 <CaretRightIcon className="transition-transform group-aria-expanded:rotate-90" />
                 <FolderIcon />
                 {fileItem.name}
@@ -41,7 +42,8 @@ export const FolderStructure = ({ fileTree }: { fileTree: FileTreeItem[] }) => {
         key={fileItem.name}
         variant="link"
         size="sm"
-        className="text-foreground w-full scale-none! justify-start gap-2">
+        className="text-foreground w-full scale-none! justify-start gap-2"
+      >
         <FileIcon />
         <span>{fileItem.name}</span>
       </Button>

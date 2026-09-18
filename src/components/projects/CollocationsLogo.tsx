@@ -11,7 +11,8 @@ export const CollocationsLogo = ({
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={cn("text-foreground", className)}
-    {...props}>
+    {...props}
+  >
     <path
       d="M117.244 31L99.702 96.1726H93.9608L111.503 31H117.244Z"
       fill="currentColor"
