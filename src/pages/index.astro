@@ -15,6 +15,7 @@ import { InditexHoverCard } from "@/components/index/hover-cards/InditexHoverCar
 import { CorunaHoverCard } from "@/components/index/hover-cards/CorunaHoverCard";
 import GitHubWeeklyContributions from "@/components/index/GitHubWeeklyContributions.astro";
 import { Image } from "astro:assets";
+import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr/ArrowUpRight";
 
 const pageTitle = "Juan Otálora";
 ---
@@ -91,7 +92,7 @@ const pageTitle = "Juan Otálora";
       <h2>Projects</h2>
       <div class="not-prose mt-6">
         <a href="https://www.onepointzeroone.dev/">
-          <Item size="sm">
+          <Item size="sm" className="group">
             <ItemMedia variant="image">
               <OnePointZeroOneLogo />
             </ItemMedia>
@@ -101,12 +102,15 @@ const pageTitle = "Juan Otálora";
                 An almanack of evergreen content for SWE
               </ItemDescription>
             </ItemContent>
+            <ArrowUpRightIcon
+              className="size-4 opacity-0 transition-opacity group-hover:opacity-100"
+            />
           </Item>
         </a>
       </div>
       <div class="not-prose">
         <a href="https://collocations.juan.md">
-          <Item size="sm">
+          <Item size="sm" className="group">
             <ItemMedia variant="image">
               <CollocationsLogo />
             </ItemMedia>
@@ -116,6 +120,9 @@ const pageTitle = "Juan Otálora";
                 A search engine for English collocations
               </ItemDescription>
             </ItemContent>
+            <ArrowUpRightIcon
+              className="size-4 opacity-0 transition-opacity group-hover:opacity-100"
+            />
           </Item>
         </a>
       </div>
