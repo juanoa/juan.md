@@ -1,6 +1,7 @@
 ---
 import { SoundWrapper } from "@/components/trips/japan/SoundWrapper";
 import { YamanoteLineSign } from "@/components/trips/japan/YamanoteLineSign";
+import { AirplaneTrip } from "@/components/trips/AirplaneTrip";
 import {
   Item,
   ItemContent,
@@ -144,6 +145,18 @@ const vendingMachines = [
             >
           </ItemContent>
         </Item>
+      </div>
+      <h2>From Madrid to Kyoto</h2>
+      <p>This trip started in Madrid, as many others</p>
+      <div class="not-prose">
+        <SoundWrapper src="/trips/japan/haneda-last-call.mp3" client:load>
+          <AirplaneTrip
+            from="MAD"
+            fromLabel="Madrid"
+            to="HND"
+            toLabel="Tokyo"
+          />
+        </SoundWrapper>
       </div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac tortor
