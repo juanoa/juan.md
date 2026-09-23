@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
-import styles from "./Xerion.module.css";
-
 interface Props {
   interval?: number;
   mosaics: string[][];
@@ -69,7 +67,7 @@ export const Xerion = ({ interval = 2600, mosaics }: Props) => {
   return (
     <div
       ref={containerRef}
-      className={styles.grid}
+      className="grid gap-0.5"
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
       role="img"
       aria-label={`Xerion mosaic cycling through ${mosaicCount} designs`}
@@ -90,7 +88,7 @@ export const Xerion = ({ interval = 2600, mosaics }: Props) => {
             <div
               key={`${rowIndex}-${columnIndex}`}
               aria-hidden="true"
-              className={`${styles.tile} ${isFilled ? styles.filled : ""} aspect-square bg-blue-500`}
+              className={`aspect-square scale-[0.35] bg-blue-500 opacity-0 transition-[opacity,transform] delay-[var(--tile-delay)] duration-[240ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] motion-reduce:transform-none motion-reduce:transition-opacity motion-reduce:delay-0 motion-reduce:duration-160 motion-reduce:ease-linear ${isFilled ? "scale-100 opacity-100" : ""}`}
               style={tileStyle}
             />
           );
