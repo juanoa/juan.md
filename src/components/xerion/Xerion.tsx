@@ -88,7 +88,7 @@ export const Xerion = ({ interval = 2600, mosaics }: Props) => {
             <div
               key={`${rowIndex}-${columnIndex}`}
               aria-hidden="true"
-              className={`aspect-square scale-[0.35] bg-blue-500 opacity-0 transition-[opacity,transform] delay-[var(--tile-delay)] duration-[240ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] motion-reduce:transform-none motion-reduce:transition-opacity motion-reduce:delay-0 motion-reduce:duration-160 motion-reduce:ease-linear ${isFilled ? "scale-100 opacity-100" : ""}`}
+              className={`aspect-square bg-blue-500 transition-[opacity,transform] delay-[var(--tile-delay)] duration-[240ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] motion-reduce:transform-none motion-reduce:transition-opacity motion-reduce:delay-0 motion-reduce:duration-160 motion-reduce:ease-linear ${isFilled ? "scale-100 opacity-100" : "scale-[0.35] opacity-0"}`}
               style={tileStyle}
             />
           );
