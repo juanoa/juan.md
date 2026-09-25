@@ -1,0 +1,68 @@
+---
+import { Image } from "astro:assets";
+---
+
+<div class="relative aspect-[960/1281] self-start overflow-hidden">
+  <Image
+    src="/torre-hercules.webp"
+    alt="Hercules Tower in A Coruña"
+    width={960}
+    height={1281}
+    widths={[320, 480, 640, 960]}
+    sizes="(max-width: 640px) calc((100vw - 3.5rem) / 2), 32ch"
+    quality="high"
+    class="block h-full w-full object-cover"
+  />
+  <!-- Match the photo's coordinates so the light stays on the lantern. -->
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 960 1281"
+    aria-hidden="true"
+    focusable="false"
+    class="pointer-events-none absolute inset-0 h-full w-full opacity-0 mix-blend-screen motion-safe:animate-[lighthouse-flash_6s_ease-in-out_infinite] motion-reduce:opacity-30"
+  >
+    <defs>
+      <radialGradient id="hercules-lighthouse-glow">
+        <stop stop-color="#fffce8" stop-opacity="0.85"></stop>
+        <stop offset="0.18" stop-color="#fff1bf" stop-opacity="0.55"></stop>
+        <stop offset="0.5" stop-color="#ffe8a3" stop-opacity="0.16"></stop>
+        <stop offset="1" stop-color="#ffe8a3" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient id="hercules-lighthouse-flare">
+        <stop stop-color="#fffef5"></stop>
+        <stop offset="0.12" stop-color="#fff8dc" stop-opacity="0.8"></stop>
+        <stop offset="0.45" stop-color="#fff1bf" stop-opacity="0.25"></stop>
+        <stop offset="1" stop-color="#fff1bf" stop-opacity="0"></stop>
+      </radialGradient>
+    </defs>
+    <g transform="translate(494 437)">
+      <circle r="66" fill="url(#hercules-lighthouse-glow)"></circle>
+      <ellipse
+        rx="145"
+        ry="10"
+        fill="url(#hercules-lighthouse-flare)"
+        opacity="0.35"></ellipse>
+      <ellipse rx="112" ry="2.5" fill="url(#hercules-lighthouse-flare)"
+      ></ellipse>
+      <ellipse rx="5" ry="6" fill="#fffef5"></ellipse>
+    </g>
+  </svg>
+</div>
+
+<style>
+  @keyframes lighthouse-flash {
+    0%,
+    55%,
+    90%,
+    100% {
+      opacity: 0;
+    }
+    65%,
+    82% {
+      opacity: 0.2;
+    }
+    73% {
+      opacity: 1;
+    }
+  }
+</style>

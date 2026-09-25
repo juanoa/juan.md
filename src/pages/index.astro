@@ -15,7 +15,7 @@ import { InditexHoverCard } from "@/components/index/hover-cards/InditexHoverCar
 import { CorunaHoverCard } from "@/components/index/hover-cards/CorunaHoverCard";
 import GitHubWeeklyContributions from "@/components/index/GitHubWeeklyContributions.astro";
 import MitoTeamPhoto from "@/components/index/MitoTeamPhoto.astro";
-import { Image } from "astro:assets";
+import HerculesTowerPhoto from "@/components/index/HerculesTowerPhoto.astro";
 import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr/ArrowUpRight";
 
 const pageTitle = "Juan Otálora";
@@ -53,16 +53,7 @@ const pageTitle = "Juan Otálora";
       <p>Spending my free time climbing, surfing, or running.</p>
       <div class="not-prose flex flex-col gap-2">
         <div class="grid grid-cols-2 gap-2 sm:gap-4">
-          <Image
-            src="/torre-hercules.webp"
-            alt="Hercules Tower in A Coruña"
-            width={960}
-            height={1281}
-            widths={[320, 480, 640, 960]}
-            sizes="(max-width: 640px) calc((100vw - 3.5rem) / 2), 32ch"
-            quality="high"
-            class="h-full object-cover"
-          />
+          <HerculesTowerPhoto />
           <video
             autoplay
             muted
