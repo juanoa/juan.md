@@ -14,6 +14,7 @@ import { MitoHoverCard } from "@/components/index/hover-cards/MitoHoverCard";
 import { InditexHoverCard } from "@/components/index/hover-cards/InditexHoverCard";
 import { CorunaHoverCard } from "@/components/index/hover-cards/CorunaHoverCard";
 import GitHubWeeklyContributions from "@/components/index/GitHubWeeklyContributions.astro";
+import MitoTeamPhoto from "@/components/index/MitoTeamPhoto.astro";
 import { Image } from "astro:assets";
 import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr/ArrowUpRight";
 
@@ -32,15 +33,7 @@ const pageTitle = "Juan Otálora";
         interfaces and make them easy to use.
       </p>
       <div class="not-prose flex flex-col gap-2">
-        <Image
-          src="/mito-team.webp"
-          alt="The MITO team"
-          width={1536}
-          height={685}
-          widths={[320, 640, 960, 1200, 1536]}
-          sizes="(max-width: 640px) calc(100vw - 3rem), 65ch"
-          quality="high"
-        />
+        <MitoTeamPhoto />
         <p class="text-center text-xs">MITO Team. December 2025</p>
       </div>
       <p>

@@ -1,0 +1,63 @@
+---
+import { Image } from "astro:assets";
+---
+
+<div class="relative">
+  <Image
+    src="/mito-team.webp"
+    alt="The MITO team. Juan is third from the right, under the arrow."
+    width={1536}
+    height={685}
+    widths={[320, 640, 960, 1200, 1536]}
+    sizes="(max-width: 640px) calc(100vw - 3rem), 65ch"
+    quality="high"
+    class="block h-auto w-full"
+  />
+  <!-- Anchor and size follow the uncropped photo, including the float distance. -->
+  <span
+    aria-hidden="true"
+    class="pointer-events-none absolute top-[4%] left-[75.1%] w-[3.8%] -translate-x-1/2"
+  >
+    <span
+      class="block [filter:drop-shadow(2px_3px_1.5px_rgb(0_0_0/0.22))] motion-safe:animate-[player-float_2.4s_cubic-bezier(0.645,0.045,0.355,1)_infinite]"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 56 76"
+        fill="none"
+        focusable="false"
+        class="block h-auto w-full origin-center motion-safe:animate-[player-turn_4.8s_linear_infinite]"
+      >
+        <defs>
+          <mask id="mito-player-arrow" maskUnits="userSpaceOnUse">
+            <path
+              d="M7 20Q2 18 4 23L25 70Q28 76 31 70L52 23Q54 18 49 20L31 27Q28 28 25 27Z"
+              fill="white"></path>
+          </mask>
+        </defs>
+        <path
+          fill="oklch(0.500 0 0)"
+          d="M0 0H56V76H0Z"
+          mask="url(#mito-player-arrow)"></path>
+      </svg>
+    </span>
+  </span>
+</div>
+
+<style>
+  @keyframes player-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8%);
+    }
+  }
+
+  @keyframes player-turn {
+    to {
+      transform: rotateY(360deg);
+    }
+  }
+</style>
