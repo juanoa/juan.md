@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import {
   ItemDescription,
   ItemContent,
@@ -76,6 +77,32 @@ const pageTitle = "Juan Otálora";
     <section>
       <h2>Projects</h2>
       <div class="not-prose mt-6">
+        <a href="https://sounds-of-a-bit.juan.md">
+          <Item size="sm" className="group">
+            <ItemMedia variant="image">
+              <Image
+                src="/projects/sounds-of-a-bit.webp"
+                alt="Sounds of a bit logo"
+                width={500}
+                height={500}
+                widths={[32, 64, 96]}
+                sizes="32px"
+                class="h-auto w-full"
+              />
+            </ItemMedia>
+            <ItemContent className="gap-0">
+              <ItemTitle>Sounds of a bit</ItemTitle>
+              <ItemDescription>
+                Music generated on your browser
+              </ItemDescription>
+            </ItemContent>
+            <ArrowUpRightIcon
+              className="size-4 opacity-0 transition-opacity group-hover:opacity-100"
+            />
+          </Item>
+        </a>
+      </div>
+      <div class="not-prose">
         <a href="https://www.onepointzeroone.dev/">
           <Item size="sm" className="group">
             <ItemMedia variant="image">
@@ -93,6 +120,7 @@ const pageTitle = "Juan Otálora";
           </Item>
         </a>
       </div>
+
       <div class="not-prose">
         <a href="https://collocations.juan.md">
           <Item size="sm" className="group">
