@@ -5,6 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const trips = [
   {
+    name: "Morocco",
+    thumbnail: "/trips/morocco/morocco-2026-thumbnail.webp",
+    year: 2026,
+  },
+  {
     name: "Brazil",
     thumbnail: "/trips/brazil/brazil-thumbnail.webp",
     year: 2026,
@@ -54,7 +59,7 @@ export function TripsTabs({ children }: TripsTabsProps) {
       <TabsContent value="gallery" className="mt-5">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {trips.map((trip) => (
-            <TripCard key={trip.name} {...trip} />
+            <TripCard key={`${trip.name}-${trip.year}`} {...trip} />
           ))}
         </div>
       </TabsContent>
