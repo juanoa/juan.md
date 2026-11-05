@@ -11,8 +11,7 @@ import LogList from "@/components/logs/LogList.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { CollocationsLogo } from "@/components/projects/CollocationsLogo";
 import { OnePointZeroOneLogo } from "@/components/projects/OnePointZeroOneLogo";
-import { MitoHoverCard } from "@/components/index/hover-cards/MitoHoverCard";
-import { InditexHoverCard } from "@/components/index/hover-cards/InditexHoverCard";
+import { CompanyPill } from "@/components/ui/company-pill";
 import { CorunaHoverCard } from "@/components/index/hover-cards/CorunaHoverCard";
 import GitHubWeeklyContributions from "@/components/index/GitHubWeeklyContributions.astro";
 import MitoTeamPhoto from "@/components/index/MitoTeamPhoto.astro";
@@ -27,8 +26,11 @@ const pageTitle = "Juan Otálora";
     <section>
       <h2>Work</h2>
       <p>
-        I work on the engineering team at <MitoHoverCard
-          text="MITO"
+        I work on the engineering team at <CompanyPill
+          name="MITO"
+          logo="/companies/mito.webp"
+          href="https://mito.ai"
+          variant="light"
           client:load
         />. I was one of the company's first engineers. I like to craft
         interfaces and make them easy to use.
@@ -38,7 +40,13 @@ const pageTitle = "Juan Otálora";
         <p class="text-center text-xs">MITO Team. December 2025</p>
       </div>
       <p>
-        I previously worked at <InditexHoverCard text="Inditex" client:load /> (zara.com).
+        I previously worked at <CompanyPill
+          name="Inditex"
+          logo="/companies/inditex.webp"
+          href="https://inditex.com"
+          variant="dark"
+          client:load
+        /> (zara.com).
       </p>
       <h2>About</h2>
       <p>
