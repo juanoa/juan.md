@@ -18,10 +18,10 @@
     "format:check": "pnpm exec prettier . --check"
   },
   "dependencies": {
-    "@astrojs/mdx": "5.0.3",
-    "@astrojs/react": "5.0.3",
-    "@astrojs/rss": "4.0.18",
-    "@astrojs/vercel": "10.0.8",
+    "@astrojs/mdx": "8.1.2",
+    "@astrojs/react": "7.1.2",
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/vercel": "11.0.18",
     "@base-ui/react": "1.7.0",
     "@fontsource-variable/geist": "5.2.8",
     "@fontsource-variable/jetbrains-mono": "5.2.8",
@@ -30,7 +30,7 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vercel/analytics": "1.6.1",
-    "astro": "6.1.8",
+    "astro": "7.4.5",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cobe": "^2.0.1",
