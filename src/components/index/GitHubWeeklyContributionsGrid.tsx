@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -75,10 +77,50 @@ function formatDate(value: string) {
 const getContributionLabel = (total: number) =>
   total === 1 ? "1 contribution" : `${total} contributions`;
 
+function WeekNavigationButton({
+  direction,
+  disabled,
+  onClick,
+}: {
+  direction: "previous" | "next";
+  disabled: boolean;
+  onClick: () => void;
+}) {
+  const label = direction === "previous" ? "Previous week" : "Next week";
+  const Icon = direction === "previous" ? ArrowLeft : ArrowRight;
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        disabled={disabled}
+        render={
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="rounded-md"
+            aria-label={label}
+            disabled={disabled}
+            onClick={onClick}
+          >
+            <Icon aria-hidden="true" />
+          </Button>
+        }
+      />
+      {!disabled && <TooltipContent>{label}</TooltipContent>}
+    </Tooltip>
+  );
+}
+
 export const GitHubWeeklyContributionsGrid = ({
   weeklyContributions,
 }: Props) => {
-  const [selected, setSelected] = useState<WeeklyContribution | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const selected = weeklyContributions[selectedIndex];
+  const lastIndex = weeklyContributions.length - 1;
+  function moveWeek(offset: number) {
+    setSelectedIndex((index) =>
+      Math.max(0, Math.min(index + offset, lastIndex)),
+    );
+  }
   const [failedIcons, setFailedIcons] = useState<Set<string>>(() => new Set());
   const hasIcons = selected?.repositories.some(
     (repo) => repo.favicon && !failedIcons.has(repo.favicon),
@@ -92,7 +134,7 @@ export const GitHubWeeklyContributionsGrid = ({
     <Dialog>
       <TooltipProvider delay={500}>
         <div className="grid grid-cols-30 gap-0.75 sm:grid-cols-52">
-          {weeklyContributions.map((week) => {
+          {weeklyContributions.map((week, index) => {
             const label = `${getWeekLabel(week.start, week.end)}: ${getContributionLabel(week.total)}`;
 
             return (
@@ -101,7 +143,7 @@ export const GitHubWeeklyContributionsGrid = ({
                   render={
                     <DialogTrigger
                       aria-label={label}
-                      onClick={() => setSelected(week)}
+                      onClick={() => setSelectedIndex(index)}
                       className={`aspect-square cursor-pointer rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-2 ${week.toneClass}`}
                     />
                   }
@@ -117,11 +159,38 @@ export const GitHubWeeklyContributionsGrid = ({
         </div>
       </TooltipProvider>
       {selected && (
-        <DialogContent>
+        <DialogContent
+          onKeyDown={(event) => {
+            if (
+              event.altKey ||
+              event.ctrlKey ||
+              event.metaKey ||
+              event.shiftKey
+            )
+              return;
+            if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+            event.preventDefault();
+            moveWeek(event.key === "ArrowLeft" ? -1 : 1);
+          }}
+        >
           <DialogHeader>
-            <DialogTitle>
-              {getWeekLabel(selected.start, selected.end)}
-            </DialogTitle>
+            <div className="flex items-center gap-1 pr-8">
+              <TooltipProvider delay={300}>
+                <WeekNavigationButton
+                  direction="previous"
+                  disabled={selectedIndex === 0}
+                  onClick={() => moveWeek(-1)}
+                />
+                <DialogTitle aria-live="polite" aria-atomic="true">
+                  {getWeekLabel(selected.start, selected.end)}
+                </DialogTitle>
+                <WeekNavigationButton
+                  direction="next"
+                  disabled={selectedIndex === lastIndex}
+                  onClick={() => moveWeek(1)}
+                />
+              </TooltipProvider>
+            </div>
             <DialogDescription>
               {getContributionLabel(selected.total)} ·{" "}
               {formatDate(selected.start)} – {formatDate(selected.end)}
@@ -131,6 +200,7 @@ export const GitHubWeeklyContributionsGrid = ({
             <p>No contributions this week.</p>
           ) : (
             <ul
+              key={selected.start}
               className={`grid max-h-[55dvh] gap-2 overflow-y-auto [&>li]:col-span-full [&>li]:grid [&>li]:grid-cols-subgrid [&>li]:items-center ${hasIcons ? "grid-cols-[1rem_minmax(0,1fr)_max-content_max-content]" : "grid-cols-[minmax(0,1fr)_max-content_max-content]"}`}
             >
               {selected.repositories.map((repo) => (

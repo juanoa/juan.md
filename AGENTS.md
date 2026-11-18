@@ -36,6 +36,7 @@ This repository contains the `juan.md` website as a single Astro project. It use
 ## Working Rules
 
 - Prefer minimal, scoped edits.
+- Use Lucide icons for interface arrows, including navigation controls and keyboard shortcut hints. Avoid ASCII and Unicode arrow characters in their labels.
 - Use Tailwind CSS utility classes for component styling. Never use CSS Modules.
 - Keep shared-looking UI code local to `src/components/ui` unless a separate package is intentionally introduced.
 - Do not edit generated or cache directories such as `dist` or `.astro` unless the task explicitly requires it.
