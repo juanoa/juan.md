@@ -107,7 +107,12 @@ function mockWeek(start: string, end: string, username: string): Week {
       lines: { additions: 100 + (hash % 1250), deletions: hash % 275 },
     },
     {
-      name: `${username}/example-project`,
+      ...(hash % 2
+        ? {
+            name: `${username}/coruna.fyi`,
+            favicon: "https://coruna.juan.md/favicon.svg",
+          }
+        : { name: `${username}/example-project` }),
       count: Math.floor(publicCount / 2),
       lines: { additions: hash % 420, deletions: hash % 135 },
     },
@@ -119,7 +124,7 @@ async function findFavicon(homepage: string): Promise<string | undefined> {
   const site = URL.parse(homepage);
   if (!site || !["https:", "http:"].includes(site.protocol)) return;
 
-  // Look up the site's declared icon, including icons outside /favicon.ico.
+  // The index can find icons outside the site's root, but may miss SVGs.
   const icon = new URL("https://t3.gstatic.com/faviconV2");
   icon.search = new URLSearchParams({
     client: "SOCIAL",
@@ -138,8 +143,9 @@ async function findFavicon(homepage: string): Promise<string | undefined> {
     )
       return icon.href;
   } catch {
-    // An unavailable icon leaves the row's icon slot empty.
+    // Fall back to the site's own icon when the index is unavailable.
   }
+  return new URL("/favicon.svg", site.origin).href;
 }
 
 export async function getContributionWeeks(
