@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import SocialFooter from "@/components/ui/SocialFooter.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import {
   getAlternateLogLinks,
@@ -43,4 +44,5 @@ const alternateLinks = getAlternateLogLinks(entryId, translations);
     }
     <slot />
   </article>
+  <SocialFooter />
 </BaseLayout>

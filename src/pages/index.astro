@@ -8,6 +8,7 @@ import {
   ItemMedia,
 } from "@/components/ui/item";
 import LogList from "@/components/logs/LogList.astro";
+import SocialFooter from "@/components/ui/SocialFooter.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { CollocationsLogo } from "@/components/projects/CollocationsLogo";
 import { OnePointZeroOneLogo } from "@/components/projects/OnePointZeroOneLogo";
@@ -177,13 +178,6 @@ const pageTitle = "Juan Otálora";
       <h2>Logs</h2>
       <LogList />
     </section>
-
-    <section class="mt-20">
-      <p class="*:no-underline">
-        <a href="https://x.com/juanoa_">X</a> / <a
-          href="https://linkedin.com/in/juanoa">LinkedIn</a
-        > / <a href="https://github.com/juanoa">GitHub</a>
-      </p>
-    </section>
   </article>
+  <SocialFooter />
 </BaseLayout>
