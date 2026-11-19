@@ -1,7 +1,13 @@
 ---
-import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { getLogHref } from "@/lib/logs";
 
-const isProduction = import.meta.env.PROD;
+interface Props {
+  logs: CollectionEntry<"logs">[];
+}
+
+const { logs } = Astro.props;
+
 const logDateFormatter = new Intl.DateTimeFormat("en", {
   month: "short",
   year: "numeric",
@@ -16,29 +22,13 @@ const logDateYearFormatter = new Intl.DateTimeFormat("en", {
 function formatLogDate(date: Date) {
   return logDateFormatter.format(date);
 }
-
-const logs = (
-  await getCollection(
-    "logs",
-    (entry) => !entry.id.includes("/") && (!isProduction || !entry.data.draft),
-  )
-).sort((left, right) => {
-  const createdAtDifference =
-    right.data.createdAt.getTime() - left.data.createdAt.getTime();
-
-  if (createdAtDifference !== 0) {
-    return createdAtDifference;
-  }
-
-  return left.data.title.localeCompare(right.data.title);
-});
 ---
 
 <ul class="not-prose mt-6 space-y-3">
   {
     logs.map((log) => (
       <li>
-        <a href={`/${log.id}`} class="group block">
+        <a href={getLogHref(log.id)} class="group block">
           <div class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-2">
             <div class="flex min-w-0 items-baseline gap-1">
               <span class="group-hover:text-foreground min-w-0 truncate">

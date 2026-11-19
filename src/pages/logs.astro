@@ -1,0 +1,27 @@
+---
+import LogList from "@/components/logs/LogList.astro";
+import SocialFooter from "@/components/ui/SocialFooter.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getListedLogs } from "@/lib/logs";
+
+const logs = await getListedLogs();
+const logsByYear = Map.groupBy(logs, (log) =>
+  log.data.createdAt.getUTCFullYear(),
+);
+---
+
+<BaseLayout pageTitle="Logs">
+  <main class="prose dark:prose-invert">
+    <h1 class="text-3xl">Logs</h1>
+    <p>I write to remember who I once was, and to build who I will become.</p>
+    {
+      Array.from(logsByYear, ([year, yearLogs]) => (
+        <section aria-labelledby={`logs-${year}`}>
+          <h2 id={`logs-${year}`}>{year}</h2>
+          <LogList logs={yearLogs} />
+        </section>
+      ))
+    }
+  </main>
+  <SocialFooter />
+</BaseLayout>
